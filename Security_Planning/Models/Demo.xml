@@ -46,11 +46,32 @@
 			<BottomLeftX>0.495</BottomLeftX>
 			<BottomLeftY>0.3</BottomLeftY>
 			<UpperRightX>0.505</UpperRightX>
+			<UpperRightY>0.7</UpperRightY>			
+		</Wall>
+		<Wall>
+			<Id>4</Id>
+			<BottomLeftX>0.495</BottomLeftX>
+			<BottomLeftY>0.8</BottomLeftY>
+			<UpperRightX>0.505</UpperRightX>
 			<UpperRightY>1</UpperRightY>			
 		</Wall>
 		<Wall>
 			<Id>4</Id>
 			<BottomLeftX>0</BottomLeftX>
+			<BottomLeftY>0.495</BottomLeftY>
+			<UpperRightX>0.2</UpperRightX>
+			<UpperRightY>0.505</UpperRightY>			
+		</Wall>
+		<Wall>
+			<Id>4</Id>
+			<BottomLeftX>0.3</BottomLeftX>
+			<BottomLeftY>0.495</BottomLeftY>
+			<UpperRightX>0.7</UpperRightX>
+			<UpperRightY>0.505</UpperRightY>			
+		</Wall>
+		<Wall>
+			<Id>4</Id>
+			<BottomLeftX>0.8</BottomLeftX>
 			<BottomLeftY>0.495</BottomLeftY>
 			<UpperRightX>1</UpperRightX>
 			<UpperRightY>0.505</UpperRightY>			
@@ -63,6 +84,27 @@
 			<BottomLeftY>0.2</BottomLeftY>
 			<UpperRightX>0.505</UpperRightX>
 			<UpperRightY>0.3</UpperRightY>	
+		</Gate>
+		<Gate>
+			<Id>4</Id>
+			<BottomLeftX>0.2</BottomLeftX>
+			<BottomLeftY>0.495</BottomLeftY>
+			<UpperRightX>0.3</UpperRightX>
+			<UpperRightY>0.505</UpperRightY>	
+		</Gate>
+		<Gate>
+			<Id>4</Id>
+			<BottomLeftX>0.495</BottomLeftX>
+			<BottomLeftY>0.7</BottomLeftY>
+			<UpperRightX>0.505</UpperRightX>
+			<UpperRightY>0.8</UpperRightY>	
+		</Gate>
+		<Gate>
+			<Id>4</Id>
+			<BottomLeftX>0.7</BottomLeftX>
+			<BottomLeftY>0.495</BottomLeftY>
+			<UpperRightX>0.8</UpperRightX>
+			<UpperRightY>0.505</UpperRightY>	
 		</Gate>
 	</Gates>
 	<Rooms>

@@ -44,6 +44,7 @@ public class Main : MonoBehaviour {
             Vector3 size = GateObject.GetComponent<BoxCollider>().size;
             GateObject.GetComponent<BoxCollider>().size = new Vector3(size.x * 10, 1.5f*size.y);
             GateObject.AddComponent<GateOpen>();
+          
         }
     }
 
