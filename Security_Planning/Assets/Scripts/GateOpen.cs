@@ -1,46 +1,78 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GateOpen : MonoBehaviour {
+public class GateOpen : MonoBehaviour
+{
+
+    public bool horizontal;
+    public GameObject gate;
 
     Vector3 defaultPosition;
-    Vector3 localScale;
+    Vector3 lossyScale;
+    Vector3 translationDirection;
     float speed;
     bool isReturning;
-    bool firstTime;
+    Axis axis;
 
-    void Start()
+    private void Start()
     {
-        defaultPosition = transform.position;
-        localScale = transform.lossyScale;
-        firstTime = false;
-        speed = 2f;
+        defaultPosition = gate.transform.position;
+        lossyScale = gate.transform.lossyScale;
+        speed = 4f;
+        translationDirection = horizontal ? Vector3.right : Vector3.up;
+        axis = horizontal ? Axis.X : Axis.Y;
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Enter");
 
         isReturning = false;
     }
 
-    void OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider other)
     {
+        Debug.Log("Stay");
+        bool gateFullyOpen = true;
 
-        if (transform.position.y < defaultPosition.y + localScale.y)
-            transform.position += speed * Vector3.up * Time.deltaTime;
+        if (gate.transform.position.GetVectorCoord(axis) < defaultPosition.GetVectorCoord(axis) + lossyScale.GetVectorCoord(axis))
+        {
+            gateFullyOpen = false;
+        }
+
+        if (!gateFullyOpen)
+        {
+            gate.transform.position += speed * translationDirection * Time.deltaTime;
+        }
+
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
+        Debug.Log("Exit");
         isReturning = true;
     }
 
-    void Update()
+    private void Update()
     {
+        if (isReturning)
+        {
+            bool gateFullyClosed = true;
 
-        if (isReturning && transform.position.y > defaultPosition.y)
-            transform.position += speed * Vector3.down * Time.deltaTime;
-        Debug.Log(isReturning + " currentY = " + transform.position.y +" defaultY = " + defaultPosition.y);
+            if (gate.transform.position.GetVectorCoord(axis) > defaultPosition.GetVectorCoord(axis))
+            {
+                gateFullyClosed = false;
+            }
+
+            if (!gateFullyClosed)
+            {
+                gate.transform.position -= speed * translationDirection * Time.deltaTime;
+                if (gate.transform.position.GetVectorCoord(axis) < defaultPosition.GetVectorCoord(axis))
+                {
+                    gate.transform.position = defaultPosition;
+                }
+            }
+        }   
     }
+
 }

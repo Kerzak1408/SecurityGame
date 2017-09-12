@@ -2,13 +2,19 @@
 using System.Collections;
 using System.Xml.Serialization;
 using System.IO;
+using System.Collections.Generic;
 
 public class Main : MonoBehaviour {
 
+    public GameObject Canvas;
+
+    GameManager gameManager;
+    char[][] gridChars;
+
 	// Use this for initialization
 	void Start () {
-        Model model = DeserializeModel("Models/Demo.xml");
-        InitializeModel(model);
+        gameManager = GameManager.Instance;
+        InitializeModel();
 	}
 	
 	// Update is called once per frame
@@ -16,66 +22,60 @@ public class Main : MonoBehaviour {
 	
 	}
 
-    private void InitializeModel(Model model)
+    private void InitializeModel()
     {
-        GameObject canvas = GameObject.Find("Canvas");
-        foreach (Wall wall in model.Walls)
+        LoadModel();
+        LoadPrefabs();
+    }
+
+    private void LoadModel()
+    {
+        List<string> lines = new List<string>();
+        string line;
+        System.IO.StreamReader file = new StreamReader(gameManager.PathToGridFile);
+        while ((line = file.ReadLine()) != null)
         {
-            GameObject WallObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            WallObject.transform.parent = canvas.transform;
-            
-            WallObject.transform.Rotate(wall.Rotation);
-            WallObject.transform.localPosition = wall.LocalPosition;
-            WallObject.transform.localScale = wall.LocalScale;
-            WallObject.name = "Wall";
+            lines.Add(line);
         }
-        foreach (Gate gate in model.Gates)
+        gridChars = new char[lines.Count][];
+        int counter = 0;
+        foreach (string row in lines)
         {
-            GameObject GateObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            GateObject.transform.parent = canvas.transform;
+            gridChars[counter] = row.ToCharArray();
+            counter++;
+        }
+        Debug.Log(gridChars);
+        file.Close();
+    }
 
-            GateObject.transform.Rotate(gate.Rotation);
-            GateObject.transform.localPosition = gate.LocalPosition;
-            GateObject.transform.localScale = gate.LocalScale;
-            GateObject.name = "Gate";
-            GateObject.GetComponent<Renderer>().material.color = new Color(0, 1, 0);
-            GateObject.GetComponent<Renderer>().material.shader = Shader.Find("Sprites/Default");
-            GateObject.GetComponent<BoxCollider>().isTrigger = true;
-            Vector3 size = GateObject.GetComponent<BoxCollider>().size;
-            GateObject.GetComponent<BoxCollider>().size = new Vector3(size.x * 10, 1.5f*size.y);
-            GateObject.AddComponent<GateOpen>();
-          
+    private void LoadPrefabs()
+    {
+        Vector3 canvasLocalScale = Canvas.transform.localScale;
+        int xScale = gridChars[0].Length;
+        int yScale = gridChars.Length;
+        Canvas.transform.localScale = new Vector3(canvasLocalScale.x * xScale, canvasLocalScale.y * yScale, canvasLocalScale.z);
+        for (int j = 0; j < gridChars.Length; j++)
+        {
+            for (int i = 0; i < gridChars[j].Length; i++)
+            {
+                GameObject newObject = null;
+                switch (gridChars[j][i])
+                {
+                    case '|':
+                    {
+                        newObject = Instantiate(Resources.Load("Prefabs/" + "WallVertical", typeof(GameObject))) as GameObject;
+                    } break;
+                    case '-':
+                    {
+                        newObject = Instantiate(Resources.Load("Prefabs/" + "WallHorizontal", typeof(GameObject))) as GameObject;
+                    }
+                    break;
+                }
+                if (newObject != null)
+                {
+                    newObject.transform.position = new Vector3(i - xScale/2, j - yScale/2, -1);
+                }
+            }
         }
     }
-
-    #region XML Deserialization
-    private Model DeserializeModel(string filename)
-    {
-        // Creates an instance of the XmlSerializer class;
-        // specifies the type of object to be deserialized.
-        XmlSerializer serializer = new XmlSerializer(typeof(Model));
-        // If the XML document has been altered with unknown 
-        // nodes or attributes, handles them with the 
-        // UnknownNode and UnknownAttribute events.
-        serializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
-        serializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
-
-        // A FileStream is needed to read the XML document.
-        FileStream fs = new FileStream(filename, FileMode.Open);
-        
-        return (Model) serializer.Deserialize(fs);
-    }
-
-    private void serializer_UnknownNode(object sender, XmlNodeEventArgs e)
-    {
-        Debug.Log("Unknown Node:" + e.Name + "\t" + e.Text);
-    }
-
-    private void serializer_UnknownAttribute
-    (object sender, XmlAttributeEventArgs e)
-    {
-        System.Xml.XmlAttribute attr = e.Attr;
-        Debug.Log("Unknown attribute " + attr.Name + "='" + attr.Value + "'");
-    }
-    #endregion
 }
