@@ -74,9 +74,12 @@ public class GridManager : MonoBehaviour
             GameObject HitObject = hit.transform.gameObject;
             if (replacePhase)
             {
-                UnityEngine.Object item = allResources.FindByName(HitObject.name);
-                GameObject newObject = Instantiate(item) as GameObject;
-                newObject.name = item.name;
+                if (HitsChildOf(PanelStart, HitObject))
+                {
+                    UnityEngine.Object item = allResources.FindByName(HitObject.name);
+                    GameObject newObject = Instantiate(item) as GameObject;
+                    newObject.name = item.name;
+                }
             }
             else
             {

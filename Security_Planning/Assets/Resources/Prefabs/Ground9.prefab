@@ -38,6 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4390541227112174}
   - component: {fileID: 212910999421317408}
+  - component: {fileID: 65820024541822032}
   m_Layer: 0
   m_Name: Ground9
   m_TagString: Untagged
@@ -191,6 +192,18 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65820024541822032
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1839123584657592}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65958390758527904
 BoxCollider:
