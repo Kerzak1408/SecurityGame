@@ -17,6 +17,7 @@ public class GridManager : MonoBehaviour
     private GameObject[,] GridObjects;
     private UnityEngine.Object[] allResources;
     private GameObject HoveredObject;
+    private GameObject ClickedObject;
 
     private int width;
     private int height;
@@ -40,9 +41,19 @@ public class GridManager : MonoBehaviour
                 GameObject newObject = Instantiate(emptySquare, transform) as GameObject;
                 GridObjects[i, j] = newObject;
                 newObject.transform.position = new Vector3(j - width / 2, i - height / 2, 0);
-                newObject.AddComponent<BoxCollider>();
             }
-	}
+
+        Vector3 currentPosition = PanelStart.transform.position;
+        foreach (UnityEngine.Object item in allResources)
+        {
+            GameObject newObject = Instantiate(item) as GameObject;
+            newObject.transform.position = currentPosition;
+            newObject.transform.parent = Tiles.transform;
+            newObject.transform.localScale *= 4;
+            newObject.name = item.name;
+            currentPosition.x += 8;
+        }
+    }
 	
 	// Update is called once per frame
 	private void Update ()
@@ -74,11 +85,18 @@ public class GridManager : MonoBehaviour
             GameObject HitObject = hit.transform.gameObject;
             if (replacePhase)
             {
-                if (HitsChildOf(PanelStart, HitObject))
+                if (HitsChildOf(Tiles, HitObject))
                 {
                     UnityEngine.Object item = allResources.FindByName(HitObject.name);
                     GameObject newObject = Instantiate(item) as GameObject;
                     newObject.name = item.name;
+                    Tuple<int,int> coords = GridObjects.GetIndices(ClickedObject);
+                    newObject.transform.position = ClickedObject.transform.position;
+                    newObject.transform.parent = ClickedObject.transform.parent;
+                    GridObjects[coords.First, coords.Second] = newObject;
+                    Panel.SetActive(false);
+                    Destroy(ClickedObject);
+                    replacePhase = false;
                 }
             }
             else
@@ -87,19 +105,11 @@ public class GridManager : MonoBehaviour
                 
                 Debug.Log("Mouse button up");
                 HitObject.GetComponent<Renderer>().material.color = Color.red;
+                ClickedObject = HitObject;
                 replacePhase = true;
 
                 Panel.SetActive(true);
-                Vector3 currentPosition = PanelStart.transform.position;
-                foreach (UnityEngine.Object item in allResources)
-                {
-                    GameObject newObject = Instantiate(item) as GameObject;
-                    newObject.transform.position = currentPosition;
-                    newObject.transform.parent = Tiles.transform;
-                    newObject.transform.localScale *= 4;
-                    newObject.name = item.name;
-                    currentPosition.x += 8;
-                }
+
             }
         }
     }
