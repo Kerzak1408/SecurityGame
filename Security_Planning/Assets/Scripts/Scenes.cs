@@ -4,9 +4,9 @@ using UnityEngine.SceneManagement;
 
 public class Scenes : MonoBehaviour
 {
-    private const string MAP_EDITOR = "MapEditor";
-    private const string MAIN_MENU = "MainMenu";
-    private const string MAIN_SCENE = "MainScene";
+    public const string MAP_EDITOR = "MapEditor";
+    public const string MAIN_MENU = "MainMenu";
+    public const string MAIN_SCENE = "MainScene";
 
     private static Dictionary<string, string> Parameters { get; set; }
 
@@ -37,5 +37,10 @@ public class Scenes : MonoBehaviour
     public void LoadEditor()
     {
         Load(MAP_EDITOR);
+    }
+
+    public void LoadMainMenu()
+    {
+        Load(MAIN_MENU);
     }
 }
