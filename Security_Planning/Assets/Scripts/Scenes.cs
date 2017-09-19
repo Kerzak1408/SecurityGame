@@ -7,6 +7,7 @@ public class Scenes : MonoBehaviour
     public const string MAP_EDITOR = "MapEditor";
     public const string MAIN_MENU = "MainMenu";
     public const string MAIN_SCENE = "MainScene";
+    public const string MAP_CHOICE_SCREEN = "MapChoiceScreen";
 
     private static Dictionary<string, string> Parameters { get; set; }
 
@@ -42,5 +43,10 @@ public class Scenes : MonoBehaviour
     public void LoadMainMenu()
     {
         Load(MAIN_MENU);
+    }
+
+    public void LoadMapChoiceScreen()
+    {
+        Load(MAP_CHOICE_SCREEN);
     }
 }

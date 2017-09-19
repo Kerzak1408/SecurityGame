@@ -83,6 +83,7 @@
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\Enums\Axis.cs" />
     <Compile Include="Assets\Scripts\Extensions\ArrayExtensions.cs" />
+    <Compile Include="Assets\Scripts\Extensions\GameObjectExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\ObjectExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\UIExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\VectorExtensions.cs" />
@@ -91,6 +92,8 @@
     <Compile Include="Assets\Scripts\Guard.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
     <Compile Include="Assets\Scripts\MapEditor\GridManager.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\GridsBrowserBase.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\MapChoiceManager.cs" />
     <Compile Include="Assets\Scripts\Menu\ChooseFile.cs" />
     <Compile Include="Assets\Scripts\Scenes.cs" />
     <Compile Include="Assets\Scripts\Serialization\Serializer.cs" />

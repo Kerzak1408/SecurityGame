@@ -48,6 +48,16 @@ public class Serializer {
         return Serialize(nameMatrix);
     }
 
+    public byte[] SerializeEntities(Dictionary<Tuple<int,int>, GameObject> serializedDictionary)
+    {
+        var nameDictionary = new Dictionary<Tuple<int, int>, string>();
+        foreach (KeyValuePair<Tuple<int, int>, GameObject> kvPair in serializedDictionary)
+        {
+            nameDictionary.Add(kvPair.Key, kvPair.Value.name);
+        }
+        return Serialize(nameDictionary);
+    }
+
     public T Deserialize<T>(FileStream fileStream)
     {
         return (T) binaryFormatter.Deserialize(fileStream);

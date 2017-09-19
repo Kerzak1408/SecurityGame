@@ -6,73 +6,56 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class GridManager : MonoBehaviour
+public class GridManager : GridsBrowserBase
 {
-
     public InputField InputWidth;
     public InputField InputHeight;
     public InputField InputName;
     public Text TextError;
-    public GameObject Grids;
+    
     public GameObject Panel;
     public GameObject PanelStart;
     public GameObject Tiles;
-    public GameObject ScrollView;
-    public GameObject ScrollViewContent;
+
+    public GameObject PanelEntities;
+    public GameObject PanelEntitiesStart;
+    public GameObject Entities;
+
     public GameObject ButtonAddMap;
     public GameObject PanelNewMapForm;
     public GameObject Canvas;
-
-    private Dictionary<Button, GameObject[,]> GridsDictionary;
-    private Dictionary<Button, GameObject> GridsParentsDictionary;
     
     private GameObject HoveredObject;
     private GameObject ClickedObject;
-    private Button SelectedMapButton;
+
     private Selectable SelectedInputField;
-
-    private bool replacePhase;
-    private Vector3 previousMousePosition;
-    private float cameraPreviousSize;
-    private float cameraOriginalSize;
-
-    private string MAPS_PATH;
+    
 
     // Use this for initialization
-    private void Start ()
+    protected override void Start ()
     {
-        GridsDictionary = new Dictionary<Button, GameObject[,]>();
-        GridsParentsDictionary = new Dictionary<Button, GameObject>();
-        MAPS_PATH = Application.persistentDataPath + "/Maps";
-        if (!Directory.Exists(MAPS_PATH))
-        {
-            Directory.CreateDirectory(MAPS_PATH);
-        }
-        var info = new DirectoryInfo(MAPS_PATH);
-        var fileInfo = info.GetFiles();
-        foreach (var file in fileInfo)
-        {
-            Button addedButton = AddMapButton(file.Name.Replace('_',' '), Color.white);
-            LoadMap(file.FullName, addedButton);
-        }
-        
-        cameraOriginalSize = cameraPreviousSize = Camera.main.orthographicSize;
+        base.Start();
         
         InputWidth.onValidateInput += NumberValidationFunction;
         InputHeight.onValidateInput += NumberValidationFunction;
 
-        Vector3 currentPosition = PanelStart.transform.position;
-        foreach (UnityEngine.Object item in ResourcesHolder.Instance.AllTiles)
-        {
-            GameObject newObject = Instantiate(item) as GameObject;
-            newObject.transform.position = currentPosition;
-            newObject.transform.parent = Tiles.transform;
-            newObject.transform.localScale *= 4;
-            newObject.name = item.name;
-            currentPosition.x += 8;
-        }
+        InitializePanelGroup(ResourcesHolder.Instance.AllTiles, PanelStart.transform.position, Tiles);
+        InitializePanelGroup(ResourcesHolder.Instance.AllEntities, PanelEntitiesStart.transform.position, Entities);
 
     }
+
+    private void InitializePanelGroup(UnityEngine.Object[] objects, Vector3 startingPosition, GameObject parent)
+    {
+        foreach (UnityEngine.Object item in objects)
+        {
+            GameObject newObject = Instantiate(item) as GameObject;
+            newObject.transform.position = startingPosition;
+            newObject.transform.parent = parent.transform;
+            newObject.transform.localScale *= 4;
+            newObject.name = item.name;
+            startingPosition.x += 8;
+        }
+    } 
 
     private void InitializeGrid(int width, int height, Button button)
     {
@@ -80,6 +63,7 @@ public class GridManager : MonoBehaviour
         UnityEngine.Object emptySquare = allTiles.FindByName("Ground0");
         var newGrid = new GameObject[height, width];
         GridsDictionary.Add(button, newGrid);
+        AdditionalObjects.Add(button, new Dictionary<Tuple<int, int>, GameObject>());
         var newParent = new GameObject();
         newParent.transform.parent = Grids.transform;
         GridsParentsDictionary.Add(button, newParent);
@@ -96,7 +80,7 @@ public class GridManager : MonoBehaviour
     }
 	
 	// Update is called once per frame
-	private void Update ()
+	protected override void Update ()
     {
         Debug.Log("Panel New Map Form active: " + PanelNewMapForm.activeInHierarchy);
         if (PanelNewMapForm.activeInHierarchy)
@@ -119,42 +103,31 @@ public class GridManager : MonoBehaviour
             float scroll = Input.GetAxis("Mouse ScrollWheel");
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (replacePhase)
+            if (Panel.activeInHierarchy)
             {
                 if (scroll != 0)
                 {
-                    ScrollLogicReplacePhase(scroll, ray);
+                    ScrollLogicReplacePhase(scroll, ray, Tiles);
                 }
                 if (Input.GetMouseButtonUp(0))
                 {
                     LeftButtonUpLogicReplacePhase(ray);
                 }
             }
-            else
+            else if (PanelEntities.activeInHierarchy)
             {
                 if (scroll != 0)
                 {
-                    ScrollLogicNormalPhase(scroll, ray);
+                    ScrollLogicReplacePhase(scroll, ray, Entities);
                 }
-                if (Input.GetMouseButtonDown(1))
+                if (Input.GetMouseButtonUp(0))
                 {
-                    previousMousePosition = Input.mousePosition;
-                    HoverEnded();
+                    LeftButtonUpLogicEntityPhase(ray);
                 }
-                else if (Input.GetMouseButton(1))
-                {
-                    Vector3 delta = Input.mousePosition - previousMousePosition;
-                    previousMousePosition = Input.mousePosition;
-                    Camera.main.transform.position -= 0.02f * delta;
-                }
-                else if (Input.GetMouseButtonUp(0))
-                {
-                    LeftButtonUpLogicNormalPhase(ray);
-                }
-                else
-                {
-                    HoverLogic(ray);
-                }
+            }
+            else
+            {
+                base.Update();
             }
         }
     }
@@ -166,7 +139,7 @@ public class GridManager : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             GameObject HitObject = hit.transform.gameObject;
-            if (HitsChildOf(Tiles, HitObject))
+            if (HitObject.IsEqualToChildOf(Tiles))
             {
                 UnityEngine.Object item = ResourcesHolder.Instance.AllTiles.FindByName(HitObject.name);
                 GameObject newObject = Instantiate(item) as GameObject;
@@ -178,19 +151,46 @@ public class GridManager : MonoBehaviour
                 currentGrid[coords.First, coords.Second] = newObject;
                 Panel.SetActive(false);
                 Destroy(ClickedObject);
-                replacePhase = false;
                 Canvas.SetActive(true);
             }
-        } else
+        }
+        else
         {
             Panel.SetActive(false);
-            replacePhase = false;
             Canvas.SetActive(true);
-        }
-            
+        }  
     }
 
-    private void LeftButtonUpLogicNormalPhase(Ray ray)
+    private void LeftButtonUpLogicEntityPhase(Ray ray)
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            GameObject HitObject = hit.transform.gameObject;
+            if (HitObject.IsEqualToChildOf(Entities))
+            {
+                UnityEngine.Object item = ResourcesHolder.Instance.AllEntities.FindByName(HitObject.name);
+                GameObject newObject = Instantiate(item) as GameObject;
+                newObject.name = item.name;
+                var currentGrid = GridsDictionary[SelectedMapButton];
+                var currentDictionary = AdditionalObjects[SelectedMapButton];
+                Tuple<int, int> coords = currentGrid.GetIndices(ClickedObject);
+                newObject.transform.position = ClickedObject.transform.position;
+                newObject.transform.parent = ClickedObject.transform.parent;
+                currentDictionary.Add(coords, newObject);
+                PanelEntities.SetActive(false);
+                Canvas.SetActive(true);
+            } 
+        }
+        else
+        {
+            PanelEntities.SetActive(false);
+            Canvas.SetActive(true);
+        }
+    }
+
+    protected override void LeftButtonUpLogicNormalPhase(Ray ray)
     {
 
         RaycastHit hit;
@@ -204,7 +204,6 @@ public class GridManager : MonoBehaviour
             Debug.Log("Mouse button up");
             HitObject.GetComponent<Renderer>().material.color = Color.red;
             ClickedObject = HitObject;
-            replacePhase = true;
             Canvas.SetActive(false);
             var buttonText = SelectedMapButton.GetComponentInChildren<Text>().text;
             if (buttonText[buttonText.Length-1] != '*')
@@ -220,9 +219,21 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private void HoverLogic(Ray ray)
+    protected override void RightButtonUpLogicNormalPhase(Ray ray)
     {
-        if (replacePhase)
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            ClickedObject = hit.transform.gameObject;
+        }
+        PanelEntities.SetActive(true);
+        Canvas.SetActive(false);
+
+    }
+
+    protected override void HoverLogic(Ray ray)
+    {
+        if (Panel.activeInHierarchy)
         {
 
         }
@@ -237,7 +248,7 @@ public class GridManager : MonoBehaviour
                 {
                     HoverEnded();
                     var currentParent = GridsParentsDictionary[SelectedMapButton];
-                    if (HitsChildOf(currentParent, HitObject))
+                    if (HitObject.IsEqualToChildOf(currentParent))
                     {
                         Debug.Log("Mouse hovering");
                         HoveredObject = HitObject;
@@ -255,7 +266,7 @@ public class GridManager : MonoBehaviour
         
     }
 
-    private void HoverEnded()
+    protected override void HoverEnded()
     {
         if (HoveredObject != null)
         {
@@ -264,62 +275,17 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private bool HitsChildOf(GameObject gameObject, GameObject hitObject)
-    {
-        foreach (Transform transform in gameObject.transform)
-        {
-            if (transform.gameObject == hitObject)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private bool HitsChildOfRecursively(GameObject gameObject, GameObject hitObject)
-    {
-        foreach (Transform transform in gameObject.transform)
-        {
-            if (transform.gameObject == hitObject)
-            {
-                return true;
-            }
-            if (HitsChildOfRecursively(transform.gameObject, hitObject))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void ScrollLogicReplacePhase(float scroll, Ray ray)
+    private void ScrollLogicReplacePhase(float scroll, Ray ray, GameObject scrolledObject)
     {
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
         {
-            Tiles.transform.position += new Vector3(Camera.main.orthographicSize/cameraOriginalSize *  25 * scroll, 0, 0);
+            scrolledObject.transform.position += new Vector3(Camera.main.orthographicSize/cameraOriginalSize *  25 * scroll, 0, 0);
         }
     }
 
-    private void ScrollLogicNormalPhase(float scroll, Ray ray)
-    {
-        RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit))
-        {
-            GameObject HitObject = hit.transform.gameObject;
-            if (!HitsChildOfRecursively(ScrollView, HitObject))
-            {
-                float potentiallyNewSize = Camera.main.orthographicSize - scroll;
-                if (potentiallyNewSize > 1 && potentiallyNewSize < 20)
-                {
-                    Camera.main.orthographicSize = potentiallyNewSize;
-                }
-            }
-        }
-
-    }
 
     private char NumberValidationFunction(string text, int charIndex, char addedChar)
     {
@@ -331,14 +297,7 @@ public class GridManager : MonoBehaviour
         return '\0';
     }
 
-    private void HideCurrentMap()
-    {
-        if (SelectedMapButton != null)
-        {
-            var currentParent = GridsParentsDictionary[SelectedMapButton];
-            currentParent.SetActive(false);
-        }
-    }
+
 
     public void SaveMap()
     {
@@ -357,6 +316,15 @@ public class GridManager : MonoBehaviour
         var binaryWriter = new BinaryWriter(new FileStream(MAPS_PATH + "/" + currentMapName, FileMode.Create));
         binaryWriter.Write(serializedMap);
         binaryWriter.Close();
+        if (!Directory.Exists(ENTITIES_PATH))
+        {
+            Directory.CreateDirectory(ENTITIES_PATH);
+        }
+        byte[] serializedEntities = Serializer.Instance.SerializeEntities(AdditionalObjects[SelectedMapButton]);
+        binaryWriter = new BinaryWriter(new FileStream(ENTITIES_PATH + "/" + currentMapName, FileMode.Create));
+        binaryWriter.Write(serializedEntities);
+        binaryWriter.Close();
+
         SelectedMapButton.ChangeColor(MyColors.LIGHT_SKY_BLUE);
     }
 
@@ -436,54 +404,8 @@ public class GridManager : MonoBehaviour
         PanelNewMapForm.SetActive(false);
     }
 
-    private Button AddMapButton(string name, Color color)
-    {
-        Button newMap = UnityEngine.UI.Button.Instantiate(ResourcesHolder.Instance.MapButton);
-        newMap.transform.parent = ScrollViewContent.transform;
-        newMap.GetComponent<Image>().color = color;
-        newMap.onClick.AddListener(SelectMap);
-        newMap.GetComponentInChildren<Text>().text = name;
-        return newMap;
-    }
 
-    private void SelectMap()
-    {
-        if (SelectedMapButton != null)
-        {
-            SelectedMapButton.GetComponent<Image>().color = Color.white;
-            HideCurrentMap();
-        }
-        SelectedMapButton = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
-        SelectedMapButton.GetComponent<Image>().color = MyColors.LIGHT_SKY_BLUE;
-        GridsParentsDictionary[SelectedMapButton].SetActive(true);
-    }
 
-    private void LoadMap(string fileName, Button correspondingButton)
-    {
-        var fileStream = new FileStream(fileName, FileMode.Open);
-        var namesMatrix = Serializer.Instance.Deserialize<String[,]>(fileStream);
-        fileStream.Close();
-        var allTiles = ResourcesHolder.Instance.AllTiles;
 
-        int width = namesMatrix.GetLength(1);
-        int height = namesMatrix.GetLength(0);
-        var loadedGrid = new GameObject[height, width];
-        GameObject emptyParent = new GameObject();
-        emptyParent.transform.parent = Grids.transform;
-        emptyParent.SetActive(false);
-        for (int i = 0; i < height; i++)
-            for (int j = 0; j < width; j++)
-            {
-                string currentName = namesMatrix[i, j];
-                var newTile = allTiles.FindByName(currentName);
-                GameObject newObject = Instantiate(newTile, transform) as GameObject;
-                loadedGrid[i, j] = newObject;
-                newObject.transform.position = new Vector3(j - width / 2, i - height / 2, 0);
-                newObject.name = newTile.name;
-                newObject.transform.parent = emptyParent.transform;
-            }
-        GridsDictionary.Add(correspondingButton, loadedGrid);
-        GridsParentsDictionary.Add(correspondingButton, emptyParent);
-    }
 
 }

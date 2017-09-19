@@ -1,10 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class Tuple<T1, T2>
 {
+    [SerializeField]
     public T1 First { get; private set; }
+    [SerializeField]
     public T2 Second { get; private set; }
     internal Tuple(T1 first, T2 second)
     {
