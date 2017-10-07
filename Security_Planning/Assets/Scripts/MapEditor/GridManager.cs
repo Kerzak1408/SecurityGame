@@ -53,6 +53,7 @@ public class GridManager : GridsBrowserBase
             newObject.transform.parent = parent.transform;
             newObject.transform.localScale *= 4;
             newObject.name = item.name;
+            newObject.AddComponent<BoxCollider>();
             startingPosition.x += 8;
         }
     } 
@@ -141,6 +142,7 @@ public class GridManager : GridsBrowserBase
             GameObject HitObject = hit.transform.gameObject;
             if (HitObject.IsEqualToChildOf(Tiles))
             {
+                FlagCurrentButton();
                 UnityEngine.Object item = ResourcesHolder.Instance.AllTiles.FindByName(HitObject.name);
                 GameObject newObject = Instantiate(item) as GameObject;
                 newObject.name = item.name;
@@ -170,6 +172,7 @@ public class GridManager : GridsBrowserBase
             GameObject HitObject = hit.transform.gameObject;
             if (HitObject.IsEqualToChildOf(Entities))
             {
+                FlagCurrentButton();
                 UnityEngine.Object item = ResourcesHolder.Instance.AllEntities.FindByName(HitObject.name);
                 GameObject newObject = Instantiate(item) as GameObject;
                 newObject.name = item.name;
@@ -190,6 +193,15 @@ public class GridManager : GridsBrowserBase
         }
     }
 
+    private void FlagCurrentButton()
+    {
+        var buttonText = SelectedMapButton.GetComponentInChildren<Text>().text;
+        if (buttonText[buttonText.Length - 1] != '*')
+        {
+            SelectedMapButton.GetComponentInChildren<Text>().text += "*";
+        }
+    }
+
     protected override void LeftButtonUpLogicNormalPhase(Ray ray)
     {
 
@@ -205,13 +217,6 @@ public class GridManager : GridsBrowserBase
             HitObject.GetComponent<Renderer>().material.color = Color.red;
             ClickedObject = HitObject;
             Canvas.SetActive(false);
-            var buttonText = SelectedMapButton.GetComponentInChildren<Text>().text;
-            if (buttonText[buttonText.Length-1] != '*')
-            {
-                SelectedMapButton.GetComponentInChildren<Text>().text += "*";
-            }
-            
-
             Panel.SetActive(true);
             Panel.transform.localScale *= Camera.main.orthographicSize / cameraPreviousSize;
             cameraPreviousSize = Camera.main.orthographicSize;

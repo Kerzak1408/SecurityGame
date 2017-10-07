@@ -58,8 +58,11 @@ public class Serializer {
         return Serialize(nameDictionary);
     }
 
-    public T Deserialize<T>(FileStream fileStream)
+    public T Deserialize<T>(string filename)
     {
-        return (T) binaryFormatter.Deserialize(fileStream);
+        var fileStream = new FileStream(filename, FileMode.Open);
+        var result = (T) binaryFormatter.Deserialize(fileStream);
+        fileStream.Close();
+        return result;
     }
 }

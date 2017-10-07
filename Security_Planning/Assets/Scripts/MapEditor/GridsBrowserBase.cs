@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public abstract class GridsBrowserBase : MonoBehaviour
+public abstract class GridsBrowserBase : GridBase
 {
 
     public GameObject Grids;
@@ -14,11 +14,11 @@ public abstract class GridsBrowserBase : MonoBehaviour
 
     protected Dictionary<Button, GameObject[,]> GridsDictionary;
     protected Dictionary<Button, GameObject> GridsParentsDictionary;
-    protected Dictionary<Button, Dictionary<Tuple<int,int>, GameObject>> AdditionalObjects;
+    protected Dictionary<Button, Dictionary<Tuple<int, int>, GameObject>> AdditionalObjects;
+
     protected Button SelectedMapButton;
 
-    protected string MAPS_PATH;
-    protected string ENTITIES_PATH;
+
 
     protected float cameraPreviousSize;
     protected float cameraOriginalSize;
@@ -26,12 +26,12 @@ public abstract class GridsBrowserBase : MonoBehaviour
     private Vector3 previousMousePosition;
 
     // Use this for initialization
-    protected virtual void Start () {
+    protected override void Start () {
+        base.Start();
         GridsDictionary = new Dictionary<Button, GameObject[,]>();
         GridsParentsDictionary = new Dictionary<Button, GameObject>();
         AdditionalObjects = new Dictionary<Button, Dictionary<Tuple<int, int>, GameObject>>();
-        MAPS_PATH = Application.persistentDataPath + "/Maps";
-        ENTITIES_PATH = Application.persistentDataPath + "/Entities";
+
 
         if (!Directory.Exists(MAPS_PATH))
         {
@@ -42,7 +42,7 @@ public abstract class GridsBrowserBase : MonoBehaviour
         foreach (var file in fileInfo)
         {
             Button addedButton = AddMapButton(file.Name.Replace('_', ' '), Color.white);
-            LoadMap(file, addedButton);
+            LoadMap(file.Name, addedButton);
         }
         cameraOriginalSize = cameraPreviousSize = Camera.main.orthographicSize;
     }
@@ -120,50 +120,7 @@ public abstract class GridsBrowserBase : MonoBehaviour
         return newMap;
     }
 
-    protected virtual void LoadMap(FileInfo fileInfo, Button correspondingButton)
-    {
-        var fileStream = new FileStream(fileInfo.FullName, FileMode.Open);
-        var namesMatrix = Serializer.Instance.Deserialize<string[,]>(fileStream);
-        fileStream.Close();
-        fileStream = new FileStream(ENTITIES_PATH + "/" + fileInfo.Name, FileMode.Open);
-        var namesDictionary = Serializer.Instance.Deserialize<Dictionary<Tuple<int, int>, string>>(fileStream);
-        fileStream.Close();
-        var allTiles = ResourcesHolder.Instance.AllTiles;
-
-        int width = namesMatrix.GetLength(1);
-        int height = namesMatrix.GetLength(0);
-        var loadedGrid = new GameObject[height, width];
-        GameObject emptyParent = new GameObject();
-        emptyParent.transform.parent = Grids.transform;
-        emptyParent.SetActive(false);
-        for (int i = 0; i < height; i++)
-            for (int j = 0; j < width; j++)
-            {
-                string currentName = namesMatrix[i, j];
-                var newTile = allTiles.FindByName(currentName);
-                GameObject newObject = Instantiate(newTile, transform) as GameObject;
-                loadedGrid[i, j] = newObject;
-                newObject.transform.position = new Vector3(j - width / 2, i - height / 2, 0);
-                newObject.name = newTile.name;
-                newObject.transform.parent = emptyParent.transform;
-            }
-        GridsDictionary.Add(correspondingButton, loadedGrid);
-        GridsParentsDictionary.Add(correspondingButton, emptyParent);
-
-
-        var allEntities = ResourcesHolder.Instance.AllEntities;
-        var dictionary = new Dictionary<Tuple<int, int>, GameObject>();
-        foreach (KeyValuePair<Tuple<int, int>, string> kvPair in namesDictionary)
-        {
-            var currentName = kvPair.Value;
-            var newEntity = allEntities.FindByName(currentName);
-            GameObject newObject = Instantiate(newEntity, transform) as GameObject;
-            newObject.transform.position = new Vector3(kvPair.Key.Second - width / 2, kvPair.Key.First - height / 2, -1);
-            newObject.transform.parent = emptyParent.transform;
-            dictionary.Add(kvPair.Key, newObject);
-        }
-        AdditionalObjects.Add(correspondingButton, dictionary);
-    }
+    
 
     protected void HideCurrentMap()
     {
@@ -181,4 +138,14 @@ public abstract class GridsBrowserBase : MonoBehaviour
     protected abstract void RightButtonUpLogicNormalPhase(Ray ray);
 
     protected abstract void HoverLogic(Ray ray);
+
+    protected override Map LoadMap(string mapName, Button correspondingButton, bool mapVisible = false)
+    {
+        var map = base.LoadMap(mapName, correspondingButton);
+        map.EmptyParent.transform.parent = Grids.transform;
+        GridsDictionary.Add(correspondingButton, map.Tiles);
+        GridsParentsDictionary.Add(correspondingButton, map.EmptyParent);
+        AdditionalObjects.Add(correspondingButton, map.Entities);
+        return map;
+    }
 }

@@ -504,7 +504,7 @@ GameObject:
   - component: {fileID: 255403959}
   - component: {fileID: 255403962}
   m_Layer: 5
-  m_Name: ButtonMenu
+  m_Name: Button_Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -939,7 +939,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1646767486}
   m_Direction: 0
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1362,7 +1362,7 @@ GameObject:
   - component: {fileID: 895877847}
   - component: {fileID: 895877846}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Button_Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1425,7 +1425,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 895877847}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2042591919}
+        m_MethodName: LoadGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &895877847
@@ -1895,7 +1906,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 228887397}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.7571428
+  m_Size: 0.7571427
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3061,6 +3072,9 @@ MonoBehaviour:
   Panel: {fileID: 1929198242}
   PanelStart: {fileID: 1678323076}
   Tiles: {fileID: 1105466323}
+  PanelEntities: {fileID: 0}
+  PanelEntitiesStart: {fileID: 0}
+  Entities: {fileID: 0}
   ButtonAddMap: {fileID: 0}
   PanelNewMapForm: {fileID: 496967870}
   Canvas: {fileID: 748297384}

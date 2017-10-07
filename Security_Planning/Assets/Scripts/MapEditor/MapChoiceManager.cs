@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MapChoiceManager : GridsBrowserBase {
 
@@ -31,4 +32,9 @@ public class MapChoiceManager : GridsBrowserBase {
 	protected override void Update () {
         base.Update();
 	}
+
+    public void LoadGame()
+    {
+        Scenes.Load(Scenes.MAIN_SCENE, "map", SelectedMapButton.GetComponentInChildren<Text>().text);   
+    }
 }
