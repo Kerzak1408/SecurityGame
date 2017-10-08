@@ -102,7 +102,6 @@
     <Compile Include="Assets\Scripts\Scenes.cs" />
     <Compile Include="Assets\Scripts\Serialization\Serializer.cs" />
     <Compile Include="Assets\Scripts\UI\MyColors.cs" />
-    <Compile Include="Assets\Scripts\XmlFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Maps\BuildingGrid.txt" />

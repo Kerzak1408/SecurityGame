@@ -29,6 +29,8 @@ public class GridManager : GridsBrowserBase
     private GameObject ClickedObject;
 
     private Selectable SelectedInputField;
+
+    private Vector3 originalPanelScale;
     
 
     // Use this for initialization
@@ -42,6 +44,7 @@ public class GridManager : GridsBrowserBase
         InitializePanelGroup(ResourcesHolder.Instance.AllTiles, PanelStart.transform.position, Tiles);
         InitializePanelGroup(ResourcesHolder.Instance.AllEntities, PanelEntitiesStart.transform.position, Entities);
 
+        originalPanelScale = Panel.transform.localScale;
     }
 
     private void InitializePanelGroup(UnityEngine.Object[] objects, Vector3 startingPosition, GameObject parent)
@@ -155,6 +158,11 @@ public class GridManager : GridsBrowserBase
                 Destroy(ClickedObject);
                 Canvas.SetActive(true);
             }
+            else
+            {
+                Panel.SetActive(false);
+                Canvas.SetActive(true);
+            }
         }
         else
         {
@@ -185,6 +193,11 @@ public class GridManager : GridsBrowserBase
                 PanelEntities.SetActive(false);
                 Canvas.SetActive(true);
             } 
+            else
+            {
+                PanelEntities.SetActive(false);
+                Canvas.SetActive(true);
+            }
         }
         else
         {
@@ -204,13 +217,11 @@ public class GridManager : GridsBrowserBase
 
     protected override void LeftButtonUpLogicNormalPhase(Ray ray)
     {
-
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
         {
             GameObject HitObject = hit.transform.gameObject;
-
             HoverEnded();
                 
             Debug.Log("Mouse button up");
@@ -218,10 +229,17 @@ public class GridManager : GridsBrowserBase
             ClickedObject = HitObject;
             Canvas.SetActive(false);
             Panel.SetActive(true);
-            Panel.transform.localScale *= Camera.main.orthographicSize / cameraPreviousSize;
-            cameraPreviousSize = Camera.main.orthographicSize;
+            AdjustPanelToCamera(Panel);
 
         }
+    }
+
+    private void AdjustPanelToCamera(GameObject panel)
+    {
+        panel.transform.localScale = (Camera.main.orthographicSize / cameraOriginalSize) * originalPanelScale;
+        var cameraPosition = Camera.main.transform.position;
+        panel.transform.position = new Vector3(cameraPosition.x, cameraPosition.y, 0);
+        cameraPreviousSize = Camera.main.orthographicSize;
     }
 
     protected override void RightButtonUpLogicNormalPhase(Ray ray)
@@ -233,6 +251,7 @@ public class GridManager : GridsBrowserBase
         }
         PanelEntities.SetActive(true);
         Canvas.SetActive(false);
+        AdjustPanelToCamera(PanelEntities);
 
     }
 
@@ -306,6 +325,7 @@ public class GridManager : GridsBrowserBase
 
     public void SaveMap()
     {
+        clickProcessedByUI = true;
         var selectedButtonText =  SelectedMapButton.GetComponentInChildren<Text>().text;
         if (selectedButtonText.Contains("*"))
         {
@@ -335,6 +355,7 @@ public class GridManager : GridsBrowserBase
 
     public void DeleteMap()
     {
+        clickProcessedByUI = true;
         var mapPath = MAPS_PATH + "/" + SelectedMapButton.GetComponentInChildren<Text>().text;
         if (File.Exists(mapPath))
         {
@@ -389,9 +410,6 @@ public class GridManager : GridsBrowserBase
         {
             SelectedMapButton.GetComponent<Image>().color = Color.white;
         }
-        
-       
-        
         SelectedMapButton = AddMapButton(buttonName, MyColors.LIGHT_SKY_BLUE);
 
         InitializeGrid(width, height, SelectedMapButton);

@@ -18,12 +18,13 @@ public abstract class GridsBrowserBase : GridBase
 
     protected Button SelectedMapButton;
 
-
-
     protected float cameraPreviousSize;
     protected float cameraOriginalSize;
+    protected bool clickProcessedByUI;
 
     private Vector3 previousMousePosition;
+
+    
 
     // Use this for initialization
     protected override void Start () {
@@ -55,22 +56,27 @@ public abstract class GridsBrowserBase : GridBase
         {
             ScrollLogicNormalPhase(scroll, ray);
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(2))
         {
             previousMousePosition = Input.mousePosition;
             HoverEnded();
         }
-        else if (Input.GetMouseButton(1))
+        else if (Input.GetMouseButton(2))
         {
             Vector3 delta = Input.mousePosition - previousMousePosition;
             previousMousePosition = Input.mousePosition;
             Camera.main.transform.position -= 0.02f * delta;
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0) && !Input.GetMouseButton(1))
         {
+            if (clickProcessedByUI)
+            {
+                clickProcessedByUI = false;
+                return;
+            }
             LeftButtonUpLogicNormalPhase(ray);
         }
-        else if (Input.GetMouseButtonUp(1))
+        else if (Input.GetMouseButtonUp(1) && !Input.GetMouseButton(0))
         {
             RightButtonUpLogicNormalPhase(ray);
         }
@@ -82,6 +88,7 @@ public abstract class GridsBrowserBase : GridBase
 
     private void SelectMap()
     {
+        clickProcessedByUI = true;
         if (SelectedMapButton != null)
         {
             SelectedMapButton.GetComponent<Image>().color = Color.white;
