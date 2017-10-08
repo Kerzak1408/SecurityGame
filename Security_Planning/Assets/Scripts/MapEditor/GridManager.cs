@@ -239,7 +239,6 @@ public class GridManager : GridsBrowserBase
         panel.transform.localScale = (Camera.main.orthographicSize / cameraOriginalSize) * originalPanelScale;
         var cameraPosition = Camera.main.transform.position;
         panel.transform.position = new Vector3(cameraPosition.x, cameraPosition.y, 0);
-        cameraPreviousSize = Camera.main.orthographicSize;
     }
 
     protected override void RightButtonUpLogicNormalPhase(Ray ray)
@@ -325,7 +324,7 @@ public class GridManager : GridsBrowserBase
 
     public void SaveMap()
     {
-        clickProcessedByUI = true;
+        eventProcessedByUI = true;
         var selectedButtonText =  SelectedMapButton.GetComponentInChildren<Text>().text;
         if (selectedButtonText.Contains("*"))
         {
@@ -355,7 +354,7 @@ public class GridManager : GridsBrowserBase
 
     public void DeleteMap()
     {
-        clickProcessedByUI = true;
+        eventProcessedByUI = true;
         var mapPath = MAPS_PATH + "/" + SelectedMapButton.GetComponentInChildren<Text>().text;
         if (File.Exists(mapPath))
         {
@@ -420,6 +419,7 @@ public class GridManager : GridsBrowserBase
         ButtonAddMap.transform.parent = ScrollViewContent.transform;
         PanelNewMapForm.SetActive(false);
         Grids.SetActive(true);
+        FlagCurrentButton();
     }
 
     public void CancelMapCreation()

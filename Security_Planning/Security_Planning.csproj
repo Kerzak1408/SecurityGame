@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.1f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -81,7 +83,12 @@
     <Compile Include="Assets\Scripts\DataHandlers\ResourcesHolder.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Map.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Tuple.cs" />
-    <Compile Include="Assets\Scripts\Enemy.cs" />
+    <Compile Include="Assets\Scripts\Entities\Characters\BaseCharacter.cs" />
+    <Compile Include="Assets\Scripts\Entities\Characters\Enemy.cs" />
+    <Compile Include="Assets\Scripts\Entities\Characters\Guard.cs" />
+    <Compile Include="Assets\Scripts\Entities\Gates\GateOpen.cs" />
+    <Compile Include="Assets\Scripts\Entities\Gates\PasswordGate.cs" />
+    <Compile Include="Assets\Scripts\Entities\Interfaces\IPasswordOpenable.cs" />
     <Compile Include="Assets\Scripts\Enums\Axis.cs" />
     <Compile Include="Assets\Scripts\Extensions\CollectionsExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\GameObjectExtensions.cs" />
@@ -89,8 +96,6 @@
     <Compile Include="Assets\Scripts\Extensions\UIExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\VectorExtensions.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\GateOpen.cs" />
-    <Compile Include="Assets\Scripts\Guard.cs" />
     <Compile Include="Assets\Scripts\Helpers\FileHelper.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Game.cs" />

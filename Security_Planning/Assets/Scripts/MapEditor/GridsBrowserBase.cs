@@ -17,12 +17,13 @@ public abstract class GridsBrowserBase : GridBase
     protected Dictionary<Button, Dictionary<Tuple<int, int>, GameObject>> AdditionalObjects;
 
     protected Button SelectedMapButton;
-
-    protected float cameraPreviousSize;
+    
     protected float cameraOriginalSize;
-    protected bool clickProcessedByUI;
+    protected bool eventProcessedByUI;
 
     private Vector3 previousMousePosition;
+
+    
 
     
 
@@ -45,15 +46,21 @@ public abstract class GridsBrowserBase : GridBase
             Button addedButton = AddMapButton(file.Name.Replace('_', ' '), Color.white);
             LoadMap(file.Name, addedButton);
         }
-        cameraOriginalSize = cameraPreviousSize = Camera.main.orthographicSize;
+        cameraOriginalSize = Camera.main.orthographicSize;
     }
 	
 	// Update is called once per frame
 	protected virtual void Update () {
+
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (scroll != 0)
         {
+            if (eventProcessedByUI)
+            {
+                eventProcessedByUI = false;
+                return;
+            }
             ScrollLogicNormalPhase(scroll, ray);
         }
         if (Input.GetMouseButtonDown(2))
@@ -69,9 +76,9 @@ public abstract class GridsBrowserBase : GridBase
         }
         else if (Input.GetMouseButtonUp(0) && !Input.GetMouseButton(1))
         {
-            if (clickProcessedByUI)
+            if (eventProcessedByUI)
             {
-                clickProcessedByUI = false;
+                eventProcessedByUI = false;
                 return;
             }
             LeftButtonUpLogicNormalPhase(ray);
@@ -88,7 +95,9 @@ public abstract class GridsBrowserBase : GridBase
 
     private void SelectMap()
     {
-        clickProcessedByUI = true;
+        eventProcessedByUI = true;
+        Camera.main.transform.position = Vector3.zero;
+        Camera.main.orthographicSize = cameraOriginalSize;
         if (SelectedMapButton != null)
         {
             SelectedMapButton.GetComponent<Image>().color = Color.white;
@@ -166,5 +175,10 @@ public abstract class GridsBrowserBase : GridBase
             }
         }
         return map;
+    }
+
+    public void Scrolled()
+    {
+        eventProcessedByUI = true;
     }
 }

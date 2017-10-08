@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class GateOpen : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class GateOpen : MonoBehaviour
     bool isReturning;
     Axis axis;
 
-    private void Start()
+    protected virtual void Start()
     {
         defaultPosition = gate.transform.position;
         lossyScale = gate.transform.lossyScale;
@@ -23,14 +24,13 @@ public class GateOpen : MonoBehaviour
         axis = horizontal ? Axis.X : Axis.Y;
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         Debug.Log("Enter");
-
         isReturning = false;
     }
 
-    private void OnTriggerStay(Collider other)
+    protected virtual void OnTriggerStay(Collider other)
     {
         Debug.Log("Stay");
         bool gateFullyOpen = true;
@@ -47,13 +47,13 @@ public class GateOpen : MonoBehaviour
 
     }
 
-    private void OnTriggerExit(Collider other)
+    protected virtual void OnTriggerExit(Collider other)
     {
         Debug.Log("Exit");
         isReturning = true;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (isReturning)
         {
@@ -74,5 +74,4 @@ public class GateOpen : MonoBehaviour
             }
         }   
     }
-
 }
