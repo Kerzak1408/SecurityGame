@@ -146,6 +146,18 @@ public abstract class GridsBrowserBase : GridBase
         GridsDictionary.Add(correspondingButton, map.Tiles);
         GridsParentsDictionary.Add(correspondingButton, map.EmptyParent);
         AdditionalObjects.Add(correspondingButton, map.Entities);
+        foreach (var entity in map.Entities.Values)
+        {
+            entity.GetComponent<MonoBehaviour>().enabled = false;
+        }
+        foreach (var tile in map.Tiles)
+        {
+            MonoBehaviour script;
+            if (tile != null && (script = tile.GetComponent<MonoBehaviour>()) != null)
+            {
+                script.enabled = false;
+            }
+        }
         return map;
     }
 }

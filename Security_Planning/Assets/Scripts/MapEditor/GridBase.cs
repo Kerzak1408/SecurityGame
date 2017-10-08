@@ -57,7 +57,6 @@ public class GridBase : MonoBehaviour {
         }
         
         return new Map(loadedGrid, dictionary, emptyParent);
-    }
-    
+    }    
    
 }

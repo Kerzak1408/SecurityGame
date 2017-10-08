@@ -35,6 +35,9 @@ public class MapChoiceManager : GridsBrowserBase {
 
     public void LoadGame()
     {
-        Scenes.Load(Scenes.MAIN_SCENE, "map", SelectedMapButton.GetComponentInChildren<Text>().text);   
+        if (SelectedMapButton != null)
+        {
+            Scenes.Load(Scenes.MAIN_SCENE, "map", SelectedMapButton.GetComponentInChildren<Text>().text);
+        }
     }
 }

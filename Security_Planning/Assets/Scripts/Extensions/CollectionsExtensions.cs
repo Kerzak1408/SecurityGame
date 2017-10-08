@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class ArrayExtensions {
+public static class CollectionsExtensions
+{
 
     public static Tuple<int, int> GetIndices<T>(this T[,] array, T item)
     {
@@ -15,6 +16,15 @@ public static class ArrayExtensions {
                 }
             }
         return null;
+    }
+
+    public static T Find<T>(this IEnumerable<T> enumerable)
+    {
+        foreach (T item in enumerable)
+        {
+            
+        }
+        return default(T);
     }
 
 }

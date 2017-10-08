@@ -83,7 +83,7 @@
     <Compile Include="Assets\Scripts\DataStructures\Tuple.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\Enums\Axis.cs" />
-    <Compile Include="Assets\Scripts\Extensions\ArrayExtensions.cs" />
+    <Compile Include="Assets\Scripts\Extensions\CollectionsExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\GameObjectExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\ObjectExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\UIExtensions.cs" />
