@@ -64,10 +64,10 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 6.3499994
-  m_Radius: 0.16
+  m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.05
-  m_SkinWidth: 0.0001
+  m_SkinWidth: 0.001
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!212 &212407480273406846

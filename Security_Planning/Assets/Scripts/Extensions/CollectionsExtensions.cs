@@ -27,4 +27,20 @@ public static class CollectionsExtensions
         return default(T);
     }
 
+    public static string ToStringExtended<T>(this T[] array)
+    {
+        if (array.Length == 0)
+        {
+            return "[]";
+        }
+        var result = "[";
+        for (int i = 0; i < array.Length - 1; i++)
+        {
+            var current = array[i];
+            result += current.ToString() + ", ";
+        }
+        result += array[array.Length - 1] +  "]";
+        return result;
+    }
+
 }

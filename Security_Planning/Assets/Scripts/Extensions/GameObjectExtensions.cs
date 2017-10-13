@@ -31,4 +31,29 @@ public static class GameObjectExtensions {
         }
         return false;
     }
+
+    public static void DeactivateAllScripts(this GameObject gameObject)
+    {
+        var scripts = gameObject.GetComponents<MonoBehaviour>();
+        if (scripts != null)
+        {
+            foreach (var script in scripts)
+            {
+                script.enabled = false;
+            }
+        }
+    }
+
+    public static bool HasScriptOfType<T>(this GameObject gameObject) where T : MonoBehaviour
+    {
+        var potentialScript = gameObject.GetComponent<T>();
+        return potentialScript != null;
+    }
+
+    public static void ChangeColor(this GameObject gameObject, Color color)
+    {
+        var material = gameObject.GetComponent<Renderer>().material;
+        material.color = color;
+        material.SetColor("_EmissionColor", color);
+    }
 }

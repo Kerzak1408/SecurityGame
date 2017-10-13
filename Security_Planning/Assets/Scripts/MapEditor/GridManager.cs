@@ -5,6 +5,8 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Linq;
+using UnityEditor;
 
 public class GridManager : GridsBrowserBase
 {
@@ -24,6 +26,7 @@ public class GridManager : GridsBrowserBase
     public GameObject ButtonAddMap;
     public GameObject PanelNewMapForm;
     public GameObject Canvas;
+    public GameObject PanelPassword;
     
     private GameObject HoveredObject;
     private GameObject ClickedObject;
@@ -31,13 +34,20 @@ public class GridManager : GridsBrowserBase
     private Selectable SelectedInputField;
 
     private Vector3 originalPanelScale;
+    private Color hoveredObjectOriginalColor;
+    private PasswordGate currentPasswordGate;
+
+    private const string EMPTY_SQUARE = "000_Empty";
+    private Tuple<int, int> passwordIndices;
+    private bool clickProcessed;
+    
     
 
     // Use this for initialization
     protected override void Start ()
     {
         base.Start();
-        
+
         InputWidth.onValidateInput += NumberValidationFunction;
         InputHeight.onValidateInput += NumberValidationFunction;
 
@@ -49,9 +59,11 @@ public class GridManager : GridsBrowserBase
 
     private void InitializePanelGroup(UnityEngine.Object[] objects, Vector3 startingPosition, GameObject parent)
     {
+        objects.OrderBy(x => x.name);
         foreach (UnityEngine.Object item in objects)
         {
             GameObject newObject = Instantiate(item) as GameObject;
+            newObject.DeactivateAllScripts();
             newObject.transform.position = startingPosition;
             newObject.transform.parent = parent.transform;
             newObject.transform.localScale *= 4;
@@ -64,13 +76,13 @@ public class GridManager : GridsBrowserBase
     private void InitializeGrid(int width, int height, Button button)
     {
         UnityEngine.Object[] allTiles = ResourcesHolder.Instance.AllTiles;
-        UnityEngine.Object emptySquare = allTiles.FindByName("Ground0");
+        UnityEngine.Object emptySquare = allTiles.FindByName(EMPTY_SQUARE);
         var newGrid = new GameObject[height, width];
-        GridsDictionary.Add(button, newGrid);
-        AdditionalObjects.Add(button, new Dictionary<Tuple<int, int>, GameObject>());
+
         var newParent = new GameObject();
         newParent.transform.parent = Grids.transform;
-        GridsParentsDictionary.Add(button, newParent);
+        var map = new Map(newGrid, new Dictionary<Tuple<int, int>, GameObject>(), newParent, new Dictionary<Tuple<int, int>, string>());
+        MapsDictionary.Add(button, map);
 
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
@@ -86,7 +98,15 @@ public class GridManager : GridsBrowserBase
 	// Update is called once per frame
 	protected override void Update ()
     {
-        Debug.Log("Panel New Map Form active: " + PanelNewMapForm.activeInHierarchy);
+        if (clickProcessed)
+        {
+            clickProcessed = false;
+            return;
+        }
+        if (PanelPassword.activeInHierarchy)
+        {
+            return;
+        }
         if (PanelNewMapForm.activeInHierarchy)
         {
             Debug.Log("Panel New Map Form active");
@@ -101,39 +121,39 @@ public class GridManager : GridsBrowserBase
                 }
                 SelectedInputField.Select();
             }
+            return;
         }
-        else
-        {
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Panel.activeInHierarchy)
+        if (Panel.activeInHierarchy)
+        {
+            Debug.Log("Panel phase");
+            if (scroll != 0)
             {
-                if (scroll != 0)
-                {
-                    ScrollLogicReplacePhase(scroll, ray, Tiles);
-                }
-                if (Input.GetMouseButtonUp(0))
-                {
-                    LeftButtonUpLogicReplacePhase(ray);
-                }
+                ScrollLogicReplacePhase(scroll, ray, Tiles);
             }
-            else if (PanelEntities.activeInHierarchy)
+            if (Input.GetMouseButtonUp(0))
             {
-                if (scroll != 0)
-                {
-                    ScrollLogicReplacePhase(scroll, ray, Entities);
-                }
-                if (Input.GetMouseButtonUp(0))
-                {
-                    LeftButtonUpLogicEntityPhase(ray);
-                }
+                LeftButtonUpLogicReplacePhase(ray);
             }
-            else
-            {
-                base.Update();
-            }
+            return;
         }
+        if (PanelEntities.activeInHierarchy)
+        {
+            if (scroll != 0)
+            {
+                ScrollLogicReplacePhase(scroll, ray, Entities);
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                LeftButtonUpLogicEntityPhase(ray);
+            }
+            return;
+        }
+        base.Update();
+
+        
     }
 
     private void LeftButtonUpLogicReplacePhase(Ray ray)
@@ -149,7 +169,7 @@ public class GridManager : GridsBrowserBase
                 UnityEngine.Object item = ResourcesHolder.Instance.AllTiles.FindByName(HitObject.name);
                 GameObject newObject = Instantiate(item) as GameObject;
                 newObject.name = item.name;
-                var currentGrid = GridsDictionary[SelectedMapButton];
+                var currentGrid = MapsDictionary[SelectedMapButton].Tiles;
                 Tuple<int, int> coords = currentGrid.GetIndices(ClickedObject);
                 newObject.transform.position = ClickedObject.transform.position;
                 newObject.transform.parent = ClickedObject.transform.parent;
@@ -183,9 +203,11 @@ public class GridManager : GridsBrowserBase
                 FlagCurrentButton();
                 UnityEngine.Object item = ResourcesHolder.Instance.AllEntities.FindByName(HitObject.name);
                 GameObject newObject = Instantiate(item) as GameObject;
+                newObject.DeactivateAllScripts();
                 newObject.name = item.name;
-                var currentGrid = GridsDictionary[SelectedMapButton];
-                var currentDictionary = AdditionalObjects[SelectedMapButton];
+                var currentMap = MapsDictionary[SelectedMapButton];
+                var currentGrid = currentMap.Tiles;
+                var currentDictionary = currentMap.Entities;
                 Tuple<int, int> coords = currentGrid.GetIndices(ClickedObject);
                 newObject.transform.position = ClickedObject.transform.position;
                 newObject.transform.parent = ClickedObject.transform.parent;
@@ -223,14 +245,27 @@ public class GridManager : GridsBrowserBase
         {
             GameObject HitObject = hit.transform.gameObject;
             HoverEnded();
-                
-            Debug.Log("Mouse button up");
-            HitObject.GetComponent<Renderer>().material.color = Color.red;
-            ClickedObject = HitObject;
-            Canvas.SetActive(false);
-            Panel.SetActive(true);
-            AdjustPanelToCamera(Panel);
-
+            Debug.Log("Mouse button up normal phase");
+            GameObject panelToBeShown;
+            if (HitObject.transform.parent.gameObject.HasScriptOfType<PasswordGate>())
+            {
+                currentPasswordGate = HitObject.GetComponentInParent<PasswordGate>();
+                panelToBeShown = PanelPassword;
+                PanelPassword.GetComponentInChildren<InputField>().text = currentPasswordGate.Password;
+                var currentMap = MapsDictionary[SelectedMapButton];
+                passwordIndices = currentMap.Tiles.GetIndices(HitObject.transform.parent.gameObject);
+                MapsDictionary[SelectedMapButton].PasswordDictionary[passwordIndices] = currentPasswordGate.Password;
+                Grids.SetActive(true);
+            }
+            else
+            {
+                HitObject.ChangeColor(Color.red);
+                ClickedObject = HitObject;
+                Canvas.SetActive(false);
+                panelToBeShown = Panel;
+                AdjustPanelToCamera(panelToBeShown);
+            }
+            panelToBeShown.SetActive(true);
         }
     }
 
@@ -251,16 +286,11 @@ public class GridManager : GridsBrowserBase
         PanelEntities.SetActive(true);
         Canvas.SetActive(false);
         AdjustPanelToCamera(PanelEntities);
-
     }
 
     protected override void HoverLogic(Ray ray)
     {
-        if (Panel.activeInHierarchy)
-        {
-
-        }
-        else
+        if (!Panel.activeInHierarchy)
         {
             RaycastHit hit;
 
@@ -270,12 +300,14 @@ public class GridManager : GridsBrowserBase
                 if (HitObject != HoveredObject)
                 {
                     HoverEnded();
-                    var currentParent = GridsParentsDictionary[SelectedMapButton];
-                    if (HitObject.IsEqualToChildOf(currentParent))
+                    var currentParent = MapsDictionary[SelectedMapButton].EmptyParent;
+                    if (HitObject.IsEqualToChildOf(currentParent) ||
+                        HitObject.transform.parent.gameObject.HasScriptOfType<PasswordGate>())
                     {
-                        Debug.Log("Mouse hovering");
+                        // TODO: change color depending on whether it is 3d or 2d object
                         HoveredObject = HitObject;
-                        HoveredObject.GetComponent<Renderer>().material.color = Color.green;
+                        hoveredObjectOriginalColor = HitObject.GetComponent<Renderer>().material.color;
+                        HitObject.ChangeColor(Color.green);
                     }
                 }
 
@@ -293,8 +325,7 @@ public class GridManager : GridsBrowserBase
     {
         if (HoveredObject != null)
         {
-            Debug.Log("Hover ended");
-            HoveredObject.GetComponent<Renderer>().material.color = Color.white;
+            HoveredObject.ChangeColor(hoveredObjectOriginalColor);
         }
     }
 
@@ -334,20 +365,32 @@ public class GridManager : GridsBrowserBase
         {
             return;
         }
-        var currentGrid = GridsDictionary[SelectedMapButton];
+        var currentMap = MapsDictionary[SelectedMapButton];
+        var currentGrid = currentMap.Tiles;
         byte[] serializedMap = Serializer.Instance.SerializeGrid(currentGrid);
         string currentMapName = SelectedMapButton.GetComponentInChildren<Text>().text.Replace(' ','_');
-        var binaryWriter = new BinaryWriter(new FileStream(MAPS_PATH + "/" + currentMapName, FileMode.Create));
+
+        var mapDirectoryPath = FileHelper.JoinPath(MAPS_PATH, currentMapName);
+
+        DirectoryHelper.CreateDirectoryLazy(mapDirectoryPath);
+
+        var tilesPath = FileHelper.JoinPath(mapDirectoryPath, TILES);
+        var binaryWriter = new BinaryWriter(new FileStream(tilesPath, FileMode.Create));
         binaryWriter.Write(serializedMap);
         binaryWriter.Close();
-        if (!Directory.Exists(ENTITIES_PATH))
-        {
-            Directory.CreateDirectory(ENTITIES_PATH);
-        }
-        byte[] serializedEntities = Serializer.Instance.SerializeEntities(AdditionalObjects[SelectedMapButton]);
-        binaryWriter = new BinaryWriter(new FileStream(ENTITIES_PATH + "/" + currentMapName, FileMode.Create));
+
+        var entitiesPath = FileHelper.JoinPath(mapDirectoryPath, ENTITIES);
+        byte[] serializedEntities = Serializer.Instance.SerializeEntities(currentMap.Entities);
+        binaryWriter = new BinaryWriter(new FileStream(entitiesPath, FileMode.Create));
         binaryWriter.Write(serializedEntities);
         binaryWriter.Close();
+
+        var passwordsPath = FileHelper.JoinPath(mapDirectoryPath, PASSWORDS);
+        byte[] serializedPasswords = Serializer.Instance.Serialize(currentMap.PasswordDictionary);
+        binaryWriter = new BinaryWriter(new FileStream(passwordsPath, FileMode.Create));
+        binaryWriter.Write(serializedPasswords);
+        binaryWriter.Close();
+
 
         SelectedMapButton.ChangeColor(MyColors.LIGHT_SKY_BLUE);
     }
@@ -360,10 +403,9 @@ public class GridManager : GridsBrowserBase
         {
             File.Delete(mapPath);
         }
-        var parent = GridsParentsDictionary[SelectedMapButton];
+        var parent = MapsDictionary[SelectedMapButton].EmptyParent;
         Destroy(parent);
-        GridsDictionary.Remove(SelectedMapButton);
-        GridsParentsDictionary.Remove(SelectedMapButton);
+        MapsDictionary.Remove(SelectedMapButton);
         Destroy(SelectedMapButton.gameObject);
         SelectedMapButton = null;
     }
@@ -397,7 +439,7 @@ public class GridManager : GridsBrowserBase
             TextError.text = "Characters '_' and '*' are not allowed in the map name. ";
             return;
         }
-        foreach (var button in GridsDictionary.Keys)
+        foreach (var button in MapsDictionary.Keys)
         {
             if (button.GetComponentInChildren<Text>().text == buttonName)
             {
@@ -407,7 +449,7 @@ public class GridManager : GridsBrowserBase
         }
         if (SelectedMapButton != null)
         {
-            SelectedMapButton.GetComponent<Image>().color = Color.white;
+            SelectedMapButton.ChangeColor(Color.white);
         }
         SelectedMapButton = AddMapButton(buttonName, MyColors.LIGHT_SKY_BLUE);
 
@@ -424,11 +466,19 @@ public class GridManager : GridsBrowserBase
 
     public void CancelMapCreation()
     {
+        clickProcessed = true;
+        Debug.Log("Cancel button clicked");
         PanelNewMapForm.SetActive(false);
+        Grids.SetActive(true);
+        ShowCurrentMap();
     }
 
-
-
-
-
+    public void ChangePassword()
+    {
+        clickProcessed = true;
+        currentPasswordGate.Password = PanelPassword.GetComponentInChildren<InputField>().text;
+        MapsDictionary[SelectedMapButton].PasswordDictionary[passwordIndices] = currentPasswordGate.Password;
+        PanelPassword.SetActive(false);
+        Grids.SetActive(true);
+    }
 }

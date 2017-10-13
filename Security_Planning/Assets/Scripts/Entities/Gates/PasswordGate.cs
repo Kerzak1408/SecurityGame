@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class PasswordGate : GateOpen, IPasswordOpenable
 {
-    private string password = "1234";
+    public string Password { get; set; }
     private bool allowOpening;
 
     public void EnterPassword(string password, BaseCharacter character)
     {
-        if (this.password == password)
+        if (Password == password)
         {
             allowOpening = true;
             base.OnTriggerEnter(null);

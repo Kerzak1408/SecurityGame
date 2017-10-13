@@ -6,12 +6,14 @@ using UnityEngine;
 public class GridBase : MonoBehaviour {
 
     protected string MAPS_PATH;
-    protected string ENTITIES_PATH;
+
+    protected const string TILES = "Tiles";
+    protected const string ENTITIES = "Entities";
+    protected const string PASSWORDS = "Passwords";
 
     // Use this for initialization
     protected virtual void Start () {
-        MAPS_PATH = Application.persistentDataPath + "/Maps";
-        ENTITIES_PATH = Application.persistentDataPath + "/Entities";
+        MAPS_PATH = FileHelper.JoinPath(Application.persistentDataPath, "Maps");
     }
 
     // Update is called once per frame
@@ -22,9 +24,16 @@ public class GridBase : MonoBehaviour {
     protected virtual Map LoadMap(string mapName, UnityEngine.UI.Button correspondingButton = null, bool mapVisible = false)
     {
         mapName =  mapName.Replace(' ', '_');
-        var namesMatrix = Serializer.Instance.Deserialize<string[,]>(FileHelper.JoinPath(MAPS_PATH, mapName));
-        var namesDictionary = Serializer.Instance.Deserialize<Dictionary<Tuple<int, int>, string>>(FileHelper.JoinPath(ENTITIES_PATH, mapName));
+        var serializer = Serializer.Instance;
+        var namesMatrix = serializer.Deserialize<string[,]>(FileHelper.JoinPath(MAPS_PATH, mapName, TILES));
+        var namesDictionary = serializer.Deserialize<Dictionary<Tuple<int, int>, string>>(FileHelper.JoinPath(MAPS_PATH, mapName, ENTITIES));
+        var passwordDictionary = serializer.Deserialize<Dictionary<Tuple<int, int>, string>>(FileHelper.JoinPath(MAPS_PATH, mapName, PASSWORDS));
         var allTiles = ResourcesHolder.Instance.AllTiles;
+
+        foreach (System.Collections.Generic.KeyValuePair<Tuple<int, int>, string> kvPair in passwordDictionary)
+        {
+            Debug.Log("KEY=" + kvPair.Key + " VALUE=" + kvPair.Value);
+        }
 
         int width = namesMatrix.GetLength(1);
         int height = namesMatrix.GetLength(0);
@@ -41,6 +50,12 @@ public class GridBase : MonoBehaviour {
                 newObject.transform.position = new Vector3(j - width / 2, i - height / 2, 0);
                 newObject.name = newTile.name;
                 newObject.transform.parent = emptyParent.transform;
+                if (newObject.HasScriptOfType<PasswordGate>())
+                {
+                    var passwordGateScript = newObject.GetComponent<PasswordGate>();
+                    var password = passwordDictionary[Tuple.New(i, j)];
+                    passwordGateScript.Password = password;
+                }
             }
 
         var allEntities = ResourcesHolder.Instance.AllEntities;
@@ -55,8 +70,8 @@ public class GridBase : MonoBehaviour {
             newObject.transform.parent = emptyParent.transform;
             dictionary.Add(kvPair.Key, newObject);
         }
-        
-        return new Map(loadedGrid, dictionary, emptyParent);
+
+        return new Map(loadedGrid, dictionary, emptyParent, passwordDictionary);
     }    
    
 }

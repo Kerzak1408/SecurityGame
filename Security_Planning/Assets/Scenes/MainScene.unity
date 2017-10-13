@@ -223,10 +223,10 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -381,6 +381,7 @@ GameObject:
   - component: {fileID: 1035708928}
   - component: {fileID: 1035708927}
   - component: {fileID: 1035708926}
+  - component: {fileID: 1035708929}
   m_Layer: 5
   m_Name: InputField_Password
   m_TagString: Untagged
@@ -504,6 +505,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1035708924}
+--- !u!114 &1035708929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1035708924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 868c7f3e367a68c40bcd3a8f0b140310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1039806858
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,7 +645,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter text...
+  m_Text: Enter password...
 --- !u!222 &1361163318
 CanvasRenderer:
   m_ObjectHideFlags: 0

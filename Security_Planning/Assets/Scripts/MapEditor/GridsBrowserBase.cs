@@ -12,9 +12,7 @@ public abstract class GridsBrowserBase : GridBase
     public GameObject ScrollViewContent;
     public GameObject ScrollView;
 
-    protected Dictionary<Button, GameObject[,]> GridsDictionary;
-    protected Dictionary<Button, GameObject> GridsParentsDictionary;
-    protected Dictionary<Button, Dictionary<Tuple<int, int>, GameObject>> AdditionalObjects;
+    protected Dictionary<Button, Map> MapsDictionary;
 
     protected Button SelectedMapButton;
     
@@ -22,29 +20,23 @@ public abstract class GridsBrowserBase : GridBase
     protected bool eventProcessedByUI;
 
     private Vector3 previousMousePosition;
-
-    
-
     
 
     // Use this for initialization
     protected override void Start () {
         base.Start();
-        GridsDictionary = new Dictionary<Button, GameObject[,]>();
-        GridsParentsDictionary = new Dictionary<Button, GameObject>();
-        AdditionalObjects = new Dictionary<Button, Dictionary<Tuple<int, int>, GameObject>>();
-
+        MapsDictionary = new Dictionary<Button, Map>();
 
         if (!Directory.Exists(MAPS_PATH))
         {
             Directory.CreateDirectory(MAPS_PATH);
         }
         var info = new DirectoryInfo(MAPS_PATH);
-        var fileInfo = info.GetFiles();
-        foreach (var file in fileInfo)
+        var directoryInfo = info.GetDirectories();
+        foreach (var directory in directoryInfo)
         {
-            Button addedButton = AddMapButton(file.Name.Replace('_', ' '), Color.white);
-            LoadMap(file.Name, addedButton);
+            Button addedButton = AddMapButton(directory.Name.Replace('_', ' '), Color.white);
+            LoadMap(directory.Name, addedButton);
         }
         cameraOriginalSize = Camera.main.orthographicSize;
     }
@@ -105,7 +97,7 @@ public abstract class GridsBrowserBase : GridBase
         }
         SelectedMapButton = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
         SelectedMapButton.GetComponent<Image>().color = MyColors.LIGHT_SKY_BLUE;
-        GridsParentsDictionary[SelectedMapButton].SetActive(true);
+        MapsDictionary[SelectedMapButton].SetActive(true);
     }
 
     private void ScrollLogicNormalPhase(float scroll, Ray ray)
@@ -128,7 +120,7 @@ public abstract class GridsBrowserBase : GridBase
 
     protected virtual Button AddMapButton(string name, Color color)
     {
-        Button newMap = UnityEngine.UI.Button.Instantiate(ResourcesHolder.Instance.MapButton);
+        Button newMap = Instantiate(ResourcesHolder.Instance.MapButton);
         newMap.transform.parent = ScrollViewContent.transform;
         newMap.GetComponent<Image>().color = color;
         newMap.onClick.AddListener(SelectMap);
@@ -142,8 +134,15 @@ public abstract class GridsBrowserBase : GridBase
     {
         if (SelectedMapButton != null)
         {
-            var currentParent = GridsParentsDictionary[SelectedMapButton];
-            currentParent.SetActive(false);
+            MapsDictionary[SelectedMapButton].SetActive(false);
+        }
+    }
+
+    protected void ShowCurrentMap()
+    {
+        if (SelectedMapButton != null)
+        {
+            MapsDictionary[SelectedMapButton].SetActive(true);
         }
     }
 
@@ -159,20 +158,14 @@ public abstract class GridsBrowserBase : GridBase
     {
         var map = base.LoadMap(mapName, correspondingButton);
         map.EmptyParent.transform.parent = Grids.transform;
-        GridsDictionary.Add(correspondingButton, map.Tiles);
-        GridsParentsDictionary.Add(correspondingButton, map.EmptyParent);
-        AdditionalObjects.Add(correspondingButton, map.Entities);
+        MapsDictionary.Add(correspondingButton, map);
         foreach (var entity in map.Entities.Values)
         {
-            entity.GetComponent<MonoBehaviour>().enabled = false;
+            entity.DeactivateAllScripts();
         }
         foreach (var tile in map.Tiles)
         {
-            MonoBehaviour script;
-            if (tile != null && (script = tile.GetComponent<MonoBehaviour>()) != null)
-            {
-                script.enabled = false;
-            }
+            tile.DeactivateAllScripts();
         }
         return map;
     }

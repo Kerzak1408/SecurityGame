@@ -10,10 +10,35 @@ public class Tuple<T1, T2>
     public T1 First { get; private set; }
     [SerializeField]
     public T2 Second { get; private set; }
+
     internal Tuple(T1 first, T2 second)
     {
         First = first;
         Second = second;
+    }
+
+    public override bool Equals(object obj)
+    {
+        
+        if (obj.GetType() == typeof(Tuple<T1,T2>))
+        {
+            Tuple<T1,T2> castedObj = (Tuple<T1, T2>)obj;
+            var result = First.Equals(castedObj.First) && Second.Equals(castedObj.Second);
+            Debug.Log("Tuple comparison -> this: " + this.ToString() + " other: " + obj.ToString() + " result: " + result);
+            return result;
+        }
+        return base.Equals(obj);
+    }
+
+    public override int GetHashCode()
+    {
+        Debug.Log("Tuple hash code");
+        return First.GetHashCode() + Second.GetHashCode();
+    }
+
+    public override string ToString()
+    {
+        return "(" + First.ToString() + ", " + Second.ToString() + ")";
     }
 }
 
