@@ -476,8 +476,15 @@ public class GridManager : GridsBrowserBase
     public void ChangePassword()
     {
         clickProcessed = true;
-        currentPasswordGate.Password = PanelPassword.GetComponentInChildren<InputField>().text;
-        MapsDictionary[SelectedMapButton].PasswordDictionary[passwordIndices] = currentPasswordGate.Password;
+        var dict = MapsDictionary[SelectedMapButton].PasswordDictionary;
+        var newPassword = PanelPassword.GetComponentInChildren<InputField>().text;
+        var oldPassword = dict[passwordIndices];
+        if (newPassword != oldPassword)
+        {
+            FlagCurrentButton();
+            currentPasswordGate.Password = newPassword;
+            dict[passwordIndices] = newPassword;
+        }
         PanelPassword.SetActive(false);
         Grids.SetActive(true);
     }
