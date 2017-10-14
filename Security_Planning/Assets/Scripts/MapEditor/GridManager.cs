@@ -39,7 +39,6 @@ public class GridManager : GridsBrowserBase
 
     private const string EMPTY_SQUARE = "000_Empty";
     private Tuple<int, int> passwordIndices;
-    private bool clickProcessed;
     
     
 
@@ -98,9 +97,9 @@ public class GridManager : GridsBrowserBase
 	// Update is called once per frame
 	protected override void Update ()
     {
-        if (clickProcessed)
+        if (eventProcessedByUI)
         {
-            clickProcessed = false;
+            eventProcessedByUI = false;
             return;
         }
         if (PanelPassword.activeInHierarchy)
@@ -168,9 +167,14 @@ public class GridManager : GridsBrowserBase
                 FlagCurrentButton();
                 UnityEngine.Object item = ResourcesHolder.Instance.AllTiles.FindByName(HitObject.name);
                 GameObject newObject = Instantiate(item) as GameObject;
-                newObject.name = item.name;
-                var currentGrid = MapsDictionary[SelectedMapButton].Tiles;
+                var map = MapsDictionary[SelectedMapButton];
+                var currentGrid = map.Tiles;
                 Tuple<int, int> coords = currentGrid.GetIndices(ClickedObject);
+                if (newObject.HasScriptOfType<PasswordGate>())
+                {
+                    map.PasswordDictionary[coords] = newObject.GetComponent<PasswordGate>().Password;
+                }
+                newObject.name = item.name;
                 newObject.transform.position = ClickedObject.transform.position;
                 newObject.transform.parent = ClickedObject.transform.parent;
                 currentGrid[coords.First, coords.Second] = newObject;
@@ -355,6 +359,7 @@ public class GridManager : GridsBrowserBase
 
     public void SaveMap()
     {
+        var currentMap = MapsDictionary[SelectedMapButton];
         eventProcessedByUI = true;
         var selectedButtonText =  SelectedMapButton.GetComponentInChildren<Text>().text;
         if (selectedButtonText.Contains("*"))
@@ -365,7 +370,6 @@ public class GridManager : GridsBrowserBase
         {
             return;
         }
-        var currentMap = MapsDictionary[SelectedMapButton];
         var currentGrid = currentMap.Tiles;
         byte[] serializedMap = Serializer.Instance.SerializeGrid(currentGrid);
         string currentMapName = SelectedMapButton.GetComponentInChildren<Text>().text.Replace(' ','_');
@@ -466,7 +470,7 @@ public class GridManager : GridsBrowserBase
 
     public void CancelMapCreation()
     {
-        clickProcessed = true;
+        eventProcessedByUI = true;
         Debug.Log("Cancel button clicked");
         PanelNewMapForm.SetActive(false);
         Grids.SetActive(true);
@@ -475,7 +479,7 @@ public class GridManager : GridsBrowserBase
 
     public void ChangePassword()
     {
-        clickProcessed = true;
+        eventProcessedByUI = true;
         var dict = MapsDictionary[SelectedMapButton].PasswordDictionary;
         var newPassword = PanelPassword.GetComponentInChildren<InputField>().text;
         var oldPassword = dict[passwordIndices];

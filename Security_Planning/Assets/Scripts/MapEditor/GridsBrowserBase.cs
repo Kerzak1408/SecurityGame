@@ -44,15 +44,16 @@ public abstract class GridsBrowserBase : GridBase
 	// Update is called once per frame
 	protected virtual void Update () {
 
+        if (eventProcessedByUI)
+        {
+            eventProcessedByUI = false;
+            return;
+        }
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (scroll != 0)
         {
-            if (eventProcessedByUI)
-            {
-                eventProcessedByUI = false;
-                return;
-            }
+
             ScrollLogicNormalPhase(scroll, ray);
         }
         if (Input.GetMouseButtonDown(2))
@@ -68,11 +69,11 @@ public abstract class GridsBrowserBase : GridBase
         }
         else if (Input.GetMouseButtonUp(0) && !Input.GetMouseButton(1))
         {
-            if (eventProcessedByUI)
-            {
-                eventProcessedByUI = false;
-                return;
-            }
+            //if (eventProcessedByUI)
+            //{
+            //    eventProcessedByUI = false;
+            //    return;
+            //}
             LeftButtonUpLogicNormalPhase(ray);
         }
         else if (Input.GetMouseButtonUp(1) && !Input.GetMouseButton(0))

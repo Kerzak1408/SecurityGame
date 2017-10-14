@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class PasswordGate : GateOpen, IPasswordOpenable
 {
-    public string Password { get; set; }
+    private string password = "1234";
+    public string Password { get { return password; } set { password = value; } }
     private bool allowOpening;
 
     public void EnterPassword(string password, BaseCharacter character)
