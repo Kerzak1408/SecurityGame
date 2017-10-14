@@ -27,6 +27,7 @@ public class GridManager : GridsBrowserBase
     public GameObject PanelNewMapForm;
     public GameObject Canvas;
     public GameObject PanelPassword;
+    public GameObject PanelError;
     
     private GameObject HoveredObject;
     private GameObject ClickedObject;
@@ -102,7 +103,7 @@ public class GridManager : GridsBrowserBase
             eventProcessedByUI = false;
             return;
         }
-        if (PanelPassword.activeInHierarchy)
+        if (PanelPassword.activeInHierarchy || PanelError.activeInHierarchy)
         {
             return;
         }
@@ -360,6 +361,12 @@ public class GridManager : GridsBrowserBase
     public void SaveMap()
     {
         var currentMap = MapsDictionary[SelectedMapButton];
+        bool containsGuard = currentMap.Entities.Values.Any(x => x.HasScriptOfType<Guard>());
+        if (!containsGuard)
+        {
+            ShowError("Unable to save a map without Guard. ");
+            return;
+        }
         eventProcessedByUI = true;
         var selectedButtonText =  SelectedMapButton.GetComponentInChildren<Text>().text;
         if (selectedButtonText.Contains("*"))
@@ -491,5 +498,17 @@ public class GridManager : GridsBrowserBase
         }
         PanelPassword.SetActive(false);
         Grids.SetActive(true);
+    }
+
+    public void ShowError(string message)
+    {
+        PanelError.GetComponentInChildren<Text>().text = message;
+        PanelError.SetActive(true);
+    }
+
+    public void HideError()
+    {
+        eventProcessedByUI = true;
+        PanelError.SetActive(false);
     }
 }
