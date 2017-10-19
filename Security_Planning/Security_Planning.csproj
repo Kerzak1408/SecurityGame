@@ -70,9 +70,6 @@
     <Reference Include="UnityEngine.VR">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Forms">
-      <HintPath>Assets/Plugins/System.Windows.Forms.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
@@ -105,9 +102,9 @@
     <Compile Include="Assets\Scripts\MapEditor\GridManager.cs" />
     <Compile Include="Assets\Scripts\MapEditor\GridsBrowserBase.cs" />
     <Compile Include="Assets\Scripts\MapEditor\MapChoiceManager.cs" />
-    <Compile Include="Assets\Scripts\Menu\ChooseFile.cs" />
     <Compile Include="Assets\Scripts\Scenes.cs" />
     <Compile Include="Assets\Scripts\Serialization\Serializer.cs" />
+    <Compile Include="Assets\Scripts\Serialization\Vector3Wrapper.cs" />
     <Compile Include="Assets\Scripts\UI\InputRestrictions.cs" />
     <Compile Include="Assets\Scripts\UI\MyColors.cs" />
   </ItemGroup>

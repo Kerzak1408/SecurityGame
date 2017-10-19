@@ -26,11 +26,11 @@ public class GridBase : MonoBehaviour {
         mapName =  mapName.Replace(' ', '_');
         var serializer = Serializer.Instance;
         var namesMatrix = serializer.Deserialize<string[,]>(FileHelper.JoinPath(MAPS_PATH, mapName, TILES));
-        var namesDictionary = serializer.Deserialize<Dictionary<Tuple<int, int>, string>>(FileHelper.JoinPath(MAPS_PATH, mapName, ENTITIES));
+        var namesDictionary = serializer.Deserialize<List<Tuple<string, Vector3Wrapper>>>(FileHelper.JoinPath(MAPS_PATH, mapName, ENTITIES));
         var passwordDictionary = serializer.Deserialize<Dictionary<Tuple<int, int>, string>>(FileHelper.JoinPath(MAPS_PATH, mapName, PASSWORDS));
         var allTiles = ResourcesHolder.Instance.AllTiles;
 
-        foreach (System.Collections.Generic.KeyValuePair<Tuple<int, int>, string> kvPair in passwordDictionary)
+        foreach (KeyValuePair<Tuple<int, int>, string> kvPair in passwordDictionary)
         {
             Debug.Log("KEY=" + kvPair.Key + " VALUE=" + kvPair.Value);
         }
@@ -59,19 +59,19 @@ public class GridBase : MonoBehaviour {
             }
 
         var allEntities = ResourcesHolder.Instance.AllEntities;
-        var dictionary = new Dictionary<Tuple<int, int>, GameObject>();
-        foreach (KeyValuePair<Tuple<int, int>, string> kvPair in namesDictionary)
+        var entities = new List<GameObject>();
+        foreach (Tuple<string, Vector3Wrapper> kvPair in namesDictionary)
         {
-            var currentName = kvPair.Value;
+            var currentName = kvPair.First;
             var newEntity = allEntities.FindByName(currentName);
             GameObject newObject = Instantiate(newEntity, transform) as GameObject;
             newObject.name = newEntity.name;
-            newObject.transform.position = new Vector3(kvPair.Key.Second - width / 2, kvPair.Key.First - height / 2, -1);
+            newObject.transform.position = kvPair.Second;
             newObject.transform.parent = emptyParent.transform;
-            dictionary.Add(kvPair.Key, newObject);
+            entities.Add(newObject);
         }
 
-        return new Map(loadedGrid, dictionary, emptyParent, passwordDictionary);
+        return new Map(loadedGrid, entities, emptyParent, passwordDictionary);
     }    
    
 }

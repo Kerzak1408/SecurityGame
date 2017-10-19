@@ -48,12 +48,12 @@ public class Serializer {
         return Serialize(nameMatrix);
     }
 
-    public byte[] SerializeEntities(Dictionary<Tuple<int,int>, GameObject> serializedDictionary)
+    public byte[] SerializeEntities(List<GameObject> serializedEntities)
     {
-        var nameDictionary = new Dictionary<Tuple<int, int>, string>();
-        foreach (KeyValuePair<Tuple<int, int>, GameObject> kvPair in serializedDictionary)
+        var nameDictionary = new List<Tuple<string, Vector3Wrapper>>();
+        foreach (GameObject entity in serializedEntities)
         {
-            nameDictionary.Add(kvPair.Key, kvPair.Value.name);
+            nameDictionary.Add(Tuple.New<string, Vector3Wrapper>(entity.name, entity.transform.position));
         }
         return Serialize(nameDictionary);
     }

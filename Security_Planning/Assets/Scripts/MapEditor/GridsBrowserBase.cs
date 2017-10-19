@@ -160,7 +160,7 @@ public abstract class GridsBrowserBase : GridBase
         var map = base.LoadMap(mapName, correspondingButton);
         map.EmptyParent.transform.parent = Grids.transform;
         MapsDictionary.Add(correspondingButton, map);
-        foreach (var entity in map.Entities.Values)
+        foreach (var entity in map.Entities)
         {
             entity.DeactivateAllScripts();
         }

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Linq;
-using UnityEditor;
 
 public class GridManager : GridsBrowserBase
 {
@@ -14,6 +10,7 @@ public class GridManager : GridsBrowserBase
     public InputField InputHeight;
     public InputField InputName;
     public Text TextError;
+    public GameObject ButtonRemoveEntity;
     
     public GameObject Panel;
     public GameObject PanelStart;
@@ -40,6 +37,9 @@ public class GridManager : GridsBrowserBase
 
     private const string EMPTY_SQUARE = "000_Empty";
     private Tuple<int, int> passwordIndices;
+
+    private GameObject draggedObject;
+    private GameObject toBeRemovedEntity;
     
     
 
@@ -63,6 +63,7 @@ public class GridManager : GridsBrowserBase
         foreach (UnityEngine.Object item in objects)
         {
             GameObject newObject = Instantiate(item) as GameObject;
+            Debug.Log("Panel group item: " + item);
             newObject.DeactivateAllScripts();
             newObject.transform.position = startingPosition;
             newObject.transform.parent = parent.transform;
@@ -81,7 +82,7 @@ public class GridManager : GridsBrowserBase
 
         var newParent = new GameObject();
         newParent.transform.parent = Grids.transform;
-        var map = new Map(newGrid, new Dictionary<Tuple<int, int>, GameObject>(), newParent, new Dictionary<Tuple<int, int>, string>());
+        var map = new Map(newGrid, new List<GameObject>(), newParent, new Dictionary<Tuple<int, int>, string>());
         MapsDictionary.Add(button, map);
 
         for (int i = 0; i < height; i++)
@@ -102,6 +103,10 @@ public class GridManager : GridsBrowserBase
         {
             eventProcessedByUI = false;
             return;
+        }
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.S))
+        {
+            SaveMap();
         }
         if (PanelPassword.activeInHierarchy || PanelError.activeInHierarchy)
         {
@@ -125,6 +130,23 @@ public class GridManager : GridsBrowserBase
         }
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            LeftButtonDownLogicNormalPhase(ray);
+            return;
+        }
+
+        if (Input.GetMouseButton(0) && draggedObject != null)
+        {
+            Debug.Log("Mouse drag");
+            Vector3 previousPosition = draggedObject.transform.position;
+            var v3 = Input.mousePosition;
+            v3.z = previousPosition.z;
+            v3 = Camera.main.ScreenToWorldPoint(v3);
+            draggedObject.transform.position = v3;
+            return;
+        }
 
         if (Panel.activeInHierarchy)
         {
@@ -154,6 +176,21 @@ public class GridManager : GridsBrowserBase
         base.Update();
 
         
+    }
+
+    private void LeftButtonDownLogicNormalPhase(Ray ray)
+    {
+        RaycastHit hit;
+        
+        if (Physics.Raycast(ray, out hit))
+        {
+            GameObject hitObject = hit.transform.gameObject;
+            Map map = MapsDictionary[SelectedMapButton];
+            if (map.Entities.Contains(hitObject))
+            {
+                draggedObject = hitObject;
+            }
+        }
     }
 
     private void LeftButtonUpLogicReplacePhase(Ray ray)
@@ -213,10 +250,9 @@ public class GridManager : GridsBrowserBase
                 var currentMap = MapsDictionary[SelectedMapButton];
                 var currentGrid = currentMap.Tiles;
                 var currentDictionary = currentMap.Entities;
-                Tuple<int, int> coords = currentGrid.GetIndices(ClickedObject);
-                newObject.transform.position = ClickedObject.transform.position;
+                newObject.transform.position = ClickedObject.transform.position - new Vector3(0, 0, 0.5f);
                 newObject.transform.parent = ClickedObject.transform.parent;
-                currentDictionary.Add(coords, newObject);
+                currentDictionary.Add(newObject);
                 PanelEntities.SetActive(false);
                 Canvas.SetActive(true);
             } 
@@ -244,6 +280,12 @@ public class GridManager : GridsBrowserBase
 
     protected override void LeftButtonUpLogicNormalPhase(Ray ray)
     {
+        if (draggedObject != null)
+        {
+            draggedObject = null;
+            FlagCurrentButton();
+            return;
+        }
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
@@ -251,26 +293,26 @@ public class GridManager : GridsBrowserBase
             GameObject HitObject = hit.transform.gameObject;
             HoverEnded();
             Debug.Log("Mouse button up normal phase");
-            GameObject panelToBeShown;
+            Map map = MapsDictionary[SelectedMapButton];
             if (HitObject.transform.parent.gameObject.HasScriptOfType<PasswordGate>())
             {
                 currentPasswordGate = HitObject.GetComponentInParent<PasswordGate>();
-                panelToBeShown = PanelPassword;
                 PanelPassword.GetComponentInChildren<InputField>().text = currentPasswordGate.Password;
                 var currentMap = MapsDictionary[SelectedMapButton];
                 passwordIndices = currentMap.Tiles.GetIndices(HitObject.transform.parent.gameObject);
-                MapsDictionary[SelectedMapButton].PasswordDictionary[passwordIndices] = currentPasswordGate.Password;
+                map.PasswordDictionary[passwordIndices] = currentPasswordGate.Password;
                 Grids.SetActive(true);
+                PanelPassword.SetActive(true);
             }
             else
             {
                 HitObject.ChangeColor(Color.red);
                 ClickedObject = HitObject;
                 Canvas.SetActive(false);
-                panelToBeShown = Panel;
-                AdjustPanelToCamera(panelToBeShown);
+                AdjustPanelToCamera(Panel);
+                Panel.SetActive(true);
             }
-            panelToBeShown.SetActive(true);
+            
         }
     }
 
@@ -286,11 +328,21 @@ public class GridManager : GridsBrowserBase
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            ClickedObject = hit.transform.gameObject;
+            GameObject hitObject = hit.transform.gameObject;
+            if (MapsDictionary[SelectedMapButton].Entities.Contains(hitObject))
+            {
+                ButtonRemoveEntity.SetActive(true);
+                ButtonRemoveEntity.transform.position = Input.mousePosition;
+                toBeRemovedEntity = hitObject;
+            } 
+            else
+            {
+                ClickedObject = hit.transform.gameObject;
+                PanelEntities.SetActive(true);
+                Canvas.SetActive(false);
+                AdjustPanelToCamera(PanelEntities);
+            }
         }
-        PanelEntities.SetActive(true);
-        Canvas.SetActive(false);
-        AdjustPanelToCamera(PanelEntities);
     }
 
     protected override void HoverLogic(Ray ray)
@@ -309,13 +361,11 @@ public class GridManager : GridsBrowserBase
                     if (HitObject.IsEqualToChildOf(currentParent) ||
                         HitObject.transform.parent.gameObject.HasScriptOfType<PasswordGate>())
                     {
-                        // TODO: change color depending on whether it is 3d or 2d object
                         HoveredObject = HitObject;
                         hoveredObjectOriginalColor = HitObject.GetComponent<Renderer>().material.color;
                         HitObject.ChangeColor(Color.green);
                     }
                 }
-
             }
             else
             {
@@ -361,7 +411,7 @@ public class GridManager : GridsBrowserBase
     public void SaveMap()
     {
         var currentMap = MapsDictionary[SelectedMapButton];
-        bool containsGuard = currentMap.Entities.Values.Any(x => x.HasScriptOfType<Guard>());
+        bool containsGuard = currentMap.Entities.Any(x => x.HasScriptOfType<Guard>());
         if (!containsGuard)
         {
             ShowError("Unable to save a map without Guard. ");
@@ -510,5 +560,14 @@ public class GridManager : GridsBrowserBase
     {
         eventProcessedByUI = true;
         PanelError.SetActive(false);
+    }
+
+    public void RemoveEntity()
+    {
+        eventProcessedByUI = true;
+        FlagCurrentButton();
+        ButtonRemoveEntity.SetActive(false);
+        MapsDictionary[SelectedMapButton].Entities.Remove(toBeRemovedEntity);
+        Destroy(toBeRemovedEntity);
     }
 }
