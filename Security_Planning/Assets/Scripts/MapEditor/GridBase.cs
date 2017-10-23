@@ -26,7 +26,7 @@ public class GridBase : MonoBehaviour {
         mapName =  mapName.Replace(' ', '_');
         var serializer = Serializer.Instance;
         var namesMatrix = serializer.Deserialize<string[,]>(FileHelper.JoinPath(MAPS_PATH, mapName, TILES));
-        var namesDictionary = serializer.Deserialize<List<Tuple<string, Vector3Wrapper>>>(FileHelper.JoinPath(MAPS_PATH, mapName, ENTITIES));
+        var entitiesData = serializer.Deserialize<List<Tuple<string, Dictionary<string, object>>>>(FileHelper.JoinPath(MAPS_PATH, mapName, ENTITIES));
         var passwordDictionary = serializer.Deserialize<Dictionary<Tuple<int, int>, string>>(FileHelper.JoinPath(MAPS_PATH, mapName, PASSWORDS));
         var allTiles = ResourcesHolder.Instance.AllTiles;
 
@@ -60,13 +60,14 @@ public class GridBase : MonoBehaviour {
 
         var allEntities = ResourcesHolder.Instance.AllEntities;
         var entities = new List<GameObject>();
-        foreach (Tuple<string, Vector3Wrapper> kvPair in namesDictionary)
+        foreach (Tuple<string, Dictionary<string, object>> kvPair in entitiesData)
         {
             var currentName = kvPair.First;
             var newEntity = allEntities.FindByName(currentName);
             GameObject newObject = Instantiate(newEntity, transform) as GameObject;
             newObject.name = newEntity.name;
-            newObject.transform.position = kvPair.Second;
+            newObject.GetComponent<BaseEntity>().Deserialize(kvPair.Second);
+            newObject.GetComponent<BaseEntity>().PrefabName = kvPair.First;
             newObject.transform.parent = emptyParent.transform;
             entities.Add(newObject);
         }

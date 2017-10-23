@@ -34,12 +34,31 @@ public static class GameObjectExtensions {
 
     public static void DeactivateAllScripts(this GameObject gameObject)
     {
-        var scripts = gameObject.GetComponents<MonoBehaviour>();
-        if (scripts != null)
+        gameObject.DeactivateComponentsOfTypeRecursively<MonoBehaviour>();
+    }
+
+    public static void DeactivateAllCameras(this GameObject gameObject)
+    {
+        gameObject.DeactivateComponentsOfTypeRecursively<Camera>();
+    }
+
+    public static void DeactivateComponentsOfTypeRecursively<T>(this GameObject gameObject) where T : Behaviour
+    {
+        gameObject.DeactivateComponentsOfType<T>();
+        foreach (Transform child in gameObject.transform)
         {
-            foreach (var script in scripts)
+            child.gameObject.DeactivateComponentsOfTypeRecursively<T>();
+        }
+    }
+
+    public static void DeactivateComponentsOfType<T>(this GameObject gameObject) where T : Behaviour
+    {
+        var components = gameObject.GetComponents<T>();
+        if (components != null)
+        {
+            foreach (var component in components)
             {
-                script.enabled = false;
+                component.enabled = false;
             }
         }
     }

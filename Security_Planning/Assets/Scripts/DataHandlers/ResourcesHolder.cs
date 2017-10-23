@@ -8,12 +8,14 @@ public class ResourcesHolder {
 
     public Object[] AllTiles { get; private set; }
     public Object[] AllEntities { get; private set; }
+    public Object[] AllEntitiesIcons { get; private set; }
     public UnityEngine.UI.Button MapButton { get; private set; }
 
-    public const string PATH_PREFABS = "Prefabs/";
-    public const string PATH_PREFABS_TILES = PATH_PREFABS + "Tiles/";
-    public const string PATH_PREFABS_UI = PATH_PREFABS + "UI/";
-    public const string PATH_PREFABS_ENTITIES = PATH_PREFABS + "Entities/";
+    public static readonly string PATH_PREFABS = "Prefabs/";
+    public static readonly string PATH_PREFABS_TILES = PATH_PREFABS + "Tiles/";
+    public static readonly string PATH_PREFABS_UI = PATH_PREFABS + "UI/";
+    public static readonly string PATH_PREFABS_ENTITIES = PATH_PREFABS + "Entities/";
+    public static readonly string PATH_PREFABS_ENTITIESICONS = PATH_PREFABS + "EntitiesIcons/";
 
     public static ResourcesHolder Instance
     {
@@ -31,6 +33,7 @@ public class ResourcesHolder {
     {
         AllTiles = Resources.LoadAll(PATH_PREFABS_TILES);
         AllEntities = Resources.LoadAll(PATH_PREFABS_ENTITIES);
+        AllEntitiesIcons = Resources.LoadAll(PATH_PREFABS_ENTITIESICONS);
         MapButton = Resources.Load<UnityEngine.UI.Button>(PATH_PREFABS_UI + "MapButton");
     }
 }

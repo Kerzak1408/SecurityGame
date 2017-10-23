@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 33296878423554146}
   - component: {fileID: 65096930146904130}
   - component: {fileID: 23603806525569528}
+  - component: {fileID: 114629581943534136}
   m_Layer: 0
   m_Name: CCTV
   m_TagString: Untagged
@@ -71,7 +72,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1348382919470054}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.5, y: 0, z: 0, w: 0.8660254}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.3}
   m_Children:
@@ -79,7 +80,7 @@ Transform:
   - {fileID: 4671947673024670}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -60, y: 0, z: 0}
 --- !u!4 &4671947673024670
 Transform:
   m_ObjectHideFlags: 1
@@ -256,6 +257,17 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
+--- !u!114 &114629581943534136
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1348382919470054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 033c2efe98a22d849b307ad10adee5bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!124 &124563113862723906
 Behaviour:
   m_ObjectHideFlags: 1

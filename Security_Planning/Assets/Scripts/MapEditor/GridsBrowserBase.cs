@@ -163,6 +163,7 @@ public abstract class GridsBrowserBase : GridBase
         foreach (var entity in map.Entities)
         {
             entity.DeactivateAllScripts();
+            entity.DeactivateAllCameras();
         }
         foreach (var tile in map.Tiles)
         {

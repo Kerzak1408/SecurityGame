@@ -23,6 +23,21 @@ public class Game : GridBase
         Camera.main.orthographicSize = 1;
         Camera.main.transform.parent = guard.transform;
         Camera.main.transform.localRotation = Quaternion.identity;
+        foreach (Transform transform in map.EmptyParent.transform)
+        {
+            if (transform.name != "CCTV")
+            {
+                continue;
+            }
+            Camera cctv =  transform.gameObject.GetComponentInChildren<Camera>();
+            if (cctv != null)
+            {
+                RenderTexture newRenderTexture = new RenderTexture(256, 256, 16);
+                newRenderTexture.Create();
+                cctv.targetTexture = newRenderTexture;
+                GameObject.Find("Monitor").GetComponent<Renderer>().material.mainTexture = newRenderTexture;
+            }
+        }
 	}
 	
 	// Update is called once per frame

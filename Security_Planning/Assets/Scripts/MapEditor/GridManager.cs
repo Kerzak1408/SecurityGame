@@ -40,8 +40,8 @@ public class GridManager : GridsBrowserBase
 
     private GameObject draggedObject;
     private GameObject toBeRemovedEntity;
-    
-    
+
+    private int entitiesCounter;
 
     // Use this for initialization
     protected override void Start ()
@@ -52,7 +52,7 @@ public class GridManager : GridsBrowserBase
         InputHeight.onValidateInput += NumberValidationFunction;
 
         InitializePanelGroup(ResourcesHolder.Instance.AllTiles, PanelStart.transform.position, Tiles);
-        InitializePanelGroup(ResourcesHolder.Instance.AllEntities, PanelEntitiesStart.transform.position, Entities);
+        InitializePanelGroup(ResourcesHolder.Instance.AllEntitiesIcons, PanelEntitiesStart.transform.position, Entities);
 
         originalPanelScale = Panel.transform.localScale;
     }
@@ -64,7 +64,6 @@ public class GridManager : GridsBrowserBase
         {
             GameObject newObject = Instantiate(item) as GameObject;
             Debug.Log("Panel group item: " + item);
-            newObject.DeactivateAllScripts();
             newObject.transform.position = startingPosition;
             newObject.transform.parent = parent.transform;
             newObject.transform.localScale *= 4;
@@ -142,8 +141,8 @@ public class GridManager : GridsBrowserBase
             Debug.Log("Mouse drag");
             Vector3 previousPosition = draggedObject.transform.position;
             var v3 = Input.mousePosition;
-            v3.z = previousPosition.z;
             v3 = Camera.main.ScreenToWorldPoint(v3);
+            v3.z = previousPosition.z;
             draggedObject.transform.position = v3;
             return;
         }
@@ -246,12 +245,15 @@ public class GridManager : GridsBrowserBase
                 UnityEngine.Object item = ResourcesHolder.Instance.AllEntities.FindByName(HitObject.name);
                 GameObject newObject = Instantiate(item) as GameObject;
                 newObject.DeactivateAllScripts();
+                newObject.DeactivateAllCameras();
                 newObject.name = item.name;
                 var currentMap = MapsDictionary[SelectedMapButton];
                 var currentGrid = currentMap.Tiles;
                 var currentDictionary = currentMap.Entities;
                 newObject.transform.position = ClickedObject.transform.position - new Vector3(0, 0, 0.5f);
                 newObject.transform.parent = ClickedObject.transform.parent;
+                newObject.GetComponent<BaseEntity>().PrefabName = item.name;
+                newObject.transform.name += ("_" + ++entitiesCounter);
                 currentDictionary.Add(newObject);
                 PanelEntities.SetActive(false);
                 Canvas.SetActive(true);
@@ -280,6 +282,7 @@ public class GridManager : GridsBrowserBase
 
     protected override void LeftButtonUpLogicNormalPhase(Ray ray)
     {
+        ButtonRemoveEntity.SetActive(false);
         if (draggedObject != null)
         {
             draggedObject = null;
@@ -359,7 +362,9 @@ public class GridManager : GridsBrowserBase
                     HoverEnded();
                     var currentParent = MapsDictionary[SelectedMapButton].EmptyParent;
                     if (HitObject.IsEqualToChildOf(currentParent) ||
-                        HitObject.transform.parent.gameObject.HasScriptOfType<PasswordGate>())
+                        /*HitObject.transform.parent.gameObject.HasScriptOfType<PasswordGate>()*/
+                        MapsDictionary[SelectedMapButton].Entities.Contains(HitObject)
+                        )
                     {
                         HoveredObject = HitObject;
                         hoveredObjectOriginalColor = HitObject.GetComponent<Renderer>().material.color;

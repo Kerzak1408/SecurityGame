@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class PasswordGate : GateOpen, IPasswordOpenable
 {
+    [SerializeField]
     private string password = "1234";
-    public string Password { get { return password; } set { password = value; } }
     private bool allowOpening;
+    public string Password { get { return password; } set { password = value; } }
+    
 
     public void EnterPassword(string password, BaseCharacter character)
     {

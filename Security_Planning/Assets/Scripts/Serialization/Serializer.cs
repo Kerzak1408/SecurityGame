@@ -50,10 +50,11 @@ public class Serializer {
 
     public byte[] SerializeEntities(List<GameObject> serializedEntities)
     {
-        var nameDictionary = new List<Tuple<string, Vector3Wrapper>>();
+        var nameDictionary = new List<Tuple<string, Dictionary<string, object>>>();
         foreach (GameObject entity in serializedEntities)
         {
-            nameDictionary.Add(Tuple.New<string, Vector3Wrapper>(entity.name, entity.transform.position));
+            var baseEntity = entity.GetComponent<BaseEntity>();
+            nameDictionary.Add(Tuple.New(baseEntity.PrefabName, baseEntity.Serialize()));
         }
         return Serialize(nameDictionary);
     }

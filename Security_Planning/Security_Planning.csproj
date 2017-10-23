@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.4p5</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -79,6 +81,8 @@
     <Compile Include="Assets\Scripts\DataHandlers\ResourcesHolder.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Map.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Tuple.cs" />
+    <Compile Include="Assets\Scripts\Entities\BaseEntity.cs" />
+    <Compile Include="Assets\Scripts\Entities\CameraEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\BaseCharacter.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Enemy.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Guard.cs" />
