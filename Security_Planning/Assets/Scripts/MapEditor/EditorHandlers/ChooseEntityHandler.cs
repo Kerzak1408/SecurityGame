@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Extensions;
 using UnityEngine;
 
@@ -12,9 +13,11 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
 
         public override void LeftButtonUp(RaycastHit[] raycastHits)
         {
-            if (raycastHits.Length != 0)
+            RaycastHit entityHit =
+                raycastHits.FirstOrDefault(hit => hit.transform.gameObject.IsEqualToChildOf(gridManager.Entities));
+            if (!entityHit.Equals(default(RaycastHit)))
             {
-                GameObject hitObject = raycastHits[0].transform.gameObject;
+                GameObject hitObject = entityHit.transform.gameObject;
                 if (hitObject.IsEqualToChildOf(gridManager.Entities))
                 {
                     gridManager.FlagCurrentButton();

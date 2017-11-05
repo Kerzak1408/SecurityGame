@@ -100,11 +100,6 @@ namespace Assets.Scripts.MapEditor
 
             base.Update();
 
-            if (GetCurrentMap() == null)
-            {
-                return;
-            }
-
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
             {
                 SaveMap();
