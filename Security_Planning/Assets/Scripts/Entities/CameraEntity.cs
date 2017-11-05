@@ -1,18 +1,36 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraEntity: BaseEntity
+namespace Assets.Scripts.Entities
 {
-
-    public override void Deserialize(Dictionary<string, object> deserializedData)
+    public class CameraEntity : TransmitterEntity
     {
-        base.Deserialize(deserializedData);
-    }
 
-    //public override Dictionary<string, object> Serialize()
-    //{
-    //    return data;
-    //}
+        public override void StartGame()
+        {
+            Debug.Log("camera related name = " + Data.relatedName);
+            Vector3 position = transform.position;
+            transform.position = new Vector3(position.x, position.y, -1.8f);
+            Camera camera = GetComponentInChildren<Camera>();
+            if (Data.relatedName == "None")
+            {
+                camera.enabled = false;
+            }
+            else
+            {
+                RenderTexture renderTexture = new RenderTexture(1600, 1000, 16, RenderTextureFormat.ARGB32);
+                renderTexture.Create();
+                camera.targetTexture = renderTexture;
+                GameObject monitor = GameObject.Find(Data.relatedName);
+                GameObject screen = monitor.transform.GetChild(0).gameObject;
+                screen.GetComponent<Renderer>().material.mainTexture = renderTexture;
+                screen.GetComponent<Renderer>().material.shader = Shader.Find("Unlit/Texture");
+            }
+        }
+
+        public override Type GetReceiverType()
+        {
+            return typeof(ReceiverEntity);
+        }
+    }
 }

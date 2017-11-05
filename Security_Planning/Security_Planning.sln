@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
+# Visual Studio 2017
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security_Planning", "Security_Planning.csproj", "{9417374F-D4D9-9745-1AEC-5FF937ACDA20}"
 EndProject
 Global

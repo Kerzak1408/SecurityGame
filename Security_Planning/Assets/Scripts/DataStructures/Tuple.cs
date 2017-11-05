@@ -24,7 +24,6 @@ public class Tuple<T1, T2>
         {
             Tuple<T1,T2> castedObj = (Tuple<T1, T2>)obj;
             var result = First.Equals(castedObj.First) && Second.Equals(castedObj.Second);
-            Debug.Log("Tuple comparison -> this: " + this.ToString() + " other: " + obj.ToString() + " result: " + result);
             return result;
         }
         return base.Equals(obj);
@@ -32,7 +31,6 @@ public class Tuple<T1, T2>
 
     public override int GetHashCode()
     {
-        Debug.Log("Tuple hash code");
         return First.GetHashCode() + Second.GetHashCode();
     }
 

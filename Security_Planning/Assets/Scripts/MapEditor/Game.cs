@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.MapEditor;
 using UnityEngine;
 
 public class Game : GridBase
@@ -13,16 +14,11 @@ public class Game : GridBase
         base.Start();
         string mapName = Scenes.GetParam("map");
         map = LoadMap(mapName, mapVisible:true);
-        //map.EmptyParent.transform.Rotate(90, 0, 0);
-        //map.Entities.Values.Find();
-        var guard = GameObject.Find("Guard");
-        guard.transform.Rotate(-90, 0, 0);
-        var guardPosition = guard.transform.position;
-        var cameraPosition = Camera.main.transform.position;
-        Camera.main.transform.position = guardPosition;
-        Camera.main.orthographicSize = 1;
-        Camera.main.transform.parent = guard.transform;
-        Camera.main.transform.localRotation = Quaternion.identity;
+        foreach (GameObject entity in map.Entities)
+        {
+            entity.GetComponent<BaseEntity>().StartGame();
+        }
+
         foreach (Transform transform in map.EmptyParent.transform)
         {
             if (transform.name != "CCTV")

@@ -1,27 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
-public class GameManager
+﻿namespace Assets.Scripts
 {
-    private static GameManager instance;
-    public static GameManager Instance
+    public class GameManager
     {
-        get
+        private static GameManager instance;
+        public static GameManager Instance
         {
-            if (instance == null)
+            get
             {
-                instance = new GameManager();
+                if (instance == null)
+                {
+                    instance = new GameManager();
+                }
+                return instance;
             }
-            return instance;
         }
+
+        private GameManager()
+        {
+
+        }
+
+        public string PathToGridFile { get; set; }
     }
-
-    private GameManager()
-    {
-
-    }
-
-    public string PathToGridFile { get; set; }
 }

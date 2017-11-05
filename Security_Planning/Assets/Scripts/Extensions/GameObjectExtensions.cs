@@ -1,78 +1,86 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-public static class GameObjectExtensions {
+namespace Assets.Scripts.Extensions
+{
+    public static class GameObjectExtensions {
 
-    public static bool IsEqualToChildOf(this GameObject gameObject, GameObject anotherGameObject)
-    {
-        foreach (Transform transform in anotherGameObject.transform)
+        public static bool IsEqualToChildOf(this GameObject gameObject, GameObject anotherGameObject)
         {
-            if (transform.gameObject == gameObject)
+            foreach (Transform transform in anotherGameObject.transform)
             {
-                return true;
+                if (transform.gameObject == gameObject)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool IsEqualToDescendantOf(this GameObject gameObject, GameObject anotherGameObject)
+        {
+            foreach (Transform transform in anotherGameObject.transform)
+            {
+                if (transform.gameObject == gameObject)
+                {
+                    return true;
+                }
+                if (gameObject.IsEqualToDescendantOf(transform.gameObject))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static void DeactivateAllScripts(this GameObject gameObject)
+        {
+            gameObject.DeactivateComponentsOfTypeRecursively<MonoBehaviour>();
+        }
+
+        public static void DeactivateAllCameras(this GameObject gameObject)
+        {
+            gameObject.DeactivateComponentsOfTypeRecursively<Camera>();
+        }
+
+        public static void DeactivateComponentsOfTypeRecursively<T>(this GameObject gameObject) where T : Behaviour
+        {
+            gameObject.DeactivateComponentsOfType<T>();
+            foreach (Transform child in gameObject.transform)
+            {
+                child.gameObject.DeactivateComponentsOfTypeRecursively<T>();
             }
         }
-        return false;
-    }
 
-    public static bool IsEqualToDescendantOf(this GameObject gameObject, GameObject anotherGameObject)
-    {
-        foreach (Transform transform in anotherGameObject.transform)
+        public static void DeactivateComponentsOfType<T>(this GameObject gameObject) where T : Behaviour
         {
-            if (transform.gameObject == gameObject)
+            var components = gameObject.GetComponents<T>();
+            if (components != null)
             {
-                return true;
-            }
-            if (gameObject.IsEqualToDescendantOf(transform.gameObject))
-            {
-                return true;
+                foreach (var component in components)
+                {
+                    component.enabled = false;
+                }
             }
         }
-        return false;
-    }
 
-    public static void DeactivateAllScripts(this GameObject gameObject)
-    {
-        gameObject.DeactivateComponentsOfTypeRecursively<MonoBehaviour>();
-    }
-
-    public static void DeactivateAllCameras(this GameObject gameObject)
-    {
-        gameObject.DeactivateComponentsOfTypeRecursively<Camera>();
-    }
-
-    public static void DeactivateComponentsOfTypeRecursively<T>(this GameObject gameObject) where T : Behaviour
-    {
-        gameObject.DeactivateComponentsOfType<T>();
-        foreach (Transform child in gameObject.transform)
+        public static bool HasScriptOfType<T>(this GameObject gameObject) where T : MonoBehaviour
         {
-            child.gameObject.DeactivateComponentsOfTypeRecursively<T>();
+            var potentialScript = gameObject.GetComponent<T>();
+            return potentialScript != null;
         }
-    }
 
-    public static void DeactivateComponentsOfType<T>(this GameObject gameObject) where T : Behaviour
-    {
-        var components = gameObject.GetComponents<T>();
-        if (components != null)
+        public static bool HasScriptOfType(this GameObject gameObject, Type type)
         {
-            foreach (var component in components)
-            {
-                component.enabled = false;
-            }
+            var potentialScript = gameObject.GetComponent(type);
+            return potentialScript != null;
         }
-    }
 
-    public static bool HasScriptOfType<T>(this GameObject gameObject) where T : MonoBehaviour
-    {
-        var potentialScript = gameObject.GetComponent<T>();
-        return potentialScript != null;
-    }
-
-    public static void ChangeColor(this GameObject gameObject, Color color)
-    {
-        var material = gameObject.GetComponent<Renderer>().material;
-        material.color = color;
-        material.SetColor("_EmissionColor", color);
+        public static void ChangeColor(this GameObject gameObject, Color color)
+        {
+            var material = gameObject.GetComponent<Renderer>().material;
+            material.color = color;
+            material.SetColor("_EmissionColor", color);
+        }
     }
 }

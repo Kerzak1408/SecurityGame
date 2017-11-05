@@ -24,6 +24,10 @@ public class PasswordGate : GateOpen, IPasswordOpenable
 
     protected override void OnTriggerEnter(Collider other)
     {
+        if (!isActiveAndEnabled)
+        {
+            return;
+        }
         var character = other.gameObject.GetComponent<BaseCharacter>();
         if (character != null)
         {
@@ -33,6 +37,10 @@ public class PasswordGate : GateOpen, IPasswordOpenable
 
     protected override void OnTriggerStay(Collider other)
     {
+        if (!isActiveAndEnabled)
+        {
+            return;
+        }
         if (allowOpening)
         {
             base.OnTriggerStay(other);
@@ -41,6 +49,10 @@ public class PasswordGate : GateOpen, IPasswordOpenable
 
     protected override void OnTriggerExit(Collider other)
     {
+        if (!isActiveAndEnabled)
+        {
+            return;
+        }
         var character = other.gameObject.GetComponent<BaseCharacter>();
         character.InterruptRequestPassword();
         allowOpening = false;

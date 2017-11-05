@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseCharacter : MonoBehaviour {
+public abstract class BaseCharacter : BaseGenericEntity<BaseEntityData> {
 
     public abstract void RequestPassword(IPasswordOpenable passwordOpenableObject);
     public abstract void InterruptRequestPassword();

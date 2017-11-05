@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Extensions;
 using UnityEngine;
 
 public class Map {
@@ -22,4 +24,30 @@ public class Map {
         EmptyParent.SetActive(active);
     }
 
+    public void RemoveEntity(GameObject toBeRemovedEntity)
+    {
+        Entities.Remove(toBeRemovedEntity);
+    }
+
+    /// <summary>
+    /// Set active all entities within the map that has a script of type <typeparamref name="T"/>.
+    /// Deactivate all the other entities.
+    /// </summary>
+    /// <typeparam name="T"> Type of the scripts defining the entities that will be activated. At least <see cref="MonoBehaviour"/> </typeparam>
+    public void DeactivateEntitiesExceptOfType<T>() where T : MonoBehaviour
+    {
+        foreach (GameObject entity in Entities)
+        {
+            bool activate = entity.HasScriptOfType<T>();
+            entity.SetActive(activate);
+        }
+    }
+
+    public void ActivateAllEntities()
+    {
+        foreach (GameObject entity in Entities)
+        {
+            entity.SetActive(true);
+        }
+    }
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public static class CollectionsExtensions
 {
-
     public static Tuple<int, int> GetIndices<T>(this T[,] array, T item)
     {
         for (int i = 0; i < array.GetLength(0); i++)
@@ -18,14 +17,14 @@ public static class CollectionsExtensions
         return null;
     }
 
-    public static T Find<T>(this IEnumerable<T> enumerable)
-    {
-        foreach (T item in enumerable)
-        {
+    //public static T Find<T>(this IEnumerable<T> enumerable)
+    //{
+    //    foreach (T item in enumerable)
+    //    {
             
-        }
-        return default(T);
-    }
+    //    }
+    //    return default(T);
+    //}
 
     public static string ToStringExtended<T>(this T[] array)
     {
@@ -43,4 +42,16 @@ public static class CollectionsExtensions
         return result;
     }
 
+    public static bool Contains<T>(this T[,] array, T seekedItem)
+    {
+        foreach (T item in array)
+        {
+            if (item.Equals(seekedItem))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+        
 }

@@ -58,7 +58,6 @@ GameObject:
   - component: {fileID: 20193406518200586}
   - component: {fileID: 124563113862723906}
   - component: {fileID: 92738728819763528}
-  - component: {fileID: 81222252753663650}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -185,7 +184,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: ebf9e0df915493440b16caedfc5c7e09, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -222,13 +221,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!81 &81222252753663650
-AudioListener:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1595450952923300}
-  m_Enabled: 1
 --- !u!92 &92738728819763528
 Behaviour:
   m_ObjectHideFlags: 1

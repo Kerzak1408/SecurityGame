@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.4p5</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -82,6 +80,8 @@
     <Compile Include="Assets\Scripts\DataStructures\Map.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Tuple.cs" />
     <Compile Include="Assets\Scripts\Entities\BaseEntity.cs" />
+    <Compile Include="Assets\Scripts\Entities\BaseEntityWithBaseData.cs" />
+    <Compile Include="Assets\Scripts\Entities\BaseGenericEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\CameraEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\BaseCharacter.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Enemy.cs" />
@@ -89,7 +89,10 @@
     <Compile Include="Assets\Scripts\Entities\Gates\GateOpen.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\PasswordGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPasswordOpenable.cs" />
+    <Compile Include="Assets\Scripts\Entities\ReceiverEntity.cs" />
+    <Compile Include="Assets\Scripts\Entities\TransmitterEntity.cs" />
     <Compile Include="Assets\Scripts\Enums\Axis.cs" />
+    <Compile Include="Assets\Scripts\Enums\EditorMode.cs" />
     <Compile Include="Assets\Scripts\Extensions\CollectionsExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\GameObjectExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\ObjectExtensions.cs" />
@@ -101,13 +104,28 @@
     <Compile Include="Assets\Scripts\Logger\MyLogHandler.cs" />
     <Compile Include="Assets\Scripts\Logger\MyLogger.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\AddEntityHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\BaseChooseHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\BaseEditorHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\BaseUserSelectableHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\ChooseEntityHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\ChooseTileHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\ConnectEntitiesHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\DeleteHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\DragHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\EditParametersHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\NewMapHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\ReplaceTileHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Game.cs" />
     <Compile Include="Assets\Scripts\MapEditor\GridBase.cs" />
     <Compile Include="Assets\Scripts\MapEditor\GridManager.cs" />
     <Compile Include="Assets\Scripts\MapEditor\GridsBrowserBase.cs" />
     <Compile Include="Assets\Scripts\MapEditor\MapChoiceManager.cs" />
+    <Compile Include="Assets\Scripts\Reflection\ReflectiveEnumerator.cs" />
     <Compile Include="Assets\Scripts\Scenes.cs" />
+    <Compile Include="Assets\Scripts\Serialization\BaseEntityData.cs" />
     <Compile Include="Assets\Scripts\Serialization\Serializer.cs" />
+    <Compile Include="Assets\Scripts\Serialization\TransmitterEntityData.cs" />
     <Compile Include="Assets\Scripts\Serialization\Vector3Wrapper.cs" />
     <Compile Include="Assets\Scripts\UI\InputRestrictions.cs" />
     <Compile Include="Assets\Scripts\UI\MyColors.cs" />

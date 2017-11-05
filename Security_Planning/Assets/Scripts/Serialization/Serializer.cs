@@ -50,7 +50,7 @@ public class Serializer {
 
     public byte[] SerializeEntities(List<GameObject> serializedEntities)
     {
-        var nameDictionary = new List<Tuple<string, Dictionary<string, object>>>();
+        var nameDictionary = new List<Tuple<string, BaseEntityData>>();
         foreach (GameObject entity in serializedEntities)
         {
             var baseEntity = entity.GetComponent<BaseEntity>();

@@ -1,90 +1,217 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
+using Assets.Scripts.Extensions;
+using Assets.Scripts.MapEditor.EditorHandlers;
+using Assets.Scripts.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
 
-public class GridManager : GridsBrowserBase
+namespace Assets.Scripts.MapEditor
 {
-    public InputField InputWidth;
-    public InputField InputHeight;
-    public InputField InputName;
-    public Text TextError;
-    public GameObject ButtonRemoveEntity;
-    
-    public GameObject Panel;
-    public GameObject PanelStart;
-    public GameObject Tiles;
-
-    public GameObject PanelEntities;
-    public GameObject PanelEntitiesStart;
-    public GameObject Entities;
-
-    public GameObject ButtonAddMap;
-    public GameObject PanelNewMapForm;
-    public GameObject Canvas;
-    public GameObject PanelPassword;
-    public GameObject PanelError;
-    
-    private GameObject HoveredObject;
-    private GameObject ClickedObject;
-
-    private Selectable SelectedInputField;
-
-    private Vector3 originalPanelScale;
-    private Color hoveredObjectOriginalColor;
-    private PasswordGate currentPasswordGate;
-
-    private const string EMPTY_SQUARE = "000_Empty";
-    private Tuple<int, int> passwordIndices;
-
-    private GameObject draggedObject;
-    private GameObject toBeRemovedEntity;
-
-    private int entitiesCounter;
-
-    // Use this for initialization
-    protected override void Start ()
+    public class GridManager : GridsBrowserBase
     {
-        base.Start();
+        public InputField InputWidth;
+        public InputField InputHeight;
+        public InputField InputName;
+        public Text TextError;
+        public GameObject ButtonRemoveEntity;
+    
+        public GameObject Panel;
+        public GameObject PanelStart;
+        public GameObject Tiles;
 
-        InputWidth.onValidateInput += NumberValidationFunction;
-        InputHeight.onValidateInput += NumberValidationFunction;
+        public GameObject PanelEntities;
+        public GameObject PanelEntitiesStart;
+        public GameObject Entities;
 
-        InitializePanelGroup(ResourcesHolder.Instance.AllTiles, PanelStart.transform.position, Tiles);
-        InitializePanelGroup(ResourcesHolder.Instance.AllEntitiesIcons, PanelEntitiesStart.transform.position, Entities);
+        public GameObject ButtonAddMap;
 
-        originalPanelScale = Panel.transform.localScale;
-    }
+        public GameObject PanelNewMapForm;
+        public GameObject Canvas;
+        public GameObject PanelPassword;
+        public GameObject PanelError;
+        public Dropdown DropdownMode;
+    
+        
+        public GameObject ClickedObject;
 
-    private void InitializePanelGroup(UnityEngine.Object[] objects, Vector3 startingPosition, GameObject parent)
-    {
-        objects.OrderBy(x => x.name);
-        foreach (UnityEngine.Object item in objects)
+        private Vector3 originalPanelScale;
+        
+        public PasswordGate currentPasswordGate;
+
+        private const string EMPTY_SQUARE = "000_Empty";
+        public Tuple<int, int> passwordIndices;
+
+        private GameObject draggedObject;
+        public GameObject toBeRemovedEntity;
+
+        private BaseEditorHandler currentEditorHandler;
+        private IEnumerable<BaseEditorHandler> editorHandlers;
+        private Dictionary<int, BaseUserSelectableHandler> selectableHandlers;
+        private BaseEditorHandler previousHandler;
+        internal Vector3 newEntityPosition;
+
+        // Use this for initialization
+        protected override void Start ()
         {
-            GameObject newObject = Instantiate(item) as GameObject;
-            Debug.Log("Panel group item: " + item);
-            newObject.transform.position = startingPosition;
-            newObject.transform.parent = parent.transform;
-            newObject.transform.localScale *= 4;
-            newObject.name = item.name;
-            newObject.AddComponent<BoxCollider>();
-            startingPosition.x += 8;
+            base.Start();
+            InputWidth.onValidateInput += NumberValidationFunction;
+            InputHeight.onValidateInput += NumberValidationFunction;
+
+            InitializePanelGroup(ResourcesHolder.Instance.AllTiles, PanelStart.transform.position, Tiles);
+            InitializePanelGroup(ResourcesHolder.Instance.AllEntitiesIcons, PanelEntitiesStart.transform.position, Entities);
+
+            originalPanelScale = Panel.transform.localScale;
+            editorHandlers = ReflectiveEnumerator.GetEnumerableOfType<BaseEditorHandler>(this);
+            currentEditorHandler = editorHandlers.First(x => x is DragHandler);
+
+            IEnumerable<BaseUserSelectableHandler> baseUserSelectableHandlers = editorHandlers.OfType<BaseUserSelectableHandler>();
+            selectableHandlers = new Dictionary<int, BaseUserSelectableHandler>();
+            var options = new List<Dropdown.OptionData>();
+            int indexOfDrag = 0;
+            foreach (BaseUserSelectableHandler baseUserSelectableHandler in baseUserSelectableHandlers)
+            {
+                string className = baseUserSelectableHandler.GetType().Name;
+                className = className.Substring(0, className.Length - 7);
+                className = Regex.Replace(className, "(\\B[A-Z])", " $1");
+                selectableHandlers[options.Count] = baseUserSelectableHandler;
+                if (baseUserSelectableHandler is DragHandler)
+                {
+                    indexOfDrag = options.Count;
+                }
+                options.Add(new Dropdown.OptionData(className));
+            }
+            DropdownMode.options = options;
+            DropdownMode.value = indexOfDrag;
         }
-    } 
 
-    private void InitializeGrid(int width, int height, Button button)
-    {
-        UnityEngine.Object[] allTiles = ResourcesHolder.Instance.AllTiles;
-        UnityEngine.Object emptySquare = allTiles.FindByName(EMPTY_SQUARE);
-        var newGrid = new GameObject[height, width];
+        // Update is called once per frame
+        protected override void Update()
+        {
+            if (eventProcessedByUI)
+            {
+                eventProcessedByUI = false;
+                return;
+            }
 
-        var newParent = new GameObject();
-        newParent.transform.parent = Grids.transform;
-        var map = new Map(newGrid, new List<GameObject>(), newParent, new Dictionary<Tuple<int, int>, string>());
-        MapsDictionary.Add(button, map);
+            base.Update();
 
-        for (int i = 0; i < height; i++)
+            if (GetCurrentMap() == null)
+            {
+                return;
+            }
+
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
+            {
+                SaveMap();
+            }
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                currentEditorHandler.PressedKeys(KeyCode.Tab);
+            }
+
+
+            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit[] raycastHits = Physics.RaycastAll(ray);
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                currentEditorHandler.LeftButtonUp(raycastHits);
+            }
+            else if (Input.GetMouseButtonDown(0))
+            {
+                currentEditorHandler.LeftButtonDown(raycastHits);
+            }
+            else if (Input.GetMouseButton(0))
+            {
+                currentEditorHandler.LeftButton(raycastHits);
+            }
+            else
+            {
+                currentEditorHandler.HoverLogic(raycastHits);
+            }
+
+            if (scroll != 0)
+            {
+                currentEditorHandler.Scroll(scroll, raycastHits);
+            }
+        }
+
+        public Map GetCurrentMap()
+        {
+            return SelectedMapButton == null ? null : MapsDictionary[SelectedMapButton];
+        }
+
+        public void ChangeEditorHandler<TEditorHandler>() where TEditorHandler : BaseEditorHandler
+        {
+            ChangeEditorHandler(editorHandlers.First(x => typeof(TEditorHandler) == x.GetType()));
+        }
+
+        public void ChangeEditorHandler(Type handlerType)
+        {
+            ChangeEditorHandler(editorHandlers.First(x => handlerType == x.GetType()));
+        }
+
+        public void ChangeEditorHandler(BaseEditorHandler handler)
+        {
+            currentEditorHandler.End();
+            previousHandler = currentEditorHandler;
+            currentEditorHandler = handler;
+            currentEditorHandler.Start();
+        }
+
+        public void ActivatePreviousHandler()
+        {
+            ChangeEditorHandler(previousHandler);
+        }
+
+        public void FlagCurrentButton()
+        {
+            var buttonText = SelectedMapButton.GetComponentInChildren<Text>().text;
+            if (buttonText[buttonText.Length - 1] != '*')
+            {
+                SelectedMapButton.GetComponentInChildren<Text>().text += "*";
+            }
+        }
+
+        public void OnDropdownValueChange()
+        {
+            BaseUserSelectableHandler handler = selectableHandlers[DropdownMode.value];
+            ChangeEditorHandler(handler.GetType());
+        }
+
+        private void InitializePanelGroup(UnityEngine.Object[] objects, Vector3 startingPosition, GameObject parent)
+        {
+            objects.OrderBy(x => x.name);
+            foreach (UnityEngine.Object item in objects)
+            {
+                GameObject newObject = Instantiate(item) as GameObject;
+                newObject.transform.position = startingPosition;
+                newObject.transform.parent = parent.transform;
+                newObject.transform.localScale *= 4;
+                newObject.name = item.name;
+                newObject.AddComponent<BoxCollider>();
+                startingPosition.x += 8;
+            }
+        } 
+
+        private void InitializeGrid(int width, int height, Button button)
+        {
+            UnityEngine.Object[] allTiles = ResourcesHolder.Instance.AllTiles;
+            UnityEngine.Object emptySquare = allTiles.FindByName(EMPTY_SQUARE);
+            var newGrid = new GameObject[height, width];
+
+            var newParent = new GameObject();
+            newParent.transform.parent = Grids.transform;
+            var map = new Map(newGrid, new List<GameObject>(), newParent, new Dictionary<Tuple<int, int>, string>());
+            MapsDictionary.Add(button, map);
+
+            for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
             {
                 GameObject newObject = Instantiate(emptySquare, transform) as GameObject;
@@ -93,486 +220,204 @@ public class GridManager : GridsBrowserBase
                 newObject.name = emptySquare.name;
                 newObject.transform.parent = newParent.transform;
             }
-    }
-	
-	// Update is called once per frame
-	protected override void Update ()
-    {
-        if (eventProcessedByUI)
-        {
-            eventProcessedByUI = false;
-            return;
         }
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.S))
+
+        public void AdjustPanelToCamera(GameObject panel)
         {
-            SaveMap();
+            panel.transform.localScale = (Camera.main.orthographicSize / cameraOriginalSize) * originalPanelScale;
+            var cameraPosition = Camera.main.transform.position;
+            panel.transform.position = new Vector3(cameraPosition.x, cameraPosition.y, 0);
         }
-        if (PanelPassword.activeInHierarchy || PanelError.activeInHierarchy)
+
+        private char NumberValidationFunction(string text, int charIndex, char addedChar)
         {
-            return;
-        }
-        if (PanelNewMapForm.activeInHierarchy)
-        {
-            Debug.Log("Panel New Map Form active");
-            if (Input.GetKeyDown(KeyCode.Tab))
+            if (addedChar >= '0' && addedChar <= '9')
             {
-                Debug.Log("TAB pressed");
-                
-                SelectedInputField = SelectedInputField.FindSelectableOnDown();
-                if (SelectedInputField == null)
-                {
-                    SelectedInputField = InputName;
-                }
-                SelectedInputField.Select();
+                return addedChar;
             }
-            return;
-        }
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            LeftButtonDownLogicNormalPhase(ray);
-            return;
+            return '\0';
         }
 
-        if (Input.GetMouseButton(0) && draggedObject != null)
+        public void SaveMap()
         {
-            Debug.Log("Mouse drag");
-            Vector3 previousPosition = draggedObject.transform.position;
-            var v3 = Input.mousePosition;
-            v3 = Camera.main.ScreenToWorldPoint(v3);
-            v3.z = previousPosition.z;
-            draggedObject.transform.position = v3;
-            return;
-        }
-
-        if (Panel.activeInHierarchy)
-        {
-            Debug.Log("Panel phase");
-            if (scroll != 0)
+            var currentMap = MapsDictionary[SelectedMapButton];
+            bool containsGuard = currentMap.Entities.Any(x => x.HasScriptOfType<Guard>());
+            if (!containsGuard)
             {
-                ScrollLogicReplacePhase(scroll, ray, Tiles);
-            }
-            if (Input.GetMouseButtonUp(0))
-            {
-                LeftButtonUpLogicReplacePhase(ray);
-            }
-            return;
-        }
-        if (PanelEntities.activeInHierarchy)
-        {
-            if (scroll != 0)
-            {
-                ScrollLogicReplacePhase(scroll, ray, Entities);
-            }
-            if (Input.GetMouseButtonUp(0))
-            {
-                LeftButtonUpLogicEntityPhase(ray);
-            }
-            return;
-        }
-        base.Update();
-
-        
-    }
-
-    private void LeftButtonDownLogicNormalPhase(Ray ray)
-    {
-        RaycastHit hit;
-        
-        if (Physics.Raycast(ray, out hit))
-        {
-            GameObject hitObject = hit.transform.gameObject;
-            Map map = MapsDictionary[SelectedMapButton];
-            if (map.Entities.Contains(hitObject))
-            {
-                draggedObject = hitObject;
-            }
-        }
-    }
-
-    private void LeftButtonUpLogicReplacePhase(Ray ray)
-    {
-        RaycastHit hit;
-        
-        if (Physics.Raycast(ray, out hit))
-        {
-            GameObject HitObject = hit.transform.gameObject;
-            if (HitObject.IsEqualToChildOf(Tiles))
-            {
-                FlagCurrentButton();
-                UnityEngine.Object item = ResourcesHolder.Instance.AllTiles.FindByName(HitObject.name);
-                GameObject newObject = Instantiate(item) as GameObject;
-                var map = MapsDictionary[SelectedMapButton];
-                var currentGrid = map.Tiles;
-                Tuple<int, int> coords = currentGrid.GetIndices(ClickedObject);
-                if (newObject.HasScriptOfType<PasswordGate>())
-                {
-                    map.PasswordDictionary[coords] = newObject.GetComponent<PasswordGate>().Password;
-                }
-                newObject.name = item.name;
-                newObject.transform.position = ClickedObject.transform.position;
-                newObject.transform.parent = ClickedObject.transform.parent;
-                currentGrid[coords.First, coords.Second] = newObject;
-                Panel.SetActive(false);
-                Destroy(ClickedObject);
-                Canvas.SetActive(true);
-            }
-            else
-            {
-                Panel.SetActive(false);
-                Canvas.SetActive(true);
-            }
-        }
-        else
-        {
-            Panel.SetActive(false);
-            Canvas.SetActive(true);
-        }  
-    }
-
-    private void LeftButtonUpLogicEntityPhase(Ray ray)
-    {
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            GameObject HitObject = hit.transform.gameObject;
-            if (HitObject.IsEqualToChildOf(Entities))
-            {
-                FlagCurrentButton();
-                UnityEngine.Object item = ResourcesHolder.Instance.AllEntities.FindByName(HitObject.name);
-                GameObject newObject = Instantiate(item) as GameObject;
-                newObject.DeactivateAllScripts();
-                newObject.DeactivateAllCameras();
-                newObject.name = item.name;
-                var currentMap = MapsDictionary[SelectedMapButton];
-                var currentGrid = currentMap.Tiles;
-                var currentDictionary = currentMap.Entities;
-                newObject.transform.position = ClickedObject.transform.position - new Vector3(0, 0, 0.5f);
-                newObject.transform.parent = ClickedObject.transform.parent;
-                newObject.GetComponent<BaseEntity>().PrefabName = item.name;
-                newObject.transform.name += ("_" + ++entitiesCounter);
-                currentDictionary.Add(newObject);
-                PanelEntities.SetActive(false);
-                Canvas.SetActive(true);
-            } 
-            else
-            {
-                PanelEntities.SetActive(false);
-                Canvas.SetActive(true);
-            }
-        }
-        else
-        {
-            PanelEntities.SetActive(false);
-            Canvas.SetActive(true);
-        }
-    }
-
-    private void FlagCurrentButton()
-    {
-        var buttonText = SelectedMapButton.GetComponentInChildren<Text>().text;
-        if (buttonText[buttonText.Length - 1] != '*')
-        {
-            SelectedMapButton.GetComponentInChildren<Text>().text += "*";
-        }
-    }
-
-    protected override void LeftButtonUpLogicNormalPhase(Ray ray)
-    {
-        ButtonRemoveEntity.SetActive(false);
-        if (draggedObject != null)
-        {
-            draggedObject = null;
-            FlagCurrentButton();
-            return;
-        }
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            GameObject HitObject = hit.transform.gameObject;
-            HoverEnded();
-            Debug.Log("Mouse button up normal phase");
-            Map map = MapsDictionary[SelectedMapButton];
-            if (HitObject.transform.parent.gameObject.HasScriptOfType<PasswordGate>())
-            {
-                currentPasswordGate = HitObject.GetComponentInParent<PasswordGate>();
-                PanelPassword.GetComponentInChildren<InputField>().text = currentPasswordGate.Password;
-                var currentMap = MapsDictionary[SelectedMapButton];
-                passwordIndices = currentMap.Tiles.GetIndices(HitObject.transform.parent.gameObject);
-                map.PasswordDictionary[passwordIndices] = currentPasswordGate.Password;
-                Grids.SetActive(true);
-                PanelPassword.SetActive(true);
-            }
-            else
-            {
-                HitObject.ChangeColor(Color.red);
-                ClickedObject = HitObject;
-                Canvas.SetActive(false);
-                AdjustPanelToCamera(Panel);
-                Panel.SetActive(true);
-            }
-            
-        }
-    }
-
-    private void AdjustPanelToCamera(GameObject panel)
-    {
-        panel.transform.localScale = (Camera.main.orthographicSize / cameraOriginalSize) * originalPanelScale;
-        var cameraPosition = Camera.main.transform.position;
-        panel.transform.position = new Vector3(cameraPosition.x, cameraPosition.y, 0);
-    }
-
-    protected override void RightButtonUpLogicNormalPhase(Ray ray)
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
-        {
-            GameObject hitObject = hit.transform.gameObject;
-            if (MapsDictionary[SelectedMapButton].Entities.Contains(hitObject))
-            {
-                ButtonRemoveEntity.SetActive(true);
-                ButtonRemoveEntity.transform.position = Input.mousePosition;
-                toBeRemovedEntity = hitObject;
-            } 
-            else
-            {
-                ClickedObject = hit.transform.gameObject;
-                PanelEntities.SetActive(true);
-                Canvas.SetActive(false);
-                AdjustPanelToCamera(PanelEntities);
-            }
-        }
-    }
-
-    protected override void HoverLogic(Ray ray)
-    {
-        if (!Panel.activeInHierarchy)
-        {
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                GameObject HitObject = hit.transform.gameObject;
-                if (HitObject != HoveredObject)
-                {
-                    HoverEnded();
-                    var currentParent = MapsDictionary[SelectedMapButton].EmptyParent;
-                    if (HitObject.IsEqualToChildOf(currentParent) ||
-                        /*HitObject.transform.parent.gameObject.HasScriptOfType<PasswordGate>()*/
-                        MapsDictionary[SelectedMapButton].Entities.Contains(HitObject)
-                        )
-                    {
-                        HoveredObject = HitObject;
-                        hoveredObjectOriginalColor = HitObject.GetComponent<Renderer>().material.color;
-                        HitObject.ChangeColor(Color.green);
-                    }
-                }
-            }
-            else
-            {
-                HoverEnded();
-                HoveredObject = null;
-            }
-        }
-        
-    }
-
-    protected override void HoverEnded()
-    {
-        if (HoveredObject != null)
-        {
-            HoveredObject.ChangeColor(hoveredObjectOriginalColor);
-        }
-    }
-
-    private void ScrollLogicReplacePhase(float scroll, Ray ray, GameObject scrolledObject)
-    {
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            scrolledObject.transform.position += new Vector3(Camera.main.orthographicSize/cameraOriginalSize *  25 * scroll, 0, 0);
-        }
-    }
-
-
-
-    private char NumberValidationFunction(string text, int charIndex, char addedChar)
-    {
-        Debug.Log("Validating char: " + addedChar);
-        if (addedChar >= '0' && addedChar <= '9')
-        {
-            return addedChar;
-        }
-        return '\0';
-    }
-
-
-
-    public void SaveMap()
-    {
-        var currentMap = MapsDictionary[SelectedMapButton];
-        bool containsGuard = currentMap.Entities.Any(x => x.HasScriptOfType<Guard>());
-        if (!containsGuard)
-        {
-            ShowError("Unable to save a map without Guard. ");
-            return;
-        }
-        eventProcessedByUI = true;
-        var selectedButtonText =  SelectedMapButton.GetComponentInChildren<Text>().text;
-        if (selectedButtonText.Contains("*"))
-        {
-            SelectedMapButton.GetComponentInChildren<Text>().text = selectedButtonText.Remove(selectedButtonText.Length - 1);
-        }
-        else
-        {
-            return;
-        }
-        var currentGrid = currentMap.Tiles;
-        byte[] serializedMap = Serializer.Instance.SerializeGrid(currentGrid);
-        string currentMapName = SelectedMapButton.GetComponentInChildren<Text>().text.Replace(' ','_');
-
-        var mapDirectoryPath = FileHelper.JoinPath(MAPS_PATH, currentMapName);
-
-        DirectoryHelper.CreateDirectoryLazy(mapDirectoryPath);
-
-        var tilesPath = FileHelper.JoinPath(mapDirectoryPath, TILES);
-        var binaryWriter = new BinaryWriter(new FileStream(tilesPath, FileMode.Create));
-        binaryWriter.Write(serializedMap);
-        binaryWriter.Close();
-
-        var entitiesPath = FileHelper.JoinPath(mapDirectoryPath, ENTITIES);
-        byte[] serializedEntities = Serializer.Instance.SerializeEntities(currentMap.Entities);
-        binaryWriter = new BinaryWriter(new FileStream(entitiesPath, FileMode.Create));
-        binaryWriter.Write(serializedEntities);
-        binaryWriter.Close();
-
-        var passwordsPath = FileHelper.JoinPath(mapDirectoryPath, PASSWORDS);
-        byte[] serializedPasswords = Serializer.Instance.Serialize(currentMap.PasswordDictionary);
-        binaryWriter = new BinaryWriter(new FileStream(passwordsPath, FileMode.Create));
-        binaryWriter.Write(serializedPasswords);
-        binaryWriter.Close();
-
-
-        SelectedMapButton.ChangeColor(MyColors.LIGHT_SKY_BLUE);
-    }
-
-    public void DeleteMap()
-    {
-        eventProcessedByUI = true;
-        var mapPath = MAPS_PATH + "/" + SelectedMapButton.GetComponentInChildren<Text>().text;
-        if (File.Exists(mapPath))
-        {
-            File.Delete(mapPath);
-        }
-        var parent = MapsDictionary[SelectedMapButton].EmptyParent;
-        Destroy(parent);
-        MapsDictionary.Remove(SelectedMapButton);
-        Destroy(SelectedMapButton.gameObject);
-        SelectedMapButton = null;
-    }
-
-    public void AddMap()
-    {
-        Grids.SetActive(false);
-        HideCurrentMap();
-        PanelNewMapForm.SetActive(true);
-        InputName.Select();
-        SelectedInputField = InputName;
-    }
-
-    public void CreateMap()
-    {
-        if (InputWidth.text.Length == 0 || InputHeight.text.Length == 0 || InputName.text.Length == 0)
-        {
-            TextError.text = "All fields are obligatory.";
-            return;
-        }
-        int width = int.Parse(InputWidth.text);
-        int height = int.Parse(InputHeight.text);
-        if (width == 0 || height == 0)
-        {
-            TextError.text = "Both width and height must be greater than 0.";
-            return;
-        }
-        string buttonName = InputName.text + " (" + width + " x " + height + ")";
-        if (buttonName.Contains("_") || buttonName.Contains("*"))
-        {
-            TextError.text = "Characters '_' and '*' are not allowed in the map name. ";
-            return;
-        }
-        foreach (var button in MapsDictionary.Keys)
-        {
-            if (button.GetComponentInChildren<Text>().text == buttonName)
-            {
-                TextError.text = "Such map already exists. Change at least one of: name, width, height.";
+                ShowError("Unable to save a map without Guard. ");
                 return;
             }
+            eventProcessedByUI = true;
+            var selectedButtonText =  SelectedMapButton.GetComponentInChildren<Text>().text;
+            if (selectedButtonText.Contains("*"))
+            {
+                SelectedMapButton.GetComponentInChildren<Text>().text = selectedButtonText.Remove(selectedButtonText.Length - 1);
+            }
+            else
+            {
+                return;
+            }
+            var currentGrid = currentMap.Tiles;
+            byte[] serializedMap = Serializer.Instance.SerializeGrid(currentGrid);
+            string currentMapName = SelectedMapButton.GetComponentInChildren<Text>().text.Replace(' ','_');
+
+            var mapDirectoryPath = FileHelper.JoinPath(MAPS_PATH, currentMapName);
+
+            DirectoryHelper.CreateDirectoryLazy(mapDirectoryPath);
+
+            var tilesPath = FileHelper.JoinPath(mapDirectoryPath, TILES);
+            var binaryWriter = new BinaryWriter(new FileStream(tilesPath, FileMode.Create));
+            binaryWriter.Write(serializedMap);
+            binaryWriter.Close();
+
+            var entitiesPath = FileHelper.JoinPath(mapDirectoryPath, ENTITIES);
+            byte[] serializedEntities = Serializer.Instance.SerializeEntities(currentMap.Entities);
+            binaryWriter = new BinaryWriter(new FileStream(entitiesPath, FileMode.Create));
+            binaryWriter.Write(serializedEntities);
+            binaryWriter.Close();
+
+            var passwordsPath = FileHelper.JoinPath(mapDirectoryPath, PASSWORDS);
+            byte[] serializedPasswords = Serializer.Instance.Serialize(currentMap.PasswordDictionary);
+            binaryWriter = new BinaryWriter(new FileStream(passwordsPath, FileMode.Create));
+            binaryWriter.Write(serializedPasswords);
+            binaryWriter.Close();
+
+
+            SelectedMapButton.ChangeColor(MyColors.LIGHT_SKY_BLUE);
         }
-        if (SelectedMapButton != null)
+
+        public void DeleteMap()
         {
-            SelectedMapButton.ChangeColor(Color.white);
+            eventProcessedByUI = true;
+            var mapPath = MAPS_PATH + "/" + SelectedMapButton.GetComponentInChildren<Text>().text;
+            if (File.Exists(mapPath))
+            {
+                File.Delete(mapPath);
+            }
+            var parent = MapsDictionary[SelectedMapButton].EmptyParent;
+            Destroy(parent);
+            MapsDictionary.Remove(SelectedMapButton);
+            Destroy(SelectedMapButton.gameObject);
+            SelectedMapButton = null;
         }
-        SelectedMapButton = AddMapButton(buttonName, MyColors.LIGHT_SKY_BLUE);
 
-        InitializeGrid(width, height, SelectedMapButton);
-        SaveMap();
-
-        // To leave AddButton at the last position.
-        ButtonAddMap.transform.parent = null;
-        ButtonAddMap.transform.parent = ScrollViewContent.transform;
-        PanelNewMapForm.SetActive(false);
-        Grids.SetActive(true);
-        FlagCurrentButton();
-    }
-
-    public void CancelMapCreation()
-    {
-        eventProcessedByUI = true;
-        Debug.Log("Cancel button clicked");
-        PanelNewMapForm.SetActive(false);
-        Grids.SetActive(true);
-        ShowCurrentMap();
-    }
-
-    public void ChangePassword()
-    {
-        eventProcessedByUI = true;
-        var dict = MapsDictionary[SelectedMapButton].PasswordDictionary;
-        var newPassword = PanelPassword.GetComponentInChildren<InputField>().text;
-        var oldPassword = dict[passwordIndices];
-        if (newPassword != oldPassword)
+        public void AddMap()
         {
+            ChangeEditorHandler<NewMapHandler>();
+            Grids.SetActive(false);
+            HideCurrentMap();
+            PanelNewMapForm.SetActive(true);
+            InputName.Select();
+        }
+
+        public void CreateMap()
+        {
+            eventProcessedByUI = true;
+            ChangeEditorHandler(previousHandler);
+            if (InputWidth.text.Length == 0 || InputHeight.text.Length == 0 || InputName.text.Length == 0)
+            {
+                TextError.text = "All fields are obligatory.";
+                return;
+            }
+            int width = int.Parse(InputWidth.text);
+            int height = int.Parse(InputHeight.text);
+            if (width == 0 || height == 0)
+            {
+                TextError.text = "Both width and height must be greater than 0.";
+                return;
+            }
+            string buttonName = InputName.text + " (" + width + " x " + height + ")";
+            if (buttonName.Contains("_") || buttonName.Contains("*"))
+            {
+                TextError.text = "Characters '_' and '*' are not allowed in the map name. ";
+                return;
+            }
+            foreach (var button in MapsDictionary.Keys)
+            {
+                if (button.GetComponentInChildren<Text>().text == buttonName)
+                {
+                    TextError.text = "Such map already exists. Change at least one of: name, width, height.";
+                    return;
+                }
+            }
+            if (SelectedMapButton != null)
+            {
+                SelectedMapButton.ChangeColor(Color.white);
+            }
+            SelectedMapButton = AddMapButton(buttonName, MyColors.LIGHT_SKY_BLUE);
+
+            InitializeGrid(width, height, SelectedMapButton);
+            SaveMap();
+
+            // To leave AddButton at the last position.
+            ButtonAddMap.transform.parent = null;
+            ButtonAddMap.transform.parent = ScrollViewContent.transform;
+            PanelNewMapForm.SetActive(false);
+            Grids.SetActive(true);
             FlagCurrentButton();
-            currentPasswordGate.Password = newPassword;
-            dict[passwordIndices] = newPassword;
         }
-        PanelPassword.SetActive(false);
-        Grids.SetActive(true);
-    }
 
-    public void ShowError(string message)
-    {
-        PanelError.GetComponentInChildren<Text>().text = message;
-        PanelError.SetActive(true);
-    }
+        public void CancelMapCreation()
+        {
+            eventProcessedByUI = true;
+            Debug.Log("Cancel button clicked");
+            PanelNewMapForm.SetActive(false);
+            Grids.SetActive(true);
+            ShowCurrentMap();
+            ChangeEditorHandler(previousHandler);
+        }
 
-    public void HideError()
-    {
-        eventProcessedByUI = true;
-        PanelError.SetActive(false);
-    }
+        public void ChangePassword()
+        {
+            eventProcessedByUI = true;
+            var dict = MapsDictionary[SelectedMapButton].PasswordDictionary;
+            var newPassword = PanelPassword.GetComponentInChildren<InputField>().text;
+            var oldPassword = dict[passwordIndices];
+            if (newPassword != oldPassword)
+            {
+                FlagCurrentButton();
+                currentPasswordGate.Password = newPassword;
+                dict[passwordIndices] = newPassword;
+            }
+            PanelPassword.SetActive(false);
+            Grids.SetActive(true);
+        }
 
-    public void RemoveEntity()
-    {
-        eventProcessedByUI = true;
-        FlagCurrentButton();
-        ButtonRemoveEntity.SetActive(false);
-        MapsDictionary[SelectedMapButton].Entities.Remove(toBeRemovedEntity);
-        Destroy(toBeRemovedEntity);
+        public void ShowError(string message)
+        {
+            PanelError.GetComponentInChildren<Text>().text = message;
+            PanelError.SetActive(true);
+        }
+
+        public void HideError()
+        {
+            eventProcessedByUI = true;
+            PanelError.SetActive(false);
+        }
+
+        public void RemoveEntity()
+        {
+            eventProcessedByUI = true;
+            FlagCurrentButton();
+            ButtonRemoveEntity.SetActive(false);
+            MapsDictionary[SelectedMapButton].RemoveEntity(toBeRemovedEntity);
+            Destroy(toBeRemovedEntity);
+        }
+
+        public void DestroyGameObject(GameObject gameObject)
+        {
+            Destroy(gameObject);
+        }
+
+        public GameObject InstantiateGameObject(UnityEngine.Object item)
+        {
+            return Instantiate(item) as GameObject;
+        }
+
+        protected override void SelectMap()
+        {
+            base.SelectMap();
+            DropdownMode.transform.gameObject.SetActive(true);
+        }
     }
 }

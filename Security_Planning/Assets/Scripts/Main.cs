@@ -3,6 +3,7 @@ using System.Collections;
 using System.Xml.Serialization;
 using System.IO;
 using System.Collections.Generic;
+using Assets.Scripts;
 
 public class Main : MonoBehaviour {
 
