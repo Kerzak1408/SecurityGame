@@ -342,7 +342,6 @@ namespace Assets.Scripts.MapEditor
             SelectedMapButton = AddMapButton(buttonName, MyColors.LIGHT_SKY_BLUE);
 
             InitializeGrid(width, height, SelectedMapButton);
-            SaveMap();
 
             // To leave AddButton at the last position.
             ButtonAddMap.transform.parent = null;
@@ -350,6 +349,7 @@ namespace Assets.Scripts.MapEditor
             PanelNewMapForm.SetActive(false);
             Grids.SetActive(true);
             FlagCurrentButton();
+            DropdownMode.transform.gameObject.SetActive(true);
         }
 
         public void CancelMapCreation()
