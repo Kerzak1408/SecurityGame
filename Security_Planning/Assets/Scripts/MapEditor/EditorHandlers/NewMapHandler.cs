@@ -13,9 +13,9 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             SelectedInputField = gridManager.InputName;
         }
 
-        public override void PressedKeys(params KeyCode[] keyCodes)
+        public override void PressedKeys(KeyCode[] keyCodesUp, KeyCode[] keyCodesDown, KeyCode[] keyCodesPressed)
         {
-            if (keyCodes.Contains(KeyCode.Tab))
+            if (keyCodesDown.Contains(KeyCode.Tab))
             {
                 SelectedInputField = SelectedInputField.FindSelectableOnDown();
                 if (SelectedInputField == null)

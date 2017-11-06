@@ -13,9 +13,9 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             dropdownMode = gridManager.DropdownMode;
         }
 
-        public override void PressedKeys(params KeyCode[] keyCodes)
+        public override void PressedKeys(KeyCode[] keyCodesUp, KeyCode[] keyCodesDown, KeyCode[] keyCodesPressed)
         {
-            if (keyCodes.Contains(KeyCode.Tab))
+            if (keyCodesDown.Contains(KeyCode.Tab))
             {
                 dropdownMode.value = (dropdownMode.value + 1) % dropdownMode.options.Count;
             }

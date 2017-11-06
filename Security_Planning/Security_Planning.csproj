@@ -116,6 +116,7 @@
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\EditParametersHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\NewMapHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\ReplaceTileHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\RotateEntitiesHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Game.cs" />
     <Compile Include="Assets\Scripts\MapEditor\GridBase.cs" />
     <Compile Include="Assets\Scripts\MapEditor\GridManager.cs" />

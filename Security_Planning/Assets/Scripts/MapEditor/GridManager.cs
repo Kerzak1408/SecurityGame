@@ -100,14 +100,30 @@ namespace Assets.Scripts.MapEditor
 
             base.Update();
 
+            var pressedKeys = new List<KeyCode>();
+            var upKeys = new List<KeyCode>();
+            var downKeys = new List<KeyCode>();
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
             {
                 SaveMap();
             }
-            if (Input.GetKeyDown(KeyCode.Tab))
+            foreach (KeyCode keyCode in Enum.GetValues(typeof(KeyCode)))
             {
-                currentEditorHandler.PressedKeys(KeyCode.Tab);
+                if (Input.GetKey(keyCode))
+                {
+                    pressedKeys.Add(keyCode);
+                }
+                if (Input.GetKeyDown(keyCode))
+                {
+                    downKeys.Add(keyCode);
+                }
+                if (Input.GetKeyUp(keyCode))
+                {
+                    upKeys.Add(keyCode);
+                }
             }
+
+            currentEditorHandler.PressedKeys(upKeys.ToArray(), downKeys.ToArray(), pressedKeys.ToArray());
 
 
             float scroll = Input.GetAxis("Mouse ScrollWheel");
