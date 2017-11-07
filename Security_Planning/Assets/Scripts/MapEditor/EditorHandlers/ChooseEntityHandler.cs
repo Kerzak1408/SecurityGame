@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Extensions;
 using UnityEngine;
@@ -28,11 +29,11 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                     newObject.DeactivateAllCameras();
                     newObject.name = item.name;
                     Map currentMap = gridManager.GetCurrentMap();
-                    List<GameObject> currentDictionary = currentMap.Entities;
+                    List<GameObject> entities = currentMap.Entities;
                     newObject.transform.position = gridManager.newEntityPosition;
                     newObject.transform.parent = currentMap.EmptyParent.transform;
-                    currentDictionary.Add(newObject);
-                    newObject.transform.name += ("_" + currentDictionary.Count);
+                    newObject.transform.name += ("_" + currentMap.GetNextEntityId());
+                    entities.Add(newObject);
                     newObject.GetComponent<BaseEntity>().PrefabName = item.name;
                     gridManager.ChangeEditorHandler<AddEntityHandler>();
                 }
