@@ -119,14 +119,13 @@ namespace Assets.Scripts.Entities.Characters
 
         public override void StartGame()
         {
-            var guard = GameObject.Find("Guard_1");
-            guard.transform.Rotate(-90, 0, 0);
-            var guardPosition = guard.transform.position;
-            var cameraPosition = Camera.main.transform.position;
-            Camera.main.transform.position = guardPosition;
-            Camera.main.orthographicSize = 1;
-            Camera.main.transform.parent = guard.transform;
-            Camera.main.transform.localRotation = Quaternion.identity;
+            transform.Rotate(-90, 0, 0);
+            var guardPosition = transform.position;
+            Camera mainCamera = Camera.main;
+            mainCamera.transform.position = guardPosition;
+            mainCamera.orthographicSize = 1;
+            mainCamera.transform.parent = transform;
+            mainCamera.transform.localRotation = Quaternion.identity;
         }
     }
 }
