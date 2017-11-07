@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Entities;
+﻿using Assets.Scripts.DataStructures;
+using Assets.Scripts.Entities;
 using UnityEngine;
 
 namespace Assets.Scripts.MapEditor
