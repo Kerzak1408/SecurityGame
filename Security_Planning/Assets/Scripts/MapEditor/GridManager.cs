@@ -4,9 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
+using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Entities.Gates;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.MapEditor.EditorHandlers;
 using Assets.Scripts.Reflection;
+using Assets.Scripts.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -122,8 +125,11 @@ namespace Assets.Scripts.MapEditor
                     upKeys.Add(keyCode);
                 }
             }
-
-            currentEditorHandler.PressedKeys(upKeys.ToArray(), downKeys.ToArray(), pressedKeys.ToArray());
+            if (pressedKeys.Count != 0 || upKeys.Count != 0 || downKeys.Count != 0)
+            {
+                currentEditorHandler.PressedKeys(upKeys.ToArray(), downKeys.ToArray(), pressedKeys.ToArray());
+            }
+            
 
 
             float scroll = Input.GetAxis("Mouse ScrollWheel");

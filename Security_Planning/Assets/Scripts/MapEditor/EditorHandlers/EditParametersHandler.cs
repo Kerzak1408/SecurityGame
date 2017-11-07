@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Extensions;
+﻿using Assets.Scripts.Entities.Gates;
+using Assets.Scripts.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 

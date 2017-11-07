@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Assets.Scripts.Entities.Characters;
 
-public interface IPasswordOpenable
+namespace Assets.Scripts.Entities.Interfaces
 {
-    void EnterPassword(string password, BaseCharacter character);
+    public interface IPasswordOpenable
+    {
+        void EnterPassword(string password, BaseCharacter character);
+    }
 }

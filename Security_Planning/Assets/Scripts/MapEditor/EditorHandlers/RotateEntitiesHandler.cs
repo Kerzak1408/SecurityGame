@@ -64,6 +64,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                     gridManager.FlagCurrentButton();
                 }
             }
+            base.PressedKeys(keyCodesUp, keyCodesDown, keyCodesPressed);
         }
     }
 }

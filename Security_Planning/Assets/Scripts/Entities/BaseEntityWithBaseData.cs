@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class BaseEntityWithBaseData : BaseGenericEntity<BaseEntityData>
+﻿namespace Assets.Scripts.Entities
 {
+    public class BaseEntityWithBaseData : BaseGenericEntity<BaseEntityData>
+    {
+    }
 }

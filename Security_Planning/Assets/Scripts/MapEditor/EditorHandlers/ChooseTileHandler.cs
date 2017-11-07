@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Assets.Scripts.Entities.Gates;
 using Assets.Scripts.Extensions;
 using UnityEngine;
 

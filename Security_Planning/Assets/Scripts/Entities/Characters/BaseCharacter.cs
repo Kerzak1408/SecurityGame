@@ -1,9 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Assets.Scripts.Entities.Interfaces;
 
-public abstract class BaseCharacter : BaseGenericEntity<BaseEntityData> {
+namespace Assets.Scripts.Entities.Characters
+{
+    public abstract class BaseCharacter : BaseGenericEntity<BaseEntityData> {
 
-    public abstract void RequestPassword(IPasswordOpenable passwordOpenableObject);
-    public abstract void InterruptRequestPassword();
+        public abstract void RequestPassword(IPasswordOpenable passwordOpenableObject);
+        public abstract void InterruptRequestPassword();
+    }
 }

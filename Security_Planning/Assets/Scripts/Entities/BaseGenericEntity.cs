@@ -1,43 +1,32 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public abstract class BaseGenericEntity<T> : BaseEntity where T : BaseEntityData, new()
+﻿namespace Assets.Scripts.Entities
 {
-    private T data;
-    public T Data
+    public abstract class BaseGenericEntity<T> : BaseEntity where T : BaseEntityData, new()
     {
-        get
+        private T data;
+        public T Data
         {
-            if (data == null)
-            {
-                data = new T();
-            }
-            return data;
+            get { return data ?? (data = new T()); }
+            set { data = value; }
         }
-        set
+
+        public override string PrefabName
         {
-            data = value;
+            get { return Data.prefabName; }
+            set { Data.prefabName = value; }
         }
-    }
 
-    public override string PrefabName
-    {
-        get { return Data.prefabName; }
-        set { Data.prefabName = value; }
-    }
+        public override BaseEntityData Serialize()
+        {
+            Data.ExtractValuesFromGameObject(transform.gameObject);
+            return Data;
+        }
 
-    public override BaseEntityData Serialize()
-    {
-        Data.ExtractValuesFromGameObject(transform.gameObject);
-        return Data;
-    }
-
-    public override void Deserialize(BaseEntityData deserializedData)
-    {
-        transform.position = deserializedData.position;
-        transform.eulerAngles = deserializedData.eulerAngles;
-        name = deserializedData.name;
-        Data = (T)deserializedData;
+        public override void Deserialize(BaseEntityData deserializedData)
+        {
+            transform.position = deserializedData.position;
+            transform.eulerAngles = deserializedData.eulerAngles;
+            name = deserializedData.name;
+            Data = (T)deserializedData;
+        }
     }
 }

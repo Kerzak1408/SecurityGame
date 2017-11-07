@@ -1,44 +1,45 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Assets.Scripts.MapEditor;
+﻿using Assets.Scripts.Entities;
 using UnityEngine;
 
-public class Game : GridBase
+namespace Assets.Scripts.MapEditor
 {
-
-    private Map map;
-
-	// Use this for initialization
-	protected override void Start ()
+    public class Game : GridBase
     {
-        base.Start();
-        string mapName = Scenes.GetParam("map");
-        map = LoadMap(mapName, mapVisible:true);
-        foreach (GameObject entity in map.Entities)
-        {
-            entity.GetComponent<BaseEntity>().StartGame();
-        }
 
-        foreach (Transform transform in map.EmptyParent.transform)
+        private Map map;
+
+        // Use this for initialization
+        protected override void Start ()
         {
-            if (transform.name != "CCTV")
+            base.Start();
+            string mapName = Scenes.GetParam("map");
+            map = LoadMap(mapName, mapVisible:true);
+            foreach (GameObject entity in map.Entities)
             {
-                continue;
+                entity.GetComponent<BaseEntity>().StartGame();
             }
-            Camera cctv =  transform.gameObject.GetComponentInChildren<Camera>();
-            if (cctv != null)
+
+            foreach (Transform transform in map.EmptyParent.transform)
             {
-                RenderTexture newRenderTexture = new RenderTexture(256, 256, 16);
-                newRenderTexture.Create();
-                cctv.targetTexture = newRenderTexture;
-                GameObject.Find("Monitor").GetComponent<Renderer>().material.mainTexture = newRenderTexture;
+                if (transform.name != "CCTV")
+                {
+                    continue;
+                }
+                Camera cctv =  transform.gameObject.GetComponentInChildren<Camera>();
+                if (cctv != null)
+                {
+                    RenderTexture newRenderTexture = new RenderTexture(256, 256, 16);
+                    newRenderTexture.Create();
+                    cctv.targetTexture = newRenderTexture;
+                    GameObject.Find("Monitor").GetComponent<Renderer>().material.mainTexture = newRenderTexture;
+                }
             }
         }
-	}
 	
-	// Update is called once per frame
-	void Update ()
-    {
+        // Update is called once per frame
+        void Update ()
+        {
 		
-	}
+        }
+    }
 }

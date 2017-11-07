@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using Assets.Scripts.Entities;
+using Assets.Scripts.Entities.Gates;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Serialization;
 using UnityEngine;
 
 namespace Assets.Scripts.MapEditor

@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ReceiverEntity : BaseEntityWithBaseData
+namespace Assets.Scripts.Entities
 {
-    public override void StartGame()
+    public class ReceiverEntity : BaseEntityWithBaseData
     {
-        Vector3 position = transform.position;
-        transform.position = new Vector3(position.x, position.y, -0.8f);
+        public override void StartGame()
+        {
+            Vector3 position = transform.position;
+            transform.position = new Vector3(position.x, position.y, -0.8f);
+        }
     }
 }
