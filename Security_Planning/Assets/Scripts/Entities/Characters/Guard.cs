@@ -124,6 +124,7 @@ namespace Assets.Scripts.Entities.Characters
 
         public override void StartGame()
         {
+            base.StartGame();
             transform.Rotate(-90, 0, 0);
             var guardPosition = transform.position;
             Camera mainCamera = Camera.main;
@@ -131,6 +132,7 @@ namespace Assets.Scripts.Entities.Characters
             mainCamera.orthographicSize = 1;
             mainCamera.transform.parent = transform;
             mainCamera.transform.localRotation = Quaternion.identity;
+            
         }
     }
 }

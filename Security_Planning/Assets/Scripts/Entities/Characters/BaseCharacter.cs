@@ -9,8 +9,9 @@ namespace Assets.Scripts.Entities.Characters
     public abstract class BaseCharacter : BaseGenericEntity<CharacterData>
     {
         private List<GameObject> items;
+        private int activeItemIndex;
 
-        public List<GameObject> Items
+        protected List<GameObject> Items
         {
             get
             {
@@ -20,7 +21,6 @@ namespace Assets.Scripts.Entities.Characters
                     // Instantiate 1 GameObject per 1 itemName in the Data
                     items = Data.ItemNames.Select(itemName =>
                         Instantiate(allItems.First(obj => obj.name == itemName) as GameObject)).ToList();
-                    items = new List<GameObject>();
                 }
                 return items;
             }
@@ -31,13 +31,35 @@ namespace Assets.Scripts.Entities.Characters
             }
         }
 
-        protected override void Start()
+        public override void StartGame()
         {
-            base.Start();
+            foreach (GameObject item in Items)
+            {
+                item.transform.position = transform.position + new Vector3(0.1f,-0.075f,0.2f);
+                item.transform.parent = transform;
+                item.SetActive(false);
+            }
+            GameObject activeItem = GetActiveItem();
+            if (activeItem != null)
+            {
+                activeItem.SetActive(true);
+            }
         }
 
         public abstract void RequestPassword(IPasswordOpenable passwordOpenableObject);
         public abstract void InterruptRequestPassword();
         public abstract void RequestCard(CardReaderEntity cardReader);
+
+        protected GameObject GetActiveItem()
+        {
+            if (Items.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return Items[activeItemIndex];
+            }
+        }
     }
 }
