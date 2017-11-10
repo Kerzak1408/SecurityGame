@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 33384437484467422}
   - component: {fileID: 65921217417963810}
   - component: {fileID: 23166414973181938}
-  - component: {fileID: 114031061149237324}
+  - component: {fileID: 114178929022094910}
   m_Layer: 0
   m_Name: Monitor
   m_TagString: Untagged
@@ -177,7 +177,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114031061149237324
+--- !u!114 &114178929022094910
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -185,6 +185,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1588943746481516}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 407178c5c03ff71459d3c552adbf6767, type: 3}
+  m_Script: {fileID: 11500000, guid: 226293c4a68377040901b40b93cf457d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

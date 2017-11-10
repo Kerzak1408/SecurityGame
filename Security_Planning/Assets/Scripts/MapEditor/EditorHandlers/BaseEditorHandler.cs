@@ -11,12 +11,12 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             this.gridManager = gridManager;
         }
 
-        public virtual void LeftButtonDown(RaycastHit[] raycastHitsHits) { }
-        public virtual void LeftButton(RaycastHit[] raycastHitsHits) { }
-        public virtual void LeftButtonUp(RaycastHit[] raycastHitsHits) { }
-        public virtual void Scroll(float scroll, RaycastHit[] raycastHitsHits) { }
+        public virtual void LeftButtonDown(RaycastHit[] raycastHits) { }
+        public virtual void LeftButton(RaycastHit[] raycastHits) { }
+        public virtual void LeftButtonUp(RaycastHit[] raycastHits) { }
+        public virtual void Scroll(float scroll, RaycastHit[] raycastHits) { }
         public virtual void PressedKeys(KeyCode[] keyCodesUp, KeyCode[] keyCodesDown, KeyCode[] keyCodesPressed) { }
-        public virtual void HoverLogic(RaycastHit[] raycastHitsHits) { }
+        public virtual void HoverLogic(RaycastHit[] raycastHits) { }
 
         public virtual void Start() { }
         public virtual void End() { }

@@ -939,7 +939,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1646767486}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1906,7 +1906,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 228887397}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.75714296
+  m_Size: 0.75714284
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3076,10 +3076,12 @@ MonoBehaviour:
   Grids: {fileID: 351953644}
   ScrollViewContent: {fileID: 472537015}
   ScrollView: {fileID: 1764417646}
+  cameraOriginalSize: 0
   InputWidth: {fileID: 722669469}
   InputHeight: {fileID: 1776278911}
   InputName: {fileID: 2110404573}
   TextError: {fileID: 1988495499}
+  ButtonRemoveEntity: {fileID: 0}
   Panel: {fileID: 1929198242}
   PanelStart: {fileID: 1678323076}
   Tiles: {fileID: 1105466323}
@@ -3089,6 +3091,12 @@ MonoBehaviour:
   ButtonAddMap: {fileID: 0}
   PanelNewMapForm: {fileID: 496967870}
   Canvas: {fileID: 748297384}
+  PanelPassword: {fileID: 0}
+  PanelError: {fileID: 0}
+  DropdownMode: {fileID: 0}
+  ClickedObject: {fileID: 0}
+  currentPasswordGate: {fileID: 0}
+  toBeRemovedEntity: {fileID: 0}
 --- !u!114 &2042591919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3103,6 +3111,7 @@ MonoBehaviour:
   Grids: {fileID: 351953644}
   ScrollViewContent: {fileID: 472537015}
   ScrollView: {fileID: 1764417646}
+  cameraOriginalSize: 0
 --- !u!1 &2089457662
 GameObject:
   m_ObjectHideFlags: 0

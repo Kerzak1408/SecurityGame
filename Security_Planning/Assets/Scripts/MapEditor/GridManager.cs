@@ -32,6 +32,14 @@ namespace Assets.Scripts.MapEditor
         public GameObject PanelEntitiesStart;
         public GameObject Entities;
 
+        public GameObject PanelAllItems;
+        public GameObject PanelAllItemsStart;
+        public GameObject AllItems;
+
+        public GameObject PanelItems;
+        public GameObject PanelItemsStart;
+        public GameObject Items;
+
         public GameObject ButtonAddMap;
 
         public GameObject PanelNewMapForm;
@@ -203,8 +211,12 @@ namespace Assets.Scripts.MapEditor
             ChangeEditorHandler(handler.GetType());
         }
 
-        private void InitializePanelGroup(UnityEngine.Object[] objects, Vector3 startingPosition, GameObject parent)
+        public void InitializePanelGroup(UnityEngine.Object[] objects, Vector3 startingPosition, GameObject parent)
         {
+            foreach (Transform transform1 in parent.transform)
+            {
+                Destroy(transform1.gameObject);
+            }
             objects.OrderBy(x => x.name);
             foreach (UnityEngine.Object item in objects)
             {
@@ -214,6 +226,7 @@ namespace Assets.Scripts.MapEditor
                 newObject.transform.localScale *= 4;
                 newObject.name = item.name;
                 newObject.AddComponent<BoxCollider>();
+                newObject.DeactivateAllScripts();
                 startingPosition.x += 8;
             }
         } 
@@ -240,11 +253,18 @@ namespace Assets.Scripts.MapEditor
             }
         }
 
-        public void AdjustPanelToCamera(GameObject panel)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="panel"></param>
+        /// <param name="yTranslation"> The y translation of the panel in the default position. </param>
+        public void AdjustPanelToCamera(GameObject panel, float yTranslation = 0)
         {
-            panel.transform.localScale = (Camera.main.orthographicSize / cameraOriginalSize) * originalPanelScale;
+            float cameraRatio = Camera.main.orthographicSize / cameraOriginalSize;
+            panel.transform.localScale =  cameraRatio * originalPanelScale;
+            yTranslation *= cameraRatio;
             var cameraPosition = Camera.main.transform.position;
-            panel.transform.position = new Vector3(cameraPosition.x, cameraPosition.y, 0);
+            panel.transform.position = new Vector3(cameraPosition.x, cameraPosition.y + yTranslation, 0);
         }
 
         private char NumberValidationFunction(string text, int charIndex, char addedChar)

@@ -37,7 +37,7 @@ namespace Assets.Scripts.Entities.Gates
             }
         }
 
-        protected override void OnTriggerStay(Collider other)
+        protected void OnTriggerStay(Collider other)
         {
             if (!isActiveAndEnabled)
             {
@@ -45,7 +45,7 @@ namespace Assets.Scripts.Entities.Gates
             }
             if (allowOpening)
             {
-                base.OnTriggerStay(other);
+                Open();
             }
         }
 

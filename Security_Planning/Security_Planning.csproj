@@ -83,12 +83,17 @@
     <Compile Include="Assets\Scripts\Entities\BaseEntityWithBaseData.cs" />
     <Compile Include="Assets\Scripts\Entities\BaseGenericEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\CameraEntity.cs" />
+    <Compile Include="Assets\Scripts\Entities\CardReaderEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\BaseCharacter.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Enemy.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Guard.cs" />
+    <Compile Include="Assets\Scripts\Entities\Gates\BaseGate.cs" />
+    <Compile Include="Assets\Scripts\Entities\Gates\BaseSlidingGate.cs" />
+    <Compile Include="Assets\Scripts\Entities\Gates\CardGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\GateOpen.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\PasswordGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPasswordOpenable.cs" />
+    <Compile Include="Assets\Scripts\Entities\MonitorEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\ReceiverEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\TransmitterEntity.cs" />
     <Compile Include="Assets\Scripts\Enums\Axis.cs" />
@@ -101,6 +106,7 @@
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Helpers\DirectoryHelper.cs" />
     <Compile Include="Assets\Scripts\Helpers\FileHelper.cs" />
+    <Compile Include="Assets\Scripts\Items\BaseItem.cs" />
     <Compile Include="Assets\Scripts\Logger\MyLogHandler.cs" />
     <Compile Include="Assets\Scripts\Logger\MyLogger.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
@@ -113,6 +119,7 @@
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\ConnectEntitiesHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\DeleteHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\DragHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\EditItemsHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\EditParametersHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\NewMapHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\ReplaceTileHandler.cs" />
@@ -125,6 +132,7 @@
     <Compile Include="Assets\Scripts\Reflection\ReflectiveEnumerator.cs" />
     <Compile Include="Assets\Scripts\Scenes.cs" />
     <Compile Include="Assets\Scripts\Serialization\BaseEntityData.cs" />
+    <Compile Include="Assets\Scripts\Serialization\CharacterData.cs" />
     <Compile Include="Assets\Scripts\Serialization\Serializer.cs" />
     <Compile Include="Assets\Scripts\Serialization\TransmitterEntityData.cs" />
     <Compile Include="Assets\Scripts\Serialization\Vector3Wrapper.cs" />

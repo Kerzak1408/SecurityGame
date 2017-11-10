@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-[Serializable]
-public class TransmitterEntityData : BaseEntityData
+namespace Assets.Scripts.Serialization
 {
-    public string relatedName = "None";
+    [Serializable]
+    public class TransmitterEntityData : BaseEntityData
+    {
+        public string relatedName = "None";
+    }
 }

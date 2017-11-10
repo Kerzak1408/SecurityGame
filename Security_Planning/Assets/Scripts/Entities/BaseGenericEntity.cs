@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.Entities
+﻿using Assets.Scripts.Serialization;
+
+namespace Assets.Scripts.Entities
 {
     public abstract class BaseGenericEntity<T> : BaseEntity where T : BaseEntityData, new()
     {

@@ -14,7 +14,7 @@ namespace Assets.Scripts.Entities
             Camera camera = GetComponentInChildren<Camera>();
             GameObject monitor = GameObject.Find(Data.relatedName);
             if (monitor == null)
-            {
+            {   
                 camera.enabled = false;
             }
             else
@@ -31,7 +31,7 @@ namespace Assets.Scripts.Entities
 
         public override Type GetReceiverType()
         {
-            return typeof(ReceiverEntity);
+            return typeof(MonitorEntity);
         }
     }
 }

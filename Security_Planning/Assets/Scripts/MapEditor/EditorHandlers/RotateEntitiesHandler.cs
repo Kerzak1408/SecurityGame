@@ -30,11 +30,11 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             rotatedEntity = null;
         }
 
-        public override void LeftButtonUp(RaycastHit[] raycastHitsHits)
+        public override void LeftButtonUp(RaycastHit[] raycastHits)
         {
             Map currentMap = gridManager.GetCurrentMap();
             RaycastHit entityHit =
-                raycastHitsHits.FirstOrDefault(hit => currentMap.Entities.Contains(hit.transform.gameObject));
+                raycastHits.FirstOrDefault(hit => currentMap.Entities.Contains(hit.transform.gameObject));
             if (!entityHit.Equals(default(RaycastHit)))
             {
                 rotatedEntity = entityHit.transform.gameObject;

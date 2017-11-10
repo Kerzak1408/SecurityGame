@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Assets.Scripts.Extensions;
 using UnityEngine;
 
@@ -34,11 +35,11 @@ namespace Assets.Scripts.DataStructures
         /// Deactivate all the other entities.
         /// </summary>
         /// <typeparam name="T"> Type of the scripts defining the entities that will be activated. At least <see cref="MonoBehaviour"/> </typeparam>
-        public void DeactivateEntitiesExceptOfType<T>() where T : MonoBehaviour
+        public void DeactivateEntitiesExceptOfType(Type type) 
         {
             foreach (GameObject entity in Entities)
             {
-                bool activate = entity.HasScriptOfType<T>();
+                bool activate = entity.HasScriptOfType(type);
                 entity.SetActive(activate);
             }
         }

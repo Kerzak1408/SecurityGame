@@ -21,7 +21,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         public override void Start()
         {
             currentMap = gridManager.GetCurrentMap();
-            currentMap.DeactivateEntitiesExceptOfType<TransmitterEntity>();
+            currentMap.DeactivateEntitiesExceptOfType(typeof(TransmitterEntity));
         }
 
         public override void End()
@@ -39,13 +39,13 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 if (!transmitterHit.Equals(default(RaycastHit)))
                 {
                     selectedTransmitter = transmitterHit.transform.gameObject.GetComponent<TransmitterEntity>();
-                    currentMap.DeactivateEntitiesExceptOfType<ReceiverEntity>();
+                    currentMap.DeactivateEntitiesExceptOfType(selectedTransmitter.GetReceiverType());
                 }
             }
             else
             {
                 RaycastHit receiverHit = raycastHits.FirstOrDefault(hit =>
-                    hit.transform.gameObject.HasScriptOfType<ReceiverEntity>());
+                    hit.transform.gameObject.HasScriptOfType(selectedTransmitter.GetReceiverType()));
                 if (!receiverHit.Equals(default(RaycastHit)))
                 {
                     selectedTransmitter.Data.relatedName = receiverHit.transform.name;

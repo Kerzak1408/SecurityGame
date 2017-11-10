@@ -117,6 +117,11 @@ namespace Assets.Scripts.Entities.Characters
             }
         }
 
+        public override void RequestCard(CardReaderEntity cardReader)
+        {
+            cardReader.VerifyCard();
+        }
+
         public override void StartGame()
         {
             transform.Rotate(-90, 0, 0);

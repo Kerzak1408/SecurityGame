@@ -82,5 +82,17 @@ namespace Assets.Scripts.Extensions
             material.color = color;
             material.SetColor("_EmissionColor", color);
         }
+
+        public static bool IsChildOf(this GameObject potentialChild, GameObject potentialParent)
+        {
+            foreach (Transform transform in potentialParent.transform)
+            {
+                if (transform.gameObject.Equals(potentialChild))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
