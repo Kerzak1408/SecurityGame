@@ -16,31 +16,28 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
 
         public override void LeftButtonUp(RaycastHit[] raycastHits)
         {
-            if (raycastHits.Length != 0)
+            System.Func<RaycastHit, bool> isTile = x => x.transform.parent == gridManager.Tiles.transform;
+            if (raycastHits.Any(isTile))
             {
                 // Choose the gameobject that is in the panel of tiles.
-                GameObject hitObject = raycastHits.FirstOrDefault(x => x.transform.parent == gridManager.Tiles.transform)
-                    .transform.gameObject;
-                if (hitObject.IsEqualToChildOf(gridManager.Tiles))
+                GameObject hitObject = raycastHits.FirstOrDefault(isTile).transform.gameObject;
+                gridManager.FlagCurrentButton();
+                Object item = ResourcesHolder.Instance.AllTiles.FindByName(hitObject.name);
+                GameObject newObject = gridManager.InstantiateGameObject(item);
+                newObject.DeactivateAllScripts();
+                newObject.DeactivateAllCameras();
+                Map map = gridManager.GetCurrentMap();
+                GameObject[,] currentGrid = map.Tiles;
+                Tuple<int, int> coords = currentGrid.GetIndices(gridManager.ClickedObject);
+                if (newObject.HasScriptOfType<PasswordGate>())
                 {
-                    gridManager.FlagCurrentButton();
-                    Object item = ResourcesHolder.Instance.AllTiles.FindByName(hitObject.name);
-                    GameObject newObject = gridManager.InstantiateGameObject(item);
-                    newObject.DeactivateAllScripts();
-                    newObject.DeactivateAllCameras();
-                    Map map = gridManager.GetCurrentMap();
-                    GameObject[,] currentGrid = map.Tiles;
-                    Tuple<int, int> coords = currentGrid.GetIndices(gridManager.ClickedObject);
-                    if (newObject.HasScriptOfType<PasswordGate>())
-                    {
-                        map.PasswordDictionary[coords] = newObject.GetComponent<PasswordGate>().Password;
-                    }
-                    newObject.name = item.name;
-                    newObject.transform.position = gridManager.ClickedObject.transform.position;
-                    newObject.transform.parent = gridManager.ClickedObject.transform.parent;
-                    currentGrid[coords.First, coords.Second] = newObject;
-                    gridManager.DestroyGameObject(gridManager.ClickedObject);
+                    map.PasswordDictionary[coords] = newObject.GetComponent<PasswordGate>().Password;
                 }
+                newObject.name = item.name;
+                newObject.transform.position = gridManager.ClickedObject.transform.position;
+                newObject.transform.parent = gridManager.ClickedObject.transform.parent;
+                currentGrid[coords.First, coords.Second] = newObject;
+                gridManager.DestroyGameObject(gridManager.ClickedObject);
             }
             ExitHandler();
         }
