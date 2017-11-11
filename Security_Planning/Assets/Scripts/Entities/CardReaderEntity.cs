@@ -36,6 +36,7 @@ namespace Assets.Scripts.Entities
             if (other.gameObject.HasScriptOfType<CardItem>())
             {
                 relatedGate.UnlockOnce();
+                other.gameObject.GetComponent<CardItem>().ResetItemPosition();
                 //BaseCharacter baseCharacter = other.gameObject.GetComponent<BaseCharacter>();
                 //baseCharacter.RequestCard(this);
             }

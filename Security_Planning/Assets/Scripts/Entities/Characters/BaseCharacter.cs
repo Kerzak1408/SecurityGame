@@ -2,6 +2,7 @@
 using System.Linq;
 using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Items;
 using Assets.Scripts.Serialization;
 using UnityEngine;
 
@@ -38,6 +39,8 @@ namespace Assets.Scripts.Entities.Characters
             {
                 item.transform.position = transform.position + new Vector3(0.2f,-0.075f,0.2f);
                 item.transform.parent = transform;
+                BaseItem baseItem = item.GetComponent<BaseItem>();
+                baseItem.DefaultLocalPosition = item.transform.localPosition;
                 item.SetActive(false);
             }
             GameObject activeItem = GetActiveItem();
@@ -73,5 +76,7 @@ namespace Assets.Scripts.Entities.Characters
                 interactable.Interact(this);
             }
         }
+
+
     }
 }
