@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Comparers\ObjectComparer.cs" />
+    <Compile Include="Assets\Scripts\Constants\Constants.cs" />
     <Compile Include="Assets\Scripts\DataHandlers\ResourcesHolder.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Map.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Tuple.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Assets\Scripts\Entities\Gates\CardGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\GateOpen.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\PasswordGate.cs" />
+    <Compile Include="Assets\Scripts\Entities\Interfaces\IInteractable.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPasswordOpenable.cs" />
     <Compile Include="Assets\Scripts\Entities\MonitorEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\ReceiverEntity.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="Assets\Scripts\Helpers\DirectoryHelper.cs" />
     <Compile Include="Assets\Scripts\Helpers\FileHelper.cs" />
     <Compile Include="Assets\Scripts\Items\BaseItem.cs" />
+    <Compile Include="Assets\Scripts\Items\CardItem.cs" />
     <Compile Include="Assets\Scripts\Logger\MyLogHandler.cs" />
     <Compile Include="Assets\Scripts\Logger\MyLogger.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Entities.Interfaces;
+using Assets.Scripts.Extensions;
 using Assets.Scripts.Serialization;
 using UnityEngine;
 
@@ -35,7 +36,7 @@ namespace Assets.Scripts.Entities.Characters
         {
             foreach (GameObject item in Items)
             {
-                item.transform.position = transform.position + new Vector3(0.1f,-0.075f,0.2f);
+                item.transform.position = transform.position + new Vector3(0.2f,-0.075f,0.2f);
                 item.transform.parent = transform;
                 item.SetActive(false);
             }
@@ -50,7 +51,7 @@ namespace Assets.Scripts.Entities.Characters
         public abstract void InterruptRequestPassword();
         public abstract void RequestCard(CardReaderEntity cardReader);
 
-        protected GameObject GetActiveItem()
+        public GameObject GetActiveItem()
         {
             if (Items.Count == 0)
             {
@@ -59,6 +60,17 @@ namespace Assets.Scripts.Entities.Characters
             else
             {
                 return Items[activeItemIndex];
+            }
+        }
+
+        public void Interact(RaycastHit[] raycastHits)
+        {
+            RaycastHit interactableHit =
+                raycastHits.FirstOrDefault(hit => hit.transform.gameObject.HasScriptOfType(typeof(IInteractable)));
+            if (!interactableHit.Equals(default(RaycastHit)))
+            {
+                IInteractable interactable = interactableHit.transform.gameObject.GetComponent<IInteractable>();
+                interactable.Interact(this);
             }
         }
     }

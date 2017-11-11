@@ -1,17 +1,20 @@
-﻿using Assets.Scripts.DataStructures;
+﻿using System.Linq;
+using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
+using Assets.Scripts.Entities.Interfaces;
+using Assets.Scripts.Extensions;
 using UnityEngine;
 
 namespace Assets.Scripts.MapEditor
 {
     public class Game : GridBase
     {
-
         private Map map;
 
         // Use this for initialization
         protected override void Start ()
         {
+            
             base.Start();
             string mapName = Scenes.GetParam("map");
             map = LoadMap(mapName, mapVisible:true);
@@ -38,9 +41,11 @@ namespace Assets.Scripts.MapEditor
         }
 	
         // Update is called once per frame
-        void Update ()
+        private void Update ()
         {
-		
+
         }
+
+
     }
 }

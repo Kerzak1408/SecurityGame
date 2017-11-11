@@ -1,11 +1,14 @@
-﻿using Assets.Scripts.Entities.Interfaces;
+﻿using System;
+using System.Linq;
+using Assets.Scripts.Entities.Interfaces;
+using Assets.Scripts.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.Entities.Characters
 {
-    public class Guard : BaseCharacter {
-
+    public class Guard : BaseCharacter
+    {
         GameObject Canvas;
         float speed;
         float rotationSpeed;
@@ -15,10 +18,12 @@ namespace Assets.Scripts.Entities.Characters
         IPasswordOpenable passwordOpenableObject;
 
         CharacterController controller;
+        private ResourcesHolder resourcesHolder;
 
         // Use this for initialization
         private void Start()
         {
+            resourcesHolder = ResourcesHolder.Instance;
             rotationSpeed = 90;
             Canvas = GameObject.Find("Canvas");
             inputPassword = GameObject.Find("InputField_Password");
@@ -29,9 +34,14 @@ namespace Assets.Scripts.Entities.Characters
         // Update is called once per frame
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit[] raycastHits = Physics.RaycastAll(ray);
+
+            UpdateCursor(raycastHits);
+
+            if (Input.GetMouseButtonUp(1))
             {
-                OnFirstLeftButtonClick();
+                Interact(raycastHits);
             } 
             else if (Input.GetMouseButton(0))
             {
@@ -83,6 +93,32 @@ namespace Assets.Scripts.Entities.Characters
             {
                 var transformedDir = transform.TransformDirection(speed * Vector3.back);
                 controller.Move(transformedDir);
+            }
+        }
+
+        private void UpdateCursor(RaycastHit[] raycastHits)
+        {
+            RaycastHit interactableHit =
+                raycastHits.FirstOrDefault(hit => hit.transform.gameObject.HasScriptOfType(typeof(IInteractable)));
+               
+            if (!interactableHit.Equals(default(RaycastHit)))
+            {
+                Vector3 interactablePosition = interactableHit.transform.position;
+                Texture2D cursorTexture;
+                if (Vector3.Distance(interactablePosition, transform.position) < Constants.Constants.INTERACTABLE_DISTANCE)
+                {
+                    cursorTexture = resourcesHolder.CogwheelTexture;
+                }
+                else
+                {
+                    cursorTexture = resourcesHolder.CogwheelPaleTaxture;
+                }
+                Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
+
+            }
+            else
+            {
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             }
         }
 

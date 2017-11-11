@@ -277,6 +277,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2307054ebf157a4468b9d797873f3b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CogwheelTexture: {fileID: 2800000, guid: 140a5a7202218534ab9d6f9a4a82bfaa, type: 3}
+  CogwheelPaleTexture: {fileID: 2800000, guid: c8298a35a65fedf4ab3ecdacd61458e1, type: 3}
 --- !u!1 &820030856
 GameObject:
   m_ObjectHideFlags: 0

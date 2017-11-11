@@ -13,6 +13,8 @@ public class ResourcesHolder {
     public Object[] AllItems { get; private set; }
     public Object[] AllItemsIcons { get; private set; }
     public UnityEngine.UI.Button MapButton { get; private set; }
+    public Texture2D CogwheelTexture;
+    public Texture2D CogwheelPaleTaxture;
 
     public static readonly string PATH_PREFABS = "Prefabs/";
     public static readonly string PATH_PREFABS_TILES = PATH_PREFABS + "Tiles/";
@@ -21,6 +23,7 @@ public class ResourcesHolder {
     public static readonly string PATH_PREFABS_ENTITIESICONS = PATH_PREFABS + "EntitiesIcons/";
     public static readonly string PATH_PREFABS_ITEMS = PATH_PREFABS + "Items/";
     public static readonly string PATH_PREFABS_ITEMSICONS = PATH_PREFABS + "ItemsIcons/";
+    public static readonly string PATH_IMAGES = "Images/";
 
     public static ResourcesHolder Instance
     {
@@ -42,5 +45,7 @@ public class ResourcesHolder {
         MapButton = Resources.Load<UnityEngine.UI.Button>(PATH_PREFABS_UI + "MapButton");
         AllItems = Resources.LoadAll(PATH_PREFABS_ITEMS);
         AllItemsIcons = Resources.LoadAll(PATH_PREFABS_ITEMSICONS);
+        CogwheelTexture = Resources.Load<Texture2D>(PATH_IMAGES + "Cogwheel");
+        CogwheelPaleTaxture = Resources.Load<Texture2D>(PATH_IMAGES + "CogwheelPale");
     }
 }

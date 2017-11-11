@@ -14,14 +14,31 @@ namespace Assets.Scripts.Entities.Gates
         {
             Locked = true;
         }
+
         public virtual void Unlock()
         {
             Locked = false;
         }
+
         public void UnlockOnce()
         {
             Unlock();
             lockAfterOpening = true;
+        }
+
+        protected virtual void OnTriggerEnter(Collider other)
+        {
+            Open();
+        }
+
+        protected virtual void OnTriggerStay(Collider other)
+        {
+            Open();
+        }
+
+        protected virtual void OnTriggerExit(Collider other)
+        {
+            Close();
         }
     }
 }
