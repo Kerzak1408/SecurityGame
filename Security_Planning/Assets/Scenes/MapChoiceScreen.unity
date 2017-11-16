@@ -1906,7 +1906,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 228887397}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.75714284
+  m_Size: 0.7571429
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3088,6 +3088,12 @@ MonoBehaviour:
   PanelEntities: {fileID: 0}
   PanelEntitiesStart: {fileID: 0}
   Entities: {fileID: 0}
+  PanelAllItems: {fileID: 0}
+  PanelAllItemsStart: {fileID: 0}
+  AllItems: {fileID: 0}
+  PanelItems: {fileID: 0}
+  PanelItemsStart: {fileID: 0}
+  Items: {fileID: 0}
   ButtonAddMap: {fileID: 0}
   PanelNewMapForm: {fileID: 496967870}
   Canvas: {fileID: 748297384}

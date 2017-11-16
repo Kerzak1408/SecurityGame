@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Entities.Characters
 {
-    public abstract class BaseCharacter : BaseGenericEntity<CharacterData>
+    public abstract class BaseCharacter : BaseGenericEntity<CharacterData>, IPIRDetectable
     {
         private List<GameObject> items;
         private int activeItemIndex;

@@ -9,7 +9,7 @@ namespace Assets.Scripts.MapEditor
 {
     public class Game : GridBase
     {
-        private Map map;
+        public Map Map { get; private set; }
 
         // Use this for initialization
         protected override void Start ()
@@ -17,13 +17,16 @@ namespace Assets.Scripts.MapEditor
             
             base.Start();
             string mapName = Scenes.GetParam("map");
-            map = LoadMap(mapName, mapVisible:true);
-            foreach (GameObject entity in map.Entities)
+            Map = LoadMap(mapName, mapVisible:true);
+            foreach (GameObject entity in Map.Entities)
             {
-                entity.GetComponent<BaseEntity>().StartGame();
+                BaseEntity baseEntity = entity.GetComponent<BaseEntity>();
+                baseEntity.CurrentGame = this;
+                baseEntity.StartGame();
+
             }
 
-            foreach (Transform transform in map.EmptyParent.transform)
+            foreach (Transform transform in Map.EmptyParent.transform)
             {
                 if (transform.name != "CCTV")
                 {
