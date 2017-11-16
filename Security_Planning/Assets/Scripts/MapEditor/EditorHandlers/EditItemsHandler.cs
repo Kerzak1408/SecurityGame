@@ -93,6 +93,14 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 selectedCharacter = characterHit.transform.gameObject.GetComponent<BaseCharacter>();
                 string[] itemNames = selectedCharacter.Data.ItemNames;
                 Object[] allItemsIcons = ResourcesHolder.Instance.AllItemsIcons;
+                foreach (Object icon in allItemsIcons)
+                {
+                    Debug.Log("all items: " + icon.name);
+                }
+                foreach (string itemName in itemNames)
+                {
+                    Debug.Log("itemName: " + itemName);
+                }
                 currentItemObjects = itemNames.Select(itemName => allItemsIcons.First(icon => icon.name == itemName)).ToList();
                 gridManager.InitializePanelGroup(currentItemObjects.ToArray(), panelItemsStart.transform.position, items);
                 gridManager.AdjustPanelToCamera(panelAllItems, 3);

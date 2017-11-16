@@ -10,7 +10,7 @@ namespace Assets.Scripts.Entities
         {
             Debug.Log("camera related name = " + Data.relatedName);
             Vector3 position = transform.position;
-            transform.position = new Vector3(position.x, position.y, -1.8f);
+            transform.position = new Vector3(position.x, position.y, -2.8f);
             Camera camera = GetComponentInChildren<Camera>();
             GameObject monitor = GameObject.Find(Data.relatedName);
             if (monitor == null)

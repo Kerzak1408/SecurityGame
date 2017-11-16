@@ -16,6 +16,7 @@ namespace Assets.Scripts.Entities.Gates
 
         protected virtual void Start()
         {
+            isClosing = true;
             defaultPosition = gate.transform.position;
             lossyScale = gate.transform.lossyScale;
             speed = 4f;
@@ -55,11 +56,7 @@ namespace Assets.Scripts.Entities.Gates
 
         public override void Open()
         {
-            if (!Locked)
-            {
-                isClosing = false;
-            }
-            
+            isClosing = false;
         }
 
         public override void Close()

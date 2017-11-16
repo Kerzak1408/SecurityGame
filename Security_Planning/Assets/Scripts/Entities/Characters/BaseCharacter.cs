@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Items;
 using Assets.Scripts.Serialization;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Assets.Scripts.Entities.Characters
 {
@@ -35,10 +37,12 @@ namespace Assets.Scripts.Entities.Characters
 
         public override void StartGame()
         {
+            Transform finger = transform.Find("Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Finger_01");
             foreach (GameObject item in Items)
             {
-                item.transform.position = transform.position + new Vector3(0.2f,-0.075f,0.2f);
-                item.transform.parent = transform;
+                //item.transform.position = transform.position + new Vector3(0.2f,-0.375f,0.2f);
+                item.transform.position = finger.position;
+                item.transform.parent = finger;
                 BaseItem baseItem = item.GetComponent<BaseItem>();
                 baseItem.DefaultLocalPosition = item.transform.localPosition;
                 item.SetActive(false);
@@ -82,6 +86,12 @@ namespace Assets.Scripts.Entities.Characters
             GetActiveItem().SetActive(false);
             activeItemIndex = (activeItemIndex + 1) % Items.Count;
             GetActiveItem().SetActive(true);
+        }
+
+        public void AllowUnlocking(Action UnlockOnce)
+        {
+            // Animation of unlocking.
+            UnlockOnce();
         }
 
 

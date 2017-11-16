@@ -19,10 +19,14 @@ namespace Assets.Scripts.Entities.Characters
 
         CharacterController controller;
         private ResourcesHolder resourcesHolder;
+        private Animator animator;
+        private Rigidbody rigidBody;
 
         // Use this for initialization
         private void Start()
         {
+            animator = GetComponentInChildren<Animator>();
+            rigidBody = GetComponent<Rigidbody>();
             resourcesHolder = ResourcesHolder.Instance;
             rotationSpeed = 90;
             Canvas = GameObject.Find("Canvas");
@@ -34,6 +38,7 @@ namespace Assets.Scripts.Entities.Characters
         // Update is called once per frame
         private void Update()
         {
+            animator.SetBool("Moving", false);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] raycastHits = Physics.RaycastAll(ray);
 
@@ -71,30 +76,36 @@ namespace Assets.Scripts.Entities.Characters
 
             if (Input.GetKey(KeyCode.Q))
             {
+                animator.SetBool("Moving", true);
                 var transformedDir = transform.TransformDirection(speed * Vector3.left);
                 controller.Move(transformedDir);
             }
             if (Input.GetKey(KeyCode.E))
             {
+                animator.SetBool("Moving", true);
                 var transformedDir = transform.TransformDirection(speed * Vector3.right);
                 controller.Move(transformedDir);
             }
         
             if (Input.GetKey(KeyCode.W))
             {
+                animator.SetBool("Moving", true);
                 var transformedDir = transform.TransformDirection(speed * Vector3.forward);
                 controller.Move(transformedDir);
             }
             if (Input.GetKey(KeyCode.D))
             {
+                animator.SetBool("Moving", true);
                 controller.transform.Rotate(Time.deltaTime * new Vector3(0, rotationSpeed, 0));
             }
             if (Input.GetKey(KeyCode.A))
             {
+                animator.SetBool("Moving", true);
                 controller.transform.Rotate(Time.deltaTime * new Vector3(0, -rotationSpeed, 0));
             } 
             if (Input.GetKey(KeyCode.S))
             {
+                animator.SetBool("Moving", true);
                 var transformedDir = transform.TransformDirection(speed * Vector3.back);
                 controller.Move(transformedDir);
             }
@@ -166,13 +177,43 @@ namespace Assets.Scripts.Entities.Characters
         {
             base.StartGame();
             transform.Rotate(-90, 0, 0);
+
             var guardPosition = transform.position;
+            transform.position = new Vector3(guardPosition.x, guardPosition.y, 0);
             Camera mainCamera = Camera.main;
             mainCamera.transform.position = guardPosition;
             mainCamera.orthographicSize = 1;
             mainCamera.transform.parent = transform;
+            mainCamera.transform.localPosition = new Vector3(0, 1.3f, 0.22f);
             mainCamera.transform.localRotation = Quaternion.identity;
-            
+        }
+
+        //Animation Events
+        void Hit()
+        {
+
+        }
+
+        void FootL()
+        {
+
+        }
+
+        void FootR()
+        {
+
+        }
+
+        void Jump()
+        {
+
+        }
+
+        void Land()
+        {
+
         }
     }
+
+
 }

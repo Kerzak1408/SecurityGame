@@ -9,7 +9,7 @@ namespace Assets.Scripts.Serialization
 
         public string[] ItemNames
         {
-            get { return itemNames ?? (itemNames = new string[5]); }
+            get { return itemNames ?? (itemNames = new string[0]); }
             set { itemNames = value; }
         }
     }

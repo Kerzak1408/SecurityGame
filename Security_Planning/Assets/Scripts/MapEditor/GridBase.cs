@@ -19,6 +19,7 @@ namespace Assets.Scripts.MapEditor
         // Use this for initialization
         protected virtual void Start () {
             MAPS_PATH = FileHelper.JoinPath(Application.persistentDataPath, "Maps");
+            Physics.gravity = Vector3.back;
         }
 
         // Update is called once per frame

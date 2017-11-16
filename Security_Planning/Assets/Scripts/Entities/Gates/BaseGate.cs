@@ -28,12 +28,18 @@ namespace Assets.Scripts.Entities.Gates
 
         protected virtual void OnTriggerEnter(Collider other)
         {
-            Open();
+            if (!Locked)
+            {
+                Open();
+            }
         }
 
         protected virtual void OnTriggerStay(Collider other)
         {
-            Open();
+            if (!Locked)
+            {
+                Open();
+            }
         }
 
         protected virtual void OnTriggerExit(Collider other)

@@ -108,6 +108,7 @@
     <Compile Include="Assets\Scripts\Entities\Gates\BaseSlidingGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\CardGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\GateOpen.cs" />
+    <Compile Include="Assets\Scripts\Entities\Gates\KeyGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\PasswordGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IInteractable.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPIRDetectable.cs" />
