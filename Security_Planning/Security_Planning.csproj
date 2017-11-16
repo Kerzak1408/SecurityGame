@@ -129,6 +129,7 @@
     <Compile Include="Assets\Scripts\Helpers\FileHelper.cs" />
     <Compile Include="Assets\Scripts\Items\BaseItem.cs" />
     <Compile Include="Assets\Scripts\Items\CardItem.cs" />
+    <Compile Include="Assets\Scripts\Items\KeyItem.cs" />
     <Compile Include="Assets\Scripts\Logger\MyLogHandler.cs" />
     <Compile Include="Assets\Scripts\Logger\MyLogger.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Assets\Scripts\UI\MyColors.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\PolygonCity\Change_Log.txt" />
     <None Include="Assets\RPG Character Animation Pack\Elements\ImageEffects\Shaders\BlendModesOverlay.shader" />
     <None Include="Assets\RPG Character Animation Pack\Elements\ImageEffects\Shaders\BlurEffectConeTaps.shader" />
     <None Include="Assets\RPG Character Animation Pack\Elements\ImageEffects\Shaders\CameraMotionBlur.shader" />

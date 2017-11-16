@@ -77,6 +77,13 @@ namespace Assets.Scripts.Entities.Characters
             }
         }
 
+        protected void ChangeWeapon()
+        {
+            GetActiveItem().SetActive(false);
+            activeItemIndex = (activeItemIndex + 1) % Items.Count;
+            GetActiveItem().SetActive(true);
+        }
+
 
     }
 }

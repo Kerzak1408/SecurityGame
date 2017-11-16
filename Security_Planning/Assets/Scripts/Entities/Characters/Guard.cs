@@ -48,6 +48,10 @@ namespace Assets.Scripts.Entities.Characters
                 OnLeftButtonClick();
             }
 
+            if (Input.GetKeyUp(KeyCode.Tab))
+            {
+                ChangeWeapon();
+            }
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
                 if (passwordOpenableObject != null)
