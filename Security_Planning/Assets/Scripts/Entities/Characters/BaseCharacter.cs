@@ -83,6 +83,7 @@ namespace Assets.Scripts.Entities.Characters
 
         protected void ChangeWeapon()
         {
+            if (Items.Count == 0) return;
             GetActiveItem().SetActive(false);
             activeItemIndex = (activeItemIndex + 1) % Items.Count;
             GetActiveItem().SetActive(true);

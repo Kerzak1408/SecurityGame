@@ -4,6 +4,7 @@ namespace Assets.Scripts.Entities.Gates
 {
     public abstract class BaseGate : MonoBehaviour
     {
+        private bool anyMovement;
         protected bool lockAfterOpening;
         public bool Locked { get; private set; }
 
@@ -28,6 +29,7 @@ namespace Assets.Scripts.Entities.Gates
 
         protected virtual void OnTriggerEnter(Collider other)
         {
+            anyMovement = true;
             if (!Locked)
             {
                 Open();
@@ -36,6 +38,7 @@ namespace Assets.Scripts.Entities.Gates
 
         protected virtual void OnTriggerStay(Collider other)
         {
+            anyMovement = true;
             if (!Locked)
             {
                 Open();
@@ -44,7 +47,16 @@ namespace Assets.Scripts.Entities.Gates
 
         protected virtual void OnTriggerExit(Collider other)
         {
-            Close();
+            anyMovement = true;
+        }
+
+        protected virtual void Update()
+        {
+            if (!anyMovement)
+            {
+                Close();
+            }
+            anyMovement = false;
         }
     }
 }

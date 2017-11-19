@@ -24,8 +24,9 @@ namespace Assets.Scripts.Entities.Gates
             axis = horizontal ? Axis.X : Axis.Y;
         }
 
-        protected virtual void Update()
+        protected override void Update()
         {
+            base.Update();
             if (isClosing)
             {
                 bool gateFullyClosed = !(gate.transform.position.GetVectorCoord(axis) > defaultPosition.GetVectorCoord(axis));

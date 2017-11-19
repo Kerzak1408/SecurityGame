@@ -176,7 +176,7 @@ namespace Assets.Scripts.Entities.Characters
         public override void StartGame()
         {
             base.StartGame();
-            transform.Rotate(-90, 0, 0);
+            //transform.Rotate(-90, 0, 0);
 
             var guardPosition = transform.position;
             transform.position = new Vector3(guardPosition.x, guardPosition.y, 0);
