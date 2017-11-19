@@ -113,28 +113,24 @@ namespace Assets.Scripts.Entities.Characters
 
         private void UpdateCursor(RaycastHit[] raycastHits)
         {
-            RaycastHit interactableHit =
-                raycastHits.FirstOrDefault(hit => hit.transform.gameObject.HasScriptOfType(typeof(IInteractable)));
+            bool isInteractable;
+            bool isInteractableNow;
+            GetClosestInteractableHitObject(raycastHits, out isInteractable, out isInteractableNow);
                
-            if (!interactableHit.Equals(default(RaycastHit)))
+            Texture2D cursorTexture;
+            if (isInteractableNow)
             {
-                Vector3 interactablePosition = interactableHit.transform.position;
-                Texture2D cursorTexture;
-                if (Vector3.Distance(interactablePosition, transform.position) < Constants.Constants.INTERACTABLE_DISTANCE)
-                {
-                    cursorTexture = resourcesHolder.CogwheelTexture;
-                }
-                else
-                {
-                    cursorTexture = resourcesHolder.CogwheelPaleTaxture;
-                }
-                Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
-
+                cursorTexture = resourcesHolder.CogwheelTexture;
+            }
+            else if (isInteractable)
+            {
+                cursorTexture = resourcesHolder.CogwheelPaleTaxture;
             }
             else
             {
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                cursorTexture = null;
             }
+            Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
         }
 
         private void OnFirstLeftButtonClick()

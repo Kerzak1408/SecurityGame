@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Constants;
 using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Items;
@@ -72,13 +73,58 @@ namespace Assets.Scripts.Entities.Characters
 
         public void Interact(RaycastHit[] raycastHits)
         {
-            RaycastHit interactableHit =
-                raycastHits.FirstOrDefault(hit => hit.transform.gameObject.HasScriptOfType(typeof(IInteractable)));
-            if (!interactableHit.Equals(default(RaycastHit)))
+            bool isInterctableNow;
+            GameObject closestGameObject = GetClosestInteractableHitObject(raycastHits, out isInterctableNow);
+            if (isInterctableNow)
             {
-                IInteractable interactable = interactableHit.transform.gameObject.GetComponent<IInteractable>();
+                IInteractable interactable = closestGameObject.GetComponent<IInteractable>();
                 interactable.Interact(this);
             }
+        }
+
+        protected GameObject GetClosestInteractableHitObject(RaycastHit[] raycastHits,
+            out bool isInteractableNow)
+        {
+            bool unusedOutParam;
+            return GetClosestInteractableHitObject(raycastHits, out unusedOutParam, out isInteractableNow);
+        }
+
+        /// <param name="raycastHits"></param>
+        /// <param name="isInteractable"> 
+        /// True iff the closest hit gameobject has a script that implements <see cref="IInteractable"/>
+        /// </param>
+        /// <param name="isInteractableNow"> 
+        /// True iff <paramref name="isInteractable"/> AND the distance between the character and
+        /// the closest hit gameobject is lesser than <see cref="Constants.INTERACTABLE_DISTANCE"/>.
+        /// </param>
+        /// <returns> The closest gameobjects among all that were hit. </returns>
+        protected GameObject GetClosestInteractableHitObject(RaycastHit[] raycastHits,
+            out bool isInteractable, 
+            out bool isInteractableNow)
+        {
+            RaycastHit closestHit = default(RaycastHit);
+            foreach (RaycastHit hit in raycastHits)
+            {
+                if (hit.transform.gameObject.HasScriptOfType(typeof(IInteractable)) &&
+                    (closestHit.Equals(default(RaycastHit)) ||
+                        Vector3.Distance(transform.position, hit.transform.position) <
+                        Vector3.Distance(transform.position, closestHit.transform.position))
+                    )
+                {
+                    closestHit = hit;
+                }
+            }
+            if (closestHit.Equals(default(RaycastHit)))
+            {
+                isInteractable = isInteractableNow = false;
+                return null;
+            }
+            GameObject closestGameObject = closestHit.transform.gameObject;
+            isInteractable = true;
+            float distanceToClosest = Vector3.Distance(closestGameObject.transform.position, transform.position);
+            isInteractableNow = distanceToClosest < Constants.Constants.INTERACTABLE_DISTANCE &&
+                                isInteractable;
+            return closestGameObject;
         }
 
         protected void ChangeWeapon()
