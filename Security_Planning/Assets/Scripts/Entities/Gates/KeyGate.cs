@@ -2,7 +2,6 @@
 using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Items;
-using NUnit.Framework.Constraints;
 using UnityEngine;
 
 namespace Assets.Scripts.Entities.Gates

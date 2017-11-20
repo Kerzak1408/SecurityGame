@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using Assets.Scripts.Entities.Interfaces;
-using Assets.Scripts.Extensions;
+﻿using Assets.Scripts.Entities.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
 

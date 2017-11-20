@@ -1,8 +1,5 @@
-﻿using System.Linq;
-using Assets.Scripts.DataStructures;
+﻿using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
-using Assets.Scripts.Entities.Interfaces;
-using Assets.Scripts.Extensions;
 using UnityEngine;
 
 namespace Assets.Scripts.MapEditor

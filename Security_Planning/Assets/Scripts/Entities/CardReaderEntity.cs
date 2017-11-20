@@ -5,7 +5,6 @@ using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Items;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.Entities
 {

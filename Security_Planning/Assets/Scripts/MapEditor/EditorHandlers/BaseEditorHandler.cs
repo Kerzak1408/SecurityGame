@@ -18,7 +18,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         public virtual void PressedKeys(KeyCode[] keyCodesUp, KeyCode[] keyCodesDown, KeyCode[] keyCodesPressed) { }
         public virtual void HoverLogic(RaycastHit[] raycastHits) { }
 
-        public virtual void Start() { }
+        public virtual void Start() { gridManager.DropdownMode.RefreshShownValue(); }
         public virtual void End() { }
     }
 }

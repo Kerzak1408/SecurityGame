@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters;
@@ -209,6 +208,7 @@ namespace Assets.Scripts.MapEditor
         {
             BaseUserSelectableHandler handler = selectableHandlers[DropdownMode.value];
             ChangeEditorHandler(handler.GetType());
+            DropdownMode.RefreshShownValue();
         }
 
         public void InitializePanelGroup(UnityEngine.Object[] objects, Vector3 startingPosition, GameObject parent)

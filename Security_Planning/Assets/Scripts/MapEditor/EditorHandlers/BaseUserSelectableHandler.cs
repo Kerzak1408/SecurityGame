@@ -27,7 +27,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 {
                     dropdownMode.value = (dropdownMode.value + 1) % optionsCount;
                 }
-                
+                dropdownMode.RefreshShownValue();
             }
         }
 

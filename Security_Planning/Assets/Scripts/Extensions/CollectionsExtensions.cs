@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public static class CollectionsExtensions
+﻿public static class CollectionsExtensions
 {
     public static Tuple<int, int> GetIndices<T>(this T[,] array, T item)
     {
