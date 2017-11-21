@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Extensions;
+using UnityEngine;
 
 namespace Assets.Scripts.Entities.Gates
 {
@@ -30,6 +32,7 @@ namespace Assets.Scripts.Entities.Gates
 
         protected virtual void OnTriggerEnter(Collider other)
         {
+            if (!other.transform.gameObject.HasScriptOfType<BaseCharacter>()) return;
             Debug.Log("OnTriggerEnter");
             noMovementsTurn = 0;
             if (!Locked)
@@ -40,6 +43,7 @@ namespace Assets.Scripts.Entities.Gates
 
         protected virtual void OnTriggerStay(Collider other)
         {
+            if (!other.transform.gameObject.HasScriptOfType<BaseCharacter>()) return;
             Debug.Log("OnTriggerStay");
             noMovementsTurn = 0;
             if (!Locked)
@@ -50,6 +54,7 @@ namespace Assets.Scripts.Entities.Gates
 
         protected virtual void OnTriggerExit(Collider other)
         {
+            if (!other.transform.gameObject.HasScriptOfType<BaseCharacter>()) return;
             Debug.Log("OnTriggerExit");
             noMovementsTurn = 0;
         }
