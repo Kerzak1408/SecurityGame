@@ -112,6 +112,7 @@
     <Compile Include="Assets\Scripts\Entities\Gates\GateOpen.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\KeyGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\PasswordGate.cs" />
+    <Compile Include="Assets\Scripts\Entities\Hedge.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IInteractable.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPIRDetectable.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPasswordOpenable.cs" />
