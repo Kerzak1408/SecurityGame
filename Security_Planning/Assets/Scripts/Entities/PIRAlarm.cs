@@ -6,13 +6,24 @@ namespace Assets.Scripts.Entities
     public class PIRAlarm : ReceiverEntity
     {
         private float timeOfCurrentBlick;
+        private AudioSource alarmAudio;
 
         public bool Active { get; set; }
+
+        public override void StartGame()
+        {
+            alarmAudio = GetComponent<AudioSource>();
+            base.StartGame();
+        }
 
         public void Update()
         {
             if (Active)
             {
+                if (!alarmAudio.isPlaying)
+                {
+                    alarmAudio.Play();
+                }
                 timeOfCurrentBlick += Time.deltaTime;
                 if (timeOfCurrentBlick > 0.5f)
                 {
@@ -24,6 +35,7 @@ namespace Assets.Scripts.Entities
             }
             else
             {
+                alarmAudio.Stop();
                 timeOfCurrentBlick = 0;
             }
         }
