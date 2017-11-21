@@ -57,12 +57,18 @@ namespace Assets.Scripts.Entities.Gates
 
         public override void Open()
         {
+            if (!isClosing) return;
             isClosing = false;
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/SlidingDoorOpen"), transform.position);
+            Debug.Log("opening door");
         }
 
         public override void Close()
         {
+            if (isClosing) return;
             isClosing = true;
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/SlidingDoorClose"), transform.position);
+            Debug.Log("closing door");
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Assets.Scripts.Entities.Gates
 
         public virtual void Unlock()
         {
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/KeyLock"), transform.position);
             Locked = false;
         }
 

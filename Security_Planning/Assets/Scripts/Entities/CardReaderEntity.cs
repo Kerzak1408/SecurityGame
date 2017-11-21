@@ -20,7 +20,6 @@ namespace Assets.Scripts.Entities
         public override void StartGame()
         {
             relatedGate = GameObject.Find(Data.relatedName).GetComponent<GateOpen>();
-            relatedGate.Close();
             relatedGate.Lock();
         }
 
