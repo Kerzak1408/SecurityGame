@@ -169,6 +169,7 @@
     <Compile Include="Assets\Scripts\UI\MyColors.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\PaintedGround\read me.txt" />
     <None Include="Assets\PolygonCity\Change_Log.txt" />
     <None Include="Assets\RPG Character Animation Pack\Elements\ImageEffects\Shaders\BlendModesOverlay.shader" />
     <None Include="Assets\RPG Character Animation Pack\Elements\ImageEffects\Shaders\BlurEffectConeTaps.shader" />
