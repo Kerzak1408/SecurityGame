@@ -11,6 +11,7 @@ namespace Assets.Scripts.Entities
         private Plane[] planes;
         private GameObject relatedObject;
         private PIRAlarm alarm;
+        private Ray ray;
 
         public override Type GetReceiverType()
         {
@@ -19,8 +20,14 @@ namespace Assets.Scripts.Entities
 
         public override void StartGame()
         {
+            Vector3 currentPosition = transform.position;
+            transform.position = new Vector3(currentPosition.x, currentPosition.y, -1f);
             camera = GetComponent<Camera>();
             camera.enabled = false;
+            ray = new Ray();
+            ray.origin = camera.transform.position;
+
+
             planes = GeometryUtility.CalculateFrustumPlanes(camera);
             relatedObject = GameObject.Find(Data.relatedName);
             if (relatedObject != null)
@@ -34,12 +41,29 @@ namespace Assets.Scripts.Entities
             bool activate = false;
             foreach (GameObject entity in CurrentGame.Map.Entities)
             {
-                if (entity.HasScriptOfType(typeof(IPIRDetectable)) &&
-                    GeometryUtility.TestPlanesAABB(planes, entity.GetComponent<Collider>().bounds))
+                // Detect only entities that are PIR-Detetectable and lay in view of the PIR camera.
+                if (entity.HasScriptOfType(typeof(IPIRDetectable)) && GeometryUtility.TestPlanesAABB(planes, entity.GetComponent<Collider>().bounds))
                 {
-                    Debug.Log(entity.name + " has been detected!");
-                    activate = true;
-                }   
+                    // Aim to the center of the collider
+                    Vector3 entityColliderCenter = entity.GetComponent<Collider>().bounds.center;
+                    // Begin ray at the PIR camera
+                    ray.origin = camera.transform.position;
+                    ray.direction = entityColliderCenter - camera.transform.position;
+                    RaycastHit hit;
+                    // If the first hit is the entity, start alarm -> We have an entity inside PIR camera view + 
+                    // nothing is between the entity and the PIR
+                    if (Physics.Raycast(ray, out hit) && hit.transform.gameObject == entity)
+                    {
+                        activate = true;
+                    }
+                }
+
+                //if (entity.HasScriptOfType(typeof(IPIRDetectable)) &&
+                //    GeometryUtility.TestPlanesAABB(planes, entity.GetComponent<Collider>().bounds))
+                //{
+                //    Debug.Log(entity.name + " has been detected!");
+                //    activate = true;
+                //}   
             }
             if (alarm != null)
             {

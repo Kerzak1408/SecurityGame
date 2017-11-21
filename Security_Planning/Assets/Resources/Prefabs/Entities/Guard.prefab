@@ -400,6 +400,7 @@ GameObject:
   - component: {fileID: 143445166167042944}
   - component: {fileID: 114459893498442672}
   - component: {fileID: 54990267357137200}
+  - component: {fileID: 135929831058125722}
   m_Layer: 0
   m_Name: Guard
   m_TagString: Untagged
@@ -1777,6 +1778,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 330753f769f118e42bccc9aeb19a7bd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!135 &135929831058125722
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1328938209541020}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.45
+  m_Center: {x: 0, y: 1.03, z: 0}
 --- !u!137 &137114062767956136
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
