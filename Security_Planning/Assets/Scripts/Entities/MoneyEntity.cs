@@ -7,6 +7,8 @@ namespace Assets.Scripts.Entities
     {
         public void Interact(BaseCharacter character)
         {
+            character.ObtainMoney();
+            CurrentGame.Map.Entities.Remove(gameObject);
             Destroy(gameObject);
         }
     }

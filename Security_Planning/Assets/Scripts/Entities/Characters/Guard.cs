@@ -130,11 +130,6 @@ namespace Assets.Scripts.Entities.Characters
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
         }
 
-        private void OnFirstLeftButtonClick()
-        {
-
-        }
-
         private void OnLeftButtonClick()
         {
             var delta = new Vector3(Time.deltaTime * rotationSpeed * (-Input.GetAxis("Mouse Y")), 0, 0);
@@ -181,7 +176,13 @@ namespace Assets.Scripts.Entities.Characters
             mainCamera.transform.localRotation = Quaternion.identity;
         }
 
-        //Animation Events
+        public override void ObtainMoney()
+        {
+            base.ObtainMoney();
+            CurrentGame.TextMoney.text = money.ToString();
+        }
+
+        //Animation Events - just to enable Mecanim animations work => Do NOT delete!
         void Hit()
         {
 

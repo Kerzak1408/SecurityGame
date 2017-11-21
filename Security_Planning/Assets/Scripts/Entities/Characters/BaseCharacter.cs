@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Constants;
@@ -14,7 +15,9 @@ namespace Assets.Scripts.Entities.Characters
     public abstract class BaseCharacter : BaseGenericEntity<CharacterData>, IPIRDetectable
     {
         private List<GameObject> items;
+        private Animator animator;
         private int activeItemIndex;
+        protected int money;
 
         protected List<GameObject> Items
         {
@@ -38,21 +41,21 @@ namespace Assets.Scripts.Entities.Characters
 
         public override void StartGame()
         {
-            Transform finger = transform.Find("Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Finger_01");
+            animator = GetComponent<Animator>();
+            Transform finger =
+                transform.Find("Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Finger_01");
             foreach (GameObject item in Items)
             {
                 //item.transform.position = transform.position + new Vector3(0.2f,-0.375f,0.2f);
                 item.transform.position = finger.position;
                 item.transform.parent = finger;
-                BaseItem baseItem = item.GetComponent<BaseItem>();
+                var baseItem = item.GetComponent<BaseItem>();
                 baseItem.DefaultLocalPosition = item.transform.localPosition;
                 item.SetActive(false);
             }
             GameObject activeItem = GetActiveItem();
             if (activeItem != null)
-            {
                 activeItem.SetActive(true);
-            }
         }
 
         public abstract void RequestPassword(IPasswordOpenable passwordOpenableObject);
@@ -62,13 +65,9 @@ namespace Assets.Scripts.Entities.Characters
         public GameObject GetActiveItem()
         {
             if (Items.Count == 0)
-            {
                 return null;
-            }
             else
-            {
                 return Items[activeItemIndex];
-            }
         }
 
         public void Interact(RaycastHit[] raycastHits)
@@ -77,7 +76,7 @@ namespace Assets.Scripts.Entities.Characters
             GameObject closestGameObject = GetClosestInteractableHitObject(raycastHits, out isInterctableNow);
             if (isInterctableNow)
             {
-                IInteractable interactable = closestGameObject.GetComponent<IInteractable>();
+                var interactable = closestGameObject.GetComponent<IInteractable>();
                 interactable.Interact(this);
             }
         }
@@ -99,21 +98,17 @@ namespace Assets.Scripts.Entities.Characters
         /// </param>
         /// <returns> The closest gameobjects among all that were hit. </returns>
         protected GameObject GetClosestInteractableHitObject(RaycastHit[] raycastHits,
-            out bool isInteractable, 
+            out bool isInteractable,
             out bool isInteractableNow)
         {
             RaycastHit closestHit = default(RaycastHit);
             foreach (RaycastHit hit in raycastHits)
-            {
                 if (hit.transform.gameObject.HasScriptOfType(typeof(IInteractable)) &&
                     (closestHit.Equals(default(RaycastHit)) ||
-                        Vector3.Distance(transform.position, hit.transform.position) <
-                        Vector3.Distance(transform.position, closestHit.transform.position))
-                    )
-                {
+                     Vector3.Distance(transform.position, hit.transform.position) <
+                     Vector3.Distance(transform.position, closestHit.transform.position))
+                )
                     closestHit = hit;
-                }
-            }
             if (closestHit.Equals(default(RaycastHit)))
             {
                 isInteractable = isInteractableNow = false;
@@ -121,7 +116,7 @@ namespace Assets.Scripts.Entities.Characters
             }
             GameObject closestGameObject = closestHit.transform.gameObject;
             isInteractable = true;
-            float distanceToClosest = Vector3.Distance(closestGameObject.transform.position, transform.position);
+            var distanceToClosest = Vector3.Distance(closestGameObject.transform.position, transform.position);
             isInteractableNow = distanceToClosest < Constants.Constants.INTERACTABLE_DISTANCE &&
                                 isInteractable;
             return closestGameObject;
@@ -141,6 +136,30 @@ namespace Assets.Scripts.Entities.Characters
             UnlockOnce();
         }
 
+        public virtual void ObtainMoney()
+        {
+            money++;
+        }
+        
+        public void Attack()
+        {
+            animator.SetTrigger("Attack" + 3 + "Trigger");
+            StartCoroutine(_LockMovementAndAttack(0, .6f));
+        }
+
+        public IEnumerator _LockMovementAndAttack(float delayTime, float lockTime)
+        {
+            yield return new WaitForSeconds(delayTime);
+            animator.SetBool("Moving", false);
+            //rb.velocity = Vector3.zero;
+            //rb.angularVelocity = Vector3.zero;
+            //inputVec = new Vector3(0, 0, 0);
+            animator.applyRootMotion = true;
+            yield return new WaitForSeconds(lockTime);
+            //canAction = true;
+            //canMove = true;
+            animator.applyRootMotion = false;
+        }
 
     }
 }

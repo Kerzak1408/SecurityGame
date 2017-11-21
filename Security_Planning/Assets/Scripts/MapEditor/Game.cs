@@ -1,11 +1,14 @@
 ﻿using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.MapEditor
 {
     public class Game : GridBase
     {
+        public Text TextMoney;
+
         public Map Map { get; private set; }
 
         // Use this for initialization
@@ -20,7 +23,6 @@ namespace Assets.Scripts.MapEditor
                 BaseEntity baseEntity = entity.GetComponent<BaseEntity>();
                 baseEntity.CurrentGame = this;
                 baseEntity.StartGame();
-
             }
 
             foreach (Transform transform in Map.EmptyParent.transform)
