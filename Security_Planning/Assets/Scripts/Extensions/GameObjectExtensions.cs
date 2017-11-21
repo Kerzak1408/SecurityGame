@@ -94,5 +94,18 @@ namespace Assets.Scripts.Extensions
             }
             return false;
         }
+
+        /// <param name="clipName"> The clip is supposed to be located in Assets/Resources/Sounds </param>
+        public static AudioSource AttachAudioSource(this GameObject gameObject, string clipName)
+        {
+            AudioSource result = gameObject.AddComponent<AudioSource>();
+            result.spatialBlend = 1;
+            result.rolloffMode = AudioRolloffMode.Linear;
+            result.playOnAwake = false;
+            result.clip = Resources.Load<AudioClip>("Sounds/" + clipName);
+            result.minDistance = 0.2f;
+            result.maxDistance = 5;
+            return result;
+        }
     }
 }

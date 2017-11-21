@@ -13,6 +13,22 @@ namespace Assets.Scripts.Entities.Gates
         public abstract void Open();
         public abstract void Close();
 
+        private AudioSource keyLock;
+
+        protected virtual void Start()
+        {
+            keyLock = transform.gameObject.AttachAudioSource("KeyLock");
+        }
+
+        protected virtual void Update()
+        {
+            if (noMovementsTurn > 20)
+            {
+                Close();
+            }
+            noMovementsTurn++;
+        }
+
         public virtual void Lock()
         {
             Locked = true;
@@ -20,7 +36,7 @@ namespace Assets.Scripts.Entities.Gates
 
         public virtual void Unlock()
         {
-            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/KeyLock"), transform.position);
+            keyLock.Play();
             Locked = false;
         }
 
@@ -33,7 +49,6 @@ namespace Assets.Scripts.Entities.Gates
         protected virtual void OnTriggerEnter(Collider other)
         {
             if (!other.transform.gameObject.HasScriptOfType<BaseCharacter>()) return;
-            Debug.Log("OnTriggerEnter");
             noMovementsTurn = 0;
             if (!Locked)
             {
@@ -44,7 +59,6 @@ namespace Assets.Scripts.Entities.Gates
         protected virtual void OnTriggerStay(Collider other)
         {
             if (!other.transform.gameObject.HasScriptOfType<BaseCharacter>()) return;
-            Debug.Log("OnTriggerStay");
             noMovementsTurn = 0;
             if (!Locked)
             {
@@ -55,17 +69,8 @@ namespace Assets.Scripts.Entities.Gates
         protected virtual void OnTriggerExit(Collider other)
         {
             if (!other.transform.gameObject.HasScriptOfType<BaseCharacter>()) return;
-            Debug.Log("OnTriggerExit");
             noMovementsTurn = 0;
         }
 
-        protected virtual void Update()
-        {
-            if (noMovementsTurn > 20)
-            {
-                Close();
-            }
-            noMovementsTurn++;
-        }
     }
 }

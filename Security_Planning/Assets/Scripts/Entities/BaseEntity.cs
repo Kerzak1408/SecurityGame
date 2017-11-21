@@ -4,13 +4,10 @@ using UnityEngine;
 
 namespace Assets.Scripts.Entities
 {
-    public abstract class BaseEntity : MonoBehaviour
+    public abstract class BaseEntity : BaseObject
     {
         public abstract string PrefabName { get; set; }
         public Game CurrentGame { get; set; }
-
-        protected virtual void Start() { }
-        protected virtual void Update() { }
 
         public virtual void StartGame() { }
         public abstract void Deserialize(BaseEntityData deserializedData);

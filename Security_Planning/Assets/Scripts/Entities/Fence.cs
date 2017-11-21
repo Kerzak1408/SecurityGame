@@ -8,34 +8,22 @@ using UnityEngine;
 
 namespace Assets.Scripts.Entities
 {
-    public class Fence : MonoBehaviour, IInteractable
+    public class Fence : BaseObject, IInteractable
     {
-        private float destroyCounter;
-        private bool destroy;
         private AudioSource audioSource;
+
+        protected override void Start()
+        {
+            base.Start();
+            audioSource = gameObject.AttachAudioSource("CuttingWire");
+        }
 
         public void Interact(BaseCharacter character)
         {
             if (character.GetActiveItem().HasScriptOfType<WireCutterItem>())
             {
-                audioSource = GetComponent<AudioSource>();
                 audioSource.Play();
-                destroy = true;
-            }
-        }
-
-        private void Update()
-        {
-            if (destroy)
-            {
-                if (destroyCounter > audioSource.clip.length)
-                {
-                    Destroy(transform.gameObject);
-                }
-                else
-                {
-                    destroyCounter += Time.deltaTime;
-                }
+                DestroyAfterTimeout(audioSource.clip.length);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Extensions;
+using UnityEngine;
 
 namespace Assets.Scripts.Entities.Gates
 {
@@ -13,15 +14,20 @@ namespace Assets.Scripts.Entities.Gates
         private Vector3 translationDirection;
         private float speed;
         private Axis axis;
+        private AudioSource slidingDoorOpen;
+        private AudioSource slidingDoorClose;
 
-        protected virtual void Start()
+        protected override void Start()
         {
+            base.Start();
             isClosing = true;
             defaultPosition = gate.transform.position;
             lossyScale = gate.transform.lossyScale;
             speed = 4f;
             translationDirection = horizontal ? Vector3.right : Vector3.up;
             axis = horizontal ? Axis.X : Axis.Y;
+            slidingDoorClose = gameObject.AttachAudioSource("SlidingDoorClose");
+            slidingDoorOpen = gameObject.AttachAudioSource("SlidingDoorOpen");
         }
 
         protected override void Update()
@@ -59,16 +65,14 @@ namespace Assets.Scripts.Entities.Gates
         {
             if (!isClosing) return;
             isClosing = false;
-            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/SlidingDoorOpen"), transform.position);
-            Debug.Log("opening door");
+            slidingDoorOpen.Play();
         }
 
         public override void Close()
         {
             if (isClosing) return;
             isClosing = true;
-            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds/SlidingDoorClose"), transform.position);
-            Debug.Log("closing door");
+            slidingDoorClose.Play();
         }
     }
 }
