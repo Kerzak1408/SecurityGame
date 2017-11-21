@@ -8,6 +8,7 @@ namespace Assets.Scripts.MapEditor
     public class Game : GridBase
     {
         public Text TextMoney;
+        public Button ButtonExit;
 
         public Map Map { get; private set; }
 
@@ -45,7 +46,15 @@ namespace Assets.Scripts.MapEditor
         // Update is called once per frame
         private void Update ()
         {
+            if (Input.GetKeyUp(KeyCode.Escape))
+            {
+                ButtonExit.gameObject.SetActive(!ButtonExit.IsActive());
+            }
+        }
 
+        public void ExitToMenu()
+        {
+            Scenes.Load(Scenes.MAIN_MENU);
         }
 
 

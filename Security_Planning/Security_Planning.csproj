@@ -104,6 +104,7 @@
     <Compile Include="Assets\Scripts\Entities\Characters\BaseCharacter.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Enemy.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Guard.cs" />
+    <Compile Include="Assets\Scripts\Entities\Fence.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\BaseGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\BaseSlidingGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\CardGate.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Assets\Scripts\Items\BaseItem.cs" />
     <Compile Include="Assets\Scripts\Items\CardItem.cs" />
     <Compile Include="Assets\Scripts\Items\KeyItem.cs" />
+    <Compile Include="Assets\Scripts\Items\WireCutterItem.cs" />
     <Compile Include="Assets\Scripts\Logger\MyLogHandler.cs" />
     <Compile Include="Assets\Scripts\Logger\MyLogger.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
