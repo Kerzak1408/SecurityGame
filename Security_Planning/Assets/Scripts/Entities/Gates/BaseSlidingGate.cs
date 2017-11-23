@@ -10,20 +10,19 @@ namespace Assets.Scripts.Entities.Gates
 
         private bool isClosing;
         private Vector3 defaultPosition;
-        private Vector3 lossyScale;
         private Vector3 translationDirection;
         private float speed;
         private Axis axis;
         private AudioSource slidingDoorOpen;
         private AudioSource slidingDoorClose;
+        private static readonly double DOOR_SIZE = 1.1;
 
         protected override void Start()
         {
             base.Start();
             isClosing = true;
             defaultPosition = gate.transform.position;
-            lossyScale = gate.transform.lossyScale;
-            speed = 4f;
+            speed = 2f;
             translationDirection = horizontal ? Vector3.right : Vector3.up;
             axis = horizontal ? Axis.X : Axis.Y;
             slidingDoorClose = gameObject.AttachAudioSource("SlidingDoorClose");
@@ -48,7 +47,8 @@ namespace Assets.Scripts.Entities.Gates
             }
             else
             {
-                bool gateFullyOpen = !(gate.transform.position.GetVectorCoord(axis) < defaultPosition.GetVectorCoord(axis) + lossyScale.GetVectorCoord(axis));
+
+                bool gateFullyOpen = !(gate.transform.position.GetVectorCoord(axis) < defaultPosition.GetVectorCoord(axis) + DOOR_SIZE);
 
                 if (!gateFullyOpen)
                 {

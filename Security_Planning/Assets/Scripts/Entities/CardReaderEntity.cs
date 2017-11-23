@@ -19,24 +19,34 @@ namespace Assets.Scripts.Entities
 
         public override void StartGame()
         {
-            relatedGate = GameObject.Find(Data.relatedName).GetComponent<GateOpen>();
-            relatedGate.Lock();
+            GameObject relateGateObject = GameObject.Find(Data.relatedName);
+            if (relateGateObject != null)
+            {
+                relatedGate = relateGateObject.GetComponent<GateOpen>();
+                relatedGate.Lock();
+            }
+            transform.position += Vector3.back;
         }
 
         public void VerifyCard()
         {
             // TODO: verify card
-            relatedGate.UnlockOnce();
+            if (relatedGate != null)
+            {
+                relatedGate.UnlockOnce();
+            }
+                
         }
 
         public void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.HasScriptOfType<CardItem>())
             {
-                relatedGate.UnlockOnce();
+                if (relatedGate != null)
+                {
+                    relatedGate.UnlockOnce();
+                }
                 other.gameObject.GetComponent<CardItem>().ResetItemPosition();
-                //BaseCharacter baseCharacter = other.gameObject.GetComponent<BaseCharacter>();
-                //baseCharacter.RequestCard(this);
             }
         }
 

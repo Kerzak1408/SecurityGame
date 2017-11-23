@@ -30,6 +30,7 @@ namespace Assets.Scripts.Entities.Characters
             inputPassword = GameObject.Find("InputField_Password");
             inputPassword.SetActive(false);
             controller = GetComponent<CharacterController>();
+            gameObject.AddComponent<ConstantForce>().force = Vector3.forward;
         }
 
         // Update is called once per frame

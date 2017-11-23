@@ -22,7 +22,7 @@ namespace Assets.Scripts.Entities
         {
             Vector3 currentPosition = transform.position;
             transform.position = new Vector3(currentPosition.x, currentPosition.y, -1f);
-            camera = GetComponent<Camera>();
+            camera = GetComponentInChildren<Camera>();
             camera.enabled = false;
             ray = new Ray();
             ray.origin = camera.transform.position;
