@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Assets.Scripts.DataStructures;
+using Assets.Scripts.Entities;
 using UnityEngine;
 
 namespace Assets.Scripts.MapEditor.EditorHandlers
@@ -8,6 +9,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
     {
         private GameObject rotationArrow;
         private GameObject rotatedEntity;
+        private float rotateBack;
 
         public RotateEntitiesHandler(GridManager gridManager) : base(gridManager)
         {
@@ -39,12 +41,14 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             {
                 rotatedEntity = entityHit.transform.gameObject;
                 rotationArrow.SetActive(true);
+                AdjustArrowRotation();
                 Vector3 rotatedPosition = entityHit.transform.position;
                 rotationArrow.transform.position = new Vector3(rotatedPosition.x, rotatedPosition.y,
                     rotationArrow.transform.position.z);
             }
             else
             {
+                rotatedEntity = null;
                 rotationArrow.SetActive(false);
             }
         }
@@ -56,16 +60,33 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 float rotationSpeed = 45 * Time.deltaTime;
                 if (keyCodesPressed.Contains(KeyCode.LeftArrow))
                 {
-                    rotatedEntity.transform.Rotate(0,0, rotationSpeed, Space.World);
-                    gridManager.FlagCurrentButton();
+                    RotateEntity(rotationSpeed);
                 }
                 if (keyCodesPressed.Contains(KeyCode.RightArrow))
                 {
-                    rotatedEntity.transform.Rotate(0, 0, -rotationSpeed, Space.World);
-                    gridManager.FlagCurrentButton();
+                    RotateEntity(-rotationSpeed);
                 }
             }
             base.PressedKeys(keyCodesUp, keyCodesDown, keyCodesPressed);
+        }
+
+        private void RotateEntity(float rotationSpeed)
+        {
+            rotatedEntity.transform.Rotate(0, 0, rotationSpeed, Space.World);
+            rotationArrow.transform.Rotate(0, 0, rotationSpeed, Space.World);
+            gridManager.FlagCurrentButton();
+            AdjustArrowRotation();
+        }
+
+        private void AdjustArrowRotation()
+        {
+            Vector3 editorForward = rotatedEntity.GetComponent<BaseEntity>().GetEditorForward();
+
+            LineRenderer lineRenderer = rotationArrow.GetComponent<LineRenderer>();
+            lineRenderer.positionCount = 2;
+            Vector3 position = new Vector3(rotatedEntity.transform.position.x, rotatedEntity.transform.position.y, -10);
+            lineRenderer.SetPosition(0, position);
+            lineRenderer.SetPosition(1, position + editorForward.normalized * 0.5f);
         }
     }
 }

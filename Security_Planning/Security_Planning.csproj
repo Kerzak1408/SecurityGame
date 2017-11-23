@@ -118,6 +118,7 @@
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPasswordOpenable.cs" />
     <Compile Include="Assets\Scripts\Entities\MoneyEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\MonitorEntity.cs" />
+    <Compile Include="Assets\Scripts\Entities\MonitorOnTableEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\PIRAlarm.cs" />
     <Compile Include="Assets\Scripts\Entities\PIREntity.cs" />
     <Compile Include="Assets\Scripts\Entities\ReceiverEntity.cs" />

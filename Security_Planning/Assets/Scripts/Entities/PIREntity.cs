@@ -71,5 +71,10 @@ namespace Assets.Scripts.Entities
             }
 
         }
+
+        public override Vector3 GetEditorForward()
+        {
+            return -transform.up;
+        }
     }
 }
