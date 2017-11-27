@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.MapEditor.EditorHandlers
 {
@@ -10,6 +12,13 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         {
             this.scrolledObject = scrolledObject;
             this.cameraOriginalSize = gridManager.cameraOriginalSize;
+        }
+
+        public override void Start()
+        {
+            base.Start();
+            gridManager.SetCanvasActive(false);
+            gridManager.Grids.SetActive(false);
         }
 
         public override void Scroll(float scroll, RaycastHit[] raycastHits)
@@ -24,8 +33,13 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         {
             gridManager.Panel.SetActive(false);
             gridManager.PanelEntities.SetActive(false);
-            gridManager.Canvas.SetActive(true);
             gridManager.ActivatePreviousHandler();
+        }
+
+        public override void End()
+        {
+            gridManager.SetCanvasActive(true);
+            gridManager.Grids.SetActive(true);
         }
     }
 }

@@ -37,6 +37,7 @@ namespace Assets.Scripts.MapEditor
 
         public GameObject PanelItems;
         public GameObject PanelItemsStart;
+        public GameObject PanelInfo;
         public GameObject Items;
 
         public GameObject ButtonAddMap;
@@ -46,6 +47,7 @@ namespace Assets.Scripts.MapEditor
         public GameObject PanelPassword;
         public GameObject PanelError;
         public Dropdown DropdownMode;
+        
     
         
         public GameObject ClickedObject;
@@ -64,6 +66,7 @@ namespace Assets.Scripts.MapEditor
         private IEnumerable<BaseEditorHandler> editorHandlers;
         private Dictionary<int, BaseUserSelectableHandler> selectableHandlers;
         private BaseEditorHandler previousHandler;
+        private string[] affectedCanvasElements = {"Scroll View", "ButtonMenu", "ButtonSave", "ButtonDelete"};
         internal Vector3 newEntityPosition;
 
         // Use this for initialization
@@ -456,6 +459,14 @@ namespace Assets.Scripts.MapEditor
         {
             base.SelectMap();
             DropdownMode.transform.gameObject.SetActive(true);
+        }
+
+        public void SetCanvasActive(bool active)
+        {
+            foreach (string elementName in affectedCanvasElements)
+            {
+                Canvas.transform.Find(elementName).gameObject.SetActive(active);
+            }
         }
     }
 }

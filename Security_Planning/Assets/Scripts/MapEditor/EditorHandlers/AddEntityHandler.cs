@@ -18,7 +18,6 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             RaycastHit firstHit = raycastHits[0];
             gridManager.newEntityPosition = firstHit.point;
             gridManager.PanelEntities.SetActive(true);
-            gridManager.Canvas.SetActive(false);
             gridManager.AdjustPanelToCamera(gridManager.PanelEntities);
             gridManager.ChangeEditorHandler<ChooseEntityHandler>();
 

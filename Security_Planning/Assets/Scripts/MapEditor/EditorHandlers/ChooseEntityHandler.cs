@@ -35,10 +35,10 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                     newObject.transform.name += ("_" + currentMap.GetNextEntityId());
                     entities.Add(newObject);
                     newObject.GetComponent<BaseEntity>().PrefabName = item.name;
-                    gridManager.ChangeEditorHandler<AddEntityHandler>();
                 }
             }
             ExitHandler();
         }
+
     }
 }

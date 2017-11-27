@@ -57,6 +57,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         {
             currentMap = gridManager.GetCurrentMap();
             currentMap.DeactivateEntitiesExceptOfType(typeof(BaseCharacter));
+            gridManager.SetCanvasActive(false);
         }
 
         public override void LeftButtonUp(RaycastHit[] raycastHits)
@@ -79,7 +80,6 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                     selectedCharacter = null;
                     panelItems.SetActive(false);
                     panelAllItems.SetActive(false);
-                    canvas.SetActive(true);
                 }
 
             }
@@ -104,13 +104,13 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 gridManager.AdjustPanelToCamera(panelItems, -3);
                 panelItems.SetActive(true);
                 panelAllItems.SetActive(true);
-                canvas.SetActive(false);
             }
         }
 
         public override void End()
         {
             currentMap.ActivateAllEntities();
+            gridManager.SetCanvasActive(true);
         }
 
         public override void Scroll(float scroll, RaycastHit[] raycastHits)

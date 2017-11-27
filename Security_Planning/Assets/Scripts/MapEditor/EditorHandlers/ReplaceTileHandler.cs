@@ -51,7 +51,6 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 {
                     hitObject.ChangeColor(Color.red);
                     gridManager.ClickedObject = hitObject;
-                    gridManager.Canvas.SetActive(false);
                     gridManager.AdjustPanelToCamera(gridManager.Panel);
                     gridManager.Panel.SetActive(true);
                     gridManager.ChangeEditorHandler<ChooseTileHandler>();
@@ -90,7 +89,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                     hoveredObject = null;
                 }
             }
-
+            base.HoverLogic(raycastHits);
         }
 
         private void HoverEnded()
