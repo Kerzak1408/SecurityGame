@@ -100,6 +100,7 @@ namespace Assets.Scripts.MapEditor
         {
             Button newMap = Instantiate(ResourcesHolder.Instance.MapButton);
             newMap.transform.parent = ScrollViewContent.transform;
+            newMap.GetComponent<RectTransform>().localScale = Vector3.one;
             newMap.GetComponent<Image>().color = color;
             newMap.onClick.AddListener(SelectMap);
             newMap.GetComponentInChildren<Text>().text = name;
