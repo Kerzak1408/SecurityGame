@@ -9,6 +9,7 @@ namespace Assets.Scripts.MapEditor
     {
         public Text TextMoney;
         public Button ButtonExit;
+        public Image CurrentItemIcon;
 
         public Map Map { get; private set; }
 

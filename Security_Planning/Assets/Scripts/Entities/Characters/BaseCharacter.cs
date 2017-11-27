@@ -8,6 +8,7 @@ using Assets.Scripts.Extensions;
 using Assets.Scripts.Items;
 using Assets.Scripts.Serialization;
 using UnityEngine;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 namespace Assets.Scripts.Entities.Characters
@@ -15,6 +16,7 @@ namespace Assets.Scripts.Entities.Characters
     public abstract class BaseCharacter : BaseGenericEntity<CharacterData>, IPIRDetectable
     {
         private List<GameObject> items;
+        private List<GameObject> itemIcons;
         private Animator animator;
         private int activeItemIndex;
         protected int money;
@@ -26,9 +28,13 @@ namespace Assets.Scripts.Entities.Characters
                 if (items == null)
                 {
                     Object[] allItems = ResourcesHolder.Instance.AllItems;
+                    Object[] allItemIcons = ResourcesHolder.Instance.AllItemsIcons;
                     // Instantiate 1 GameObject per 1 itemName in the Data
                     items = Data.ItemNames.Select(itemName =>
                         Instantiate(allItems.First(obj => obj.name == itemName) as GameObject)).ToList();
+                    itemIcons = Data.ItemNames.Select(itemName =>
+                        Instantiate(allItemIcons.First(obj => obj.name == itemName) as GameObject)).ToList();
+
                 }
                 return items;
             }
@@ -53,6 +59,10 @@ namespace Assets.Scripts.Entities.Characters
                 baseItem.DefaultLocalPosition = item.transform.localPosition;
                 item.SetActive(false);
             }
+            foreach (GameObject itemIcon in itemIcons)
+            {
+                itemIcon.SetActive(false);
+            }
             GameObject activeItem = GetActiveItem();
             if (activeItem != null)
                 activeItem.SetActive(true);
@@ -65,9 +75,15 @@ namespace Assets.Scripts.Entities.Characters
         public GameObject GetActiveItem()
         {
             if (Items.Count == 0)
+            {
                 return null;
+            }
             else
+            {
+                CurrentGame.CurrentItemIcon.sprite = itemIcons[activeItemIndex].GetComponent<SpriteRenderer>().sprite;
                 return Items[activeItemIndex];
+            }
+                
         }
 
         public void Interact(RaycastHit[] raycastHits)

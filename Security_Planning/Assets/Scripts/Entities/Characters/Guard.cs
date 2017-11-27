@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Entities.Interfaces;
+using Assets.Scripts.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,7 @@ namespace Assets.Scripts.Entities.Characters
         private ResourcesHolder resourcesHolder;
         private Animator animator;
         private Rigidbody rigidBody;
+        private AudioSource footstepAudio;
 
         // Use this for initialization
         private void Start()
@@ -31,12 +33,15 @@ namespace Assets.Scripts.Entities.Characters
             inputPassword.SetActive(false);
             controller = GetComponent<CharacterController>();
             gameObject.AddComponent<ConstantForce>().force = Vector3.forward;
+            footstepAudio = gameObject.AttachAudioSource("Footstep");
+            animator.speed = 2;
         }
 
         // Update is called once per frame
         private void Update()
         {
-            animator.SetBool("Moving", false);
+            bool isMoving = false;
+            
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] raycastHits = Physics.RaycastAll(ray);
 
@@ -74,39 +79,53 @@ namespace Assets.Scripts.Entities.Characters
 
             if (Input.GetKey(KeyCode.Q))
             {
-                animator.SetBool("Moving", true);
+                isMoving = true;
+
                 var transformedDir = transform.TransformDirection(speed * Vector3.left);
                 controller.Move(transformedDir);
             }
             if (Input.GetKey(KeyCode.E))
             {
-                animator.SetBool("Moving", true);
+                isMoving = true;
                 var transformedDir = transform.TransformDirection(speed * Vector3.right);
                 controller.Move(transformedDir);
             }
         
             if (Input.GetKey(KeyCode.W))
             {
-                animator.SetBool("Moving", true);
+                isMoving = true;
                 var transformedDir = transform.TransformDirection(speed * Vector3.forward);
                 controller.Move(transformedDir);
             }
             if (Input.GetKey(KeyCode.D))
             {
-                animator.SetBool("Moving", true);
                 controller.transform.Rotate(Time.deltaTime * new Vector3(0, rotationSpeed, 0));
             }
             if (Input.GetKey(KeyCode.A))
             {
-                animator.SetBool("Moving", true);
                 controller.transform.Rotate(Time.deltaTime * new Vector3(0, -rotationSpeed, 0));
             } 
             if (Input.GetKey(KeyCode.S))
             {
-                animator.SetBool("Moving", true);
+                isMoving = true;
                 var transformedDir = transform.TransformDirection(speed * Vector3.back);
                 controller.Move(transformedDir);
             }
+            animator.SetBool("Moving", isMoving);
+            if (isMoving)
+            {
+                if (!footstepAudio.isPlaying)
+                {
+                    footstepAudio.Play();
+                    animator.speed = 2;
+                }
+            }
+            else
+            {
+                footstepAudio.Stop();
+                animator.speed = 1;
+            }
+            
         }
 
         private void UpdateCursor(RaycastHit[] raycastHits)
