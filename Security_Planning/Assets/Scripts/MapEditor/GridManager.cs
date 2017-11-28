@@ -50,7 +50,7 @@ namespace Assets.Scripts.MapEditor
         
     
         
-        public GameObject ClickedObject;
+        public GameObject ClickedTile;
 
         private Vector3 originalPanelScale;
         

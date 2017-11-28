@@ -80,6 +80,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                     selectedCharacter = null;
                     panelItems.SetActive(false);
                     panelAllItems.SetActive(false);
+                    gridManager.SetCanvasActive(true);
                 }
 
             }

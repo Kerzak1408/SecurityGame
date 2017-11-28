@@ -50,7 +50,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 else
                 {
                     hitObject.ChangeColor(Color.red);
-                    gridManager.ClickedObject = hitObject;
+                    gridManager.ClickedTile = hitObject;
                     gridManager.AdjustPanelToCamera(gridManager.Panel);
                     gridManager.Panel.SetActive(true);
                     gridManager.ChangeEditorHandler<ChooseTileHandler>();

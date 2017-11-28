@@ -6398,7 +6398,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 0.866, g: 0.896856, b: 1, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -6477,7 +6477,7 @@ MonoBehaviour:
   PanelPassword: {fileID: 1848778673}
   PanelError: {fileID: 1082547821}
   DropdownMode: {fileID: 366974928}
-  ClickedObject: {fileID: 0}
+  ClickedTile: {fileID: 0}
   currentPasswordGate: {fileID: 0}
   toBeRemovedEntity: {fileID: 0}
 --- !u!1 &2046003553
