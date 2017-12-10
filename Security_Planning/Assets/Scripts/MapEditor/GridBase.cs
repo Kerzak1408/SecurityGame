@@ -113,9 +113,31 @@ namespace Assets.Scripts.MapEditor
                         if (result.IsRoom)
                         {
                             AddCeiling(grid, result.Coordinates, parent);
+                            AddPavementTexture(grid, result.Coordinates, "InnerFloor");
+                        }
+                        else
+                        {
+                            AddPavementTexture(grid, result.Coordinates, "Pavement");
                         }
                     }
                 }
+            }
+        }
+
+        private void AddPavementTexture(GameObject[,] grid, List<Vector2> resultCoordinates, string textureName)
+        {
+            Sprite texture = Resources.Load<Sprite>("Textures/" + textureName);
+            texture = Resources.Load<Sprite>("Textures/" + textureName);
+            foreach (Vector2 coordinate in resultCoordinates)
+            {
+                GameObject tile = grid[(int) coordinate.x, (int) coordinate.y];
+                var spriteRenderer = tile.GetComponent<SpriteRenderer>();
+                if (spriteRenderer != null)
+                {
+                    spriteRenderer.drawMode = SpriteDrawMode.Tiled;
+                    spriteRenderer.sprite = texture;
+                }
+
             }
         }
 
