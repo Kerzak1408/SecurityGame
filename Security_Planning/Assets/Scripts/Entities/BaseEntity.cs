@@ -9,7 +9,7 @@ namespace Assets.Scripts.Entities
         public abstract string PrefabName { get; set; }
         public Game CurrentGame { get; set; }
 
-        public virtual void StartGame() { }
+        
         public abstract void Deserialize(BaseEntityData deserializedData);
         public abstract BaseEntityData Serialize();
 

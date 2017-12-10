@@ -8,6 +8,8 @@ namespace Assets.Scripts
         private float timeCounter;
         private float timeOfDestroy;
 
+        public virtual void StartGame() { }
+
         protected virtual void Start() { }
 
         protected virtual void Update ()

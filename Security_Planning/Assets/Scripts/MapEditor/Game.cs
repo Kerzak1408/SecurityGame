@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
+using Assets.Scripts.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,9 @@ namespace Assets.Scripts.MapEditor
             base.Start();
             string mapName = Scenes.GetParam("map");
             Map = LoadMap(mapName, mapVisible:true);
+
+            GenerateCeiling(Map.Tiles, Map.EmptyParent.transform);
+
             foreach (GameObject entity in Map.Entities)
             {
                 BaseEntity baseEntity = entity.GetComponent<BaseEntity>();
@@ -42,8 +46,18 @@ namespace Assets.Scripts.MapEditor
                     GameObject.Find("Monitor").GetComponent<Renderer>().material.mainTexture = newRenderTexture;
                 }
             }
+
+            foreach (GameObject tile in Map.Tiles)
+            {
+                if (tile.HasScriptOfType<BaseObject>())
+                {
+                    tile.GetComponent<BaseObject>().StartGame();
+                }
+            }
+            Map.EmptyParent.transform.Rotate(90, 0, 0);
+            //Map.EmptyParent.transform.eulerAngles = new Vector3(90, Map.EmptyParent.transform.eulerAngles.y, Map.EmptyParent.transform.eulerAngles.z);
         }
-	
+
         // Update is called once per frame
         private void Update ()
         {

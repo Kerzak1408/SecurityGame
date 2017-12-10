@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Model;
 using UnityEngine;
 
 namespace Assets.Scripts.DataStructures
@@ -68,6 +69,22 @@ namespace Assets.Scripts.DataStructures
                     return i;
                 }
             }
+        }
+
+        public AIModel GetAIModel()
+        {
+            AIModel result = new AIModel();
+            int width = Tiles.GetLength(0);
+            int height = Tiles.GetLength(1);
+            result.Tiles = new TileModel[width, height];
+            for (int i = 0; i < width; i++)
+                for (int j = 0; j < height; j++)
+                {
+                    string name = Tiles[i, j].name;
+                    string[] nameArr = name.Split('_');
+
+                }
+            return result;
         }
     }
 }

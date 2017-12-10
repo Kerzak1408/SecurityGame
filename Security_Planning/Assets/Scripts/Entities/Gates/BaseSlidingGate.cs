@@ -23,8 +23,8 @@ namespace Assets.Scripts.Entities.Gates
             isClosing = true;
             defaultPosition = gate.transform.position;
             speed = 2f;
-            translationDirection = horizontal ? Vector3.right : Vector3.up;
-            axis = horizontal ? Axis.X : Axis.Y;
+            translationDirection = horizontal ? Vector3.right : Vector3.forward;
+            axis = horizontal ? Axis.X : Axis.Z;
             slidingDoorClose = gameObject.AttachAudioSource("SlidingDoorClose");
             slidingDoorOpen = gameObject.AttachAudioSource("SlidingDoorOpen");
         }
@@ -47,7 +47,6 @@ namespace Assets.Scripts.Entities.Gates
             }
             else
             {
-
                 bool gateFullyOpen = !(gate.transform.position.GetVectorCoord(axis) < defaultPosition.GetVectorCoord(axis) + DOOR_SIZE);
 
                 if (!gateFullyOpen)

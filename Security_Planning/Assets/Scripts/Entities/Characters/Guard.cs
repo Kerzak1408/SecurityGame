@@ -74,7 +74,7 @@ namespace Assets.Scripts.Entities.Characters
             }
             else
             {
-                speed = 0.05f;
+                speed = 0.2f;
             }
 
             if (Input.GetKey(KeyCode.Q))

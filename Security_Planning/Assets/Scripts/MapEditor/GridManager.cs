@@ -56,7 +56,7 @@ namespace Assets.Scripts.MapEditor
         
         public PasswordGate currentPasswordGate;
 
-        private const string EMPTY_SQUARE = "000_Empty";
+        public const string EMPTY_SQUARE = "000_Empty";
         public Tuple<int, int> passwordIndices;
 
         private GameObject draggedObject;

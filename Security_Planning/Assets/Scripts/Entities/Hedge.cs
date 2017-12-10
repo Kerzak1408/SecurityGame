@@ -4,9 +4,9 @@ namespace Assets.Scripts.Entities
 {
     public class Hedge : BaseObject
     {
-        protected override void Start()
+        public override void StartGame()
         {
-            base.Start();
+            base.StartGame();
             Vector3 position = transform.position;
             transform.position = new Vector3(position.x, position.y, -1);
         }
