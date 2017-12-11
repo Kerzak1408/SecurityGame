@@ -94,13 +94,13 @@ namespace Assets.Scripts.MapEditor
         {
             int width = grid.GetLength(0);
             int height = grid.GetLength(1);
-            bool?[,] ceilingGrid = new bool?[width, height];
+            bool[,] ceilingGrid = new bool[width, height];
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
                 {
-                    bool? currentTile = ceilingGrid[i, j];
-                    if (!currentTile.HasValue)
+                    bool currentTile = ceilingGrid[i, j];
+                    if (!currentTile)
                     {
                         FloodFillResult result = new FloodFillResult();
                         Debug.Log("-------------------------------- Flood fill begun --------------------------------");
@@ -108,7 +108,7 @@ namespace Assets.Scripts.MapEditor
                         Debug.Log("-------------------------------- Flood fill ended --------------------------------");
                         foreach (Vector2 coordinate in result.Coordinates)
                         {
-                            ceilingGrid[(int) coordinate.x, (int) coordinate.y] = result.IsRoom;
+                            ceilingGrid[(int) coordinate.x, (int) coordinate.y] = true;
                         }
                         if (result.IsRoom)
                         {
@@ -146,6 +146,7 @@ namespace Assets.Scripts.MapEditor
             Color color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
             foreach (Vector2 coordinate in coordinates)
             {
+                Debug.Log("Celeing: (" + coordinate.x + ", " + coordinate.y + ") + color = " + color);
                 GameObject ceilingTile =
                     Instantiate(ResourcesHolder.Instance.AllTiles.FindByName(GridManager.EMPTY_SQUARE)) as GameObject;
                 ceilingTile.transform.position = grid[(int) coordinate.x, (int) coordinate.y].transform.position 
@@ -167,9 +168,9 @@ namespace Assets.Scripts.MapEditor
 
             Vector2[] neighbors =
             {
-                //new Vector2(i - 1, j),
+                new Vector2(i - 1, j),
                 new Vector2(i + 1, j),
-                //new Vector2(i, j - 1),
+                new Vector2(i, j - 1),
                 new Vector2(i, j + 1)
             };
             foreach (Vector2 neighbor in neighbors)
