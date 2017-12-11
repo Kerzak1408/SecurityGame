@@ -384,7 +384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc426187983710645a85867f8d5d8350, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizontal: 0
+  Direction: 2
   gate: {fileID: 1448601509010402}
 --- !u!212 &212470356862154630
 SpriteRenderer:

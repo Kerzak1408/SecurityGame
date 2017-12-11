@@ -5,17 +5,16 @@ namespace Assets.Scripts.Entities.Gates
 {
     public class BaseSlidingGate : BaseGate
     {
-        public bool horizontal;
+        public Axis Direction;
         public GameObject gate;
 
         private bool isClosing;
         private Vector3 defaultPosition;
         private Vector3 translationDirection;
         private float speed;
-        private Axis axis;
         private AudioSource slidingDoorOpen;
         private AudioSource slidingDoorClose;
-        private static readonly double DOOR_SIZE = 1.1;
+        private double DOOR_SIZE = 1.1;
 
         protected override void Start()
         {
@@ -23,10 +22,11 @@ namespace Assets.Scripts.Entities.Gates
             isClosing = true;
             defaultPosition = gate.transform.position;
             speed = 2f;
-            translationDirection = horizontal ? Vector3.right : Vector3.forward;
-            axis = horizontal ? Axis.X : Axis.Z;
+            translationDirection = Direction.GetDirectionVector();
             slidingDoorClose = gameObject.AttachAudioSource("SlidingDoorClose");
             slidingDoorOpen = gameObject.AttachAudioSource("SlidingDoorOpen");
+            if (Direction == Axis.Y) DOOR_SIZE = 2.2;
+            else DOOR_SIZE = 1.1;
         }
 
         protected override void Update()
@@ -34,12 +34,12 @@ namespace Assets.Scripts.Entities.Gates
             base.Update();
             if (isClosing)
             {
-                bool gateFullyClosed = !(gate.transform.position.GetVectorCoord(axis) > defaultPosition.GetVectorCoord(axis));
+                bool gateFullyClosed = !(gate.transform.position.GetVectorCoord(Direction) > defaultPosition.GetVectorCoord(Direction));
 
                 if (!gateFullyClosed)
                 {
                     gate.transform.position -= speed * translationDirection * Time.deltaTime;
-                    if (gate.transform.position.GetVectorCoord(axis) < defaultPosition.GetVectorCoord(axis))
+                    if (gate.transform.position.GetVectorCoord(Direction) < defaultPosition.GetVectorCoord(Direction))
                     {
                         gate.transform.position = defaultPosition;
                     }
@@ -47,7 +47,7 @@ namespace Assets.Scripts.Entities.Gates
             }
             else
             {
-                bool gateFullyOpen = !(gate.transform.position.GetVectorCoord(axis) < defaultPosition.GetVectorCoord(axis) + DOOR_SIZE);
+                bool gateFullyOpen = !(gate.transform.position.GetVectorCoord(Direction) < defaultPosition.GetVectorCoord(Direction) + DOOR_SIZE);
 
                 if (!gateFullyOpen)
                 {
