@@ -35,6 +35,7 @@ namespace Assets.Scripts.Entities.Characters
             gameObject.AddComponent<ConstantForce>().force = Vector3.forward;
             footstepAudio = gameObject.AttachAudioSource("Footstep");
             animator.speed = 2;
+            
         }
 
         // Update is called once per frame
@@ -74,7 +75,7 @@ namespace Assets.Scripts.Entities.Characters
             }
             else
             {
-                speed = 0.2f;
+                speed = 0.1f;
             }
 
             if (Input.GetKey(KeyCode.Q))

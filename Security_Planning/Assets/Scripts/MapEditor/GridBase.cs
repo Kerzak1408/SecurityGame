@@ -153,6 +153,7 @@ namespace Assets.Scripts.MapEditor
                     + 3 * Vector3.back;
                 ceilingTile.ChangeColor(color);
                 ceilingTile.transform.parent = parent;
+                ceilingTile.GetComponent<SpriteRenderer>().material.shader = Shader.Find("Standard");
             }
         }
 

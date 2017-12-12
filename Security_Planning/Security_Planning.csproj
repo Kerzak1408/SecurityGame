@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.6.3p4</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -97,6 +99,7 @@
     <Compile Include="Assets\Scripts\Constants\Constants.cs" />
     <Compile Include="Assets\Scripts\DataHandlers\ResourcesHolder.cs" />
     <Compile Include="Assets\Scripts\DataStructures\FloodFillResult.cs" />
+    <Compile Include="Assets\Scripts\DataStructures\IntegerTuple.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Map.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Tuple.cs" />
     <Compile Include="Assets\Scripts\Entities\BaseEntity.cs" />
@@ -162,6 +165,8 @@
     <Compile Include="Assets\Scripts\MapEditor\GridManager.cs" />
     <Compile Include="Assets\Scripts\MapEditor\GridsBrowserBase.cs" />
     <Compile Include="Assets\Scripts\MapEditor\MapChoiceManager.cs" />
+    <Compile Include="Assets\Scripts\Model\Edge.cs" />
+    <Compile Include="Assets\Scripts\Model\EdgeType.cs" />
     <Compile Include="Assets\Scripts\Model\Model.cs" />
     <Compile Include="Assets\Scripts\Model\TileModel.cs" />
     <Compile Include="Assets\Scripts\Reflection\ReflectiveEnumerator.cs" />

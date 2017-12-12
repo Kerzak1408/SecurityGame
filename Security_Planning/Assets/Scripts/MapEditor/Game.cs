@@ -1,6 +1,8 @@
-﻿using Assets.Scripts.DataStructures;
+﻿using System.Collections.Generic;
+using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Model;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -72,6 +74,31 @@ namespace Assets.Scripts.MapEditor
             Scenes.Load(Scenes.MAIN_MENU);
         }
 
+        private void OnDrawGizmos()
+        {
+            
+            if (Map == null) return;
+            foreach (TileModel tileModel in Map.AIModel.Tiles)
+            {
+                Gizmos.color = Color.green;
+                GameObject mapTile = Map.Tiles.Get(tileModel.Position);
+                Gizmos.DrawSphere(mapTile.transform.position, 0.1f);
+                foreach (Edge edge in tileModel.Neighbors)
+                {
+                    GameObject neighborTile = Map.Tiles.Get(edge.OtherIndices);
+                    switch (edge.Type)
+                    {
+                        case EdgeType.NORMAL: Gizmos.color = Color.green;
+                            break;
+                        default: Gizmos.color = Color.red;
+                            break;
+                    }
+                    
+                    Gizmos.DrawLine(mapTile.transform.position, neighborTile.transform.position);
+                }
+
+            }
+        }
 
     }
 }

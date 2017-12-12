@@ -49,5 +49,14 @@
         }
         return false;
     }
-        
+
+    public static T Get<T>(this T[,] array, Tuple<int, int> indices)
+    {
+        return array[indices.First, indices.Second];
+    }
+
+    public static Tuple<int, int> MultiplyBy(this Tuple<int, int> tuple, int n)
+    {
+        return Tuple.New(tuple.First * n, tuple.Second * n);
+    }
 }

@@ -17,10 +17,9 @@ public class Tuple<T1, T2>
 
     public override bool Equals(object obj)
     {
-        
-        if (obj.GetType() == typeof(Tuple<T1,T2>))
+        var castedObj = obj as Tuple<T1, T2>;
+        if (castedObj != null)
         {
-            Tuple<T1,T2> castedObj = (Tuple<T1, T2>)obj;
             var result = First.Equals(castedObj.First) && Second.Equals(castedObj.Second);
             return result;
         }
@@ -36,6 +35,7 @@ public class Tuple<T1, T2>
     {
         return "(" + First.ToString() + ", " + Second.ToString() + ")";
     }
+
 }
 
 public static class Tuple
