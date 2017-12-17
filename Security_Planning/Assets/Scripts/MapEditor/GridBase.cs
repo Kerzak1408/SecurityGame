@@ -104,11 +104,11 @@ namespace Assets.Scripts.MapEditor
                     {
                         FloodFillResult result = new FloodFillResult();
                         Debug.Log("-------------------------------- Flood fill begun --------------------------------");
-                        FloodFill(i, j, grid, result, new List<Vector2>());
+                        FloodFillAlgorithm.FloodFill(i, j, grid, result, IsTileCertainlyOutside, CanGetFromTo);
                         Debug.Log("-------------------------------- Flood fill ended --------------------------------");
-                        foreach (Vector2 coordinate in result.Coordinates)
+                        foreach (IntegerTuple coordinate in result.Coordinates)
                         {
-                            ceilingGrid[(int) coordinate.x, (int) coordinate.y] = true;
+                            ceilingGrid[coordinate.First, coordinate.Second] = true;
                         }
                         if (result.IsRoom)
                         {
@@ -124,13 +124,13 @@ namespace Assets.Scripts.MapEditor
             }
         }
 
-        private void AddPavementTexture(GameObject[,] grid, List<Vector2> resultCoordinates, string textureName)
+        private void AddPavementTexture(GameObject[,] grid, List<IntegerTuple> resultCoordinates, string textureName)
         {
             Sprite texture = Resources.Load<Sprite>("Textures/" + textureName);
             texture = Resources.Load<Sprite>("Textures/" + textureName);
-            foreach (Vector2 coordinate in resultCoordinates)
+            foreach (IntegerTuple coordinate in resultCoordinates)
             {
-                GameObject tile = grid[(int) coordinate.x, (int) coordinate.y];
+                GameObject tile = grid[coordinate.First, coordinate.Second];
                 var spriteRenderer = tile.GetComponent<SpriteRenderer>();
                 if (spriteRenderer != null)
                 {
@@ -141,15 +141,15 @@ namespace Assets.Scripts.MapEditor
             }
         }
 
-        private void AddCeiling(GameObject[,] grid, List<Vector2> coordinates, Transform parent)
+        private void AddCeiling(GameObject[,] grid, List<IntegerTuple> coordinates, Transform parent)
         {
             Color color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
-            foreach (Vector2 coordinate in coordinates)
+            foreach (IntegerTuple coordinate in coordinates)
             {
-                Debug.Log("Celeing: (" + coordinate.x + ", " + coordinate.y + ") + color = " + color);
+                Debug.Log("Celeing: (" + coordinate.First + ", " + coordinate.Second + ") + color = " + color);
                 GameObject ceilingTile =
                     Instantiate(ResourcesHolder.Instance.AllTiles.FindByName(GridManager.EMPTY_SQUARE)) as GameObject;
-                ceilingTile.transform.position = grid[(int) coordinate.x, (int) coordinate.y].transform.position 
+                ceilingTile.transform.position = grid[coordinate.First, coordinate.Second].transform.position 
                     + 3 * Vector3.back;
                 ceilingTile.ChangeColor(color);
                 ceilingTile.transform.parent = parent;
@@ -157,34 +157,36 @@ namespace Assets.Scripts.MapEditor
             }
         }
 
-        private void FloodFill(int i, int j, GameObject[,] grid, FloodFillResult result, List<Vector2> visited)
-        {
-            Debug.Log("Flood fill step (" + i + ", " + j + ")");
-            visited.Add(new Vector2(i, j));
-            if (IsTileCertainlyOutside(grid, i, j))
-            {
-                result.IsRoom = false;
-            }
-            result.Coordinates.Add(new Vector2(i, j));
+        //private void FloodFill(int i, int j, GameObject[,] grid, FloodFillResult result, List<Vector2> visited)
+        //{
+        //    Debug.Log("Flood fill step (" + i + ", " + j + ")");
+        //    visited.Add(new Vector2(i, j));
+        //    if (IsTileCertainlyOutside(grid, i, j))
+        //    {
+        //        result.IsRoom = false;
+        //    }
+        //    result.Coordinates.Add(new Vector2(i, j));
 
-            Vector2[] neighbors =
-            {
-                new Vector2(i - 1, j),
-                new Vector2(i + 1, j),
-                new Vector2(i, j - 1),
-                new Vector2(i, j + 1)
-            };
-            foreach (Vector2 neighbor in neighbors)
-            {
-                if (!visited.Contains(neighbor) && CanGetFromTo(grid, i, j, (int) neighbor.x, (int) neighbor.y))
-                {
-                    FloodFill((int) neighbor.x, (int) neighbor.y, grid, result, visited);
-                }
-            }
-        }
+        //    Vector2[] neighbors =
+        //    {
+        //        new Vector2(i - 1, j),
+        //        new Vector2(i + 1, j),
+        //        new Vector2(i, j - 1),
+        //        new Vector2(i, j + 1)
+        //    };
+        //    foreach (Vector2 neighbor in neighbors)
+        //    {
+        //        if (!visited.Contains(neighbor) && CanGetFromTo(grid, i, j, (int) neighbor.x, (int) neighbor.y))
+        //        {
+        //            FloodFill((int) neighbor.x, (int) neighbor.y, grid, result, visited);
+        //        }
+        //    }
+        //}
 
-        private bool IsTileCertainlyOutside(GameObject[,] grid, int i, int j)
+        private bool IsTileCertainlyOutside(GameObject[,] grid, IntegerTuple indices)
         {
+            int i = indices.First;
+            int j = indices.Second;
             string tileName = grid[i, j].name;
             if (i == 0)
             {
@@ -209,8 +211,13 @@ namespace Assets.Scripts.MapEditor
             return false;
         }
 
-        private bool CanGetFromTo(GameObject[,] grid, int fromX, int fromY, int toX, int toY)
+        private bool CanGetFromTo(GameObject[,] grid, IntegerTuple from, IntegerTuple to)
         {
+            int fromX = from.First;
+            int fromY = from.Second;
+            int toX = to.First;
+            int toY = to.Second;
+
             if (toX < 0 || toY < 0 || toX >= grid.GetLength(0) || toY >= grid.GetLength(1))
             {
                 return false;
