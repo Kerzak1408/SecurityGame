@@ -34,6 +34,6 @@ public class TileModel
 
     public bool HasDirectTransitionTo(IntegerTuple integerTuple)
     {
-        return Neighbors.Any(neighbor => neighbor.OtherIndices.Equals(integerTuple));
+        return Neighbors.Any(neighbor => neighbor.Type.Equals(EdgeType.NORMAL) && neighbor.OtherIndices.Equals(integerTuple));
     }
 }

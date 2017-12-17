@@ -8,15 +8,16 @@ namespace Assets.Scripts.DataStructures
 {
     public class Map
     {
-        private static readonly string UP = "Up";
-        private static readonly string DOWN = "Down";
-        private static readonly string LEFT = "Left";
-        private static readonly string RIGHT = "Right";
-        private static readonly string ROLLING_DOOR = "RollingDoor";
-        private static readonly string KEY_GATE = "KeyGate";
-        private static readonly string WINDOW = "Window";
-        private static readonly string FENCE = "Fence";
-        private static readonly string GATE = "Gate";
+        public static readonly string UP = "Up";
+        public static readonly string DOWN = "Down";
+        public static readonly string LEFT = "Left";
+        public static readonly string RIGHT = "Right";
+        public static readonly string ROLLING_DOOR = "RollingDoor";
+        public static readonly string KEY_GATE = "KeyGate";
+        public static readonly string WINDOW = "Window";
+        public static readonly string FENCE = "Fence";
+        public static readonly string GATE = "Gate";
+        public static readonly string HEDGE = "Hedge";
 
         public GameObject[,] Tiles { get; private set; }
         public List<GameObject> Entities { get; private set; }
@@ -154,19 +155,30 @@ namespace Assets.Scripts.DataStructures
             }
             string fromName = Tiles[fromX, fromY].name;
             string toName = Tiles[toX, toY].name;
-            bool anyObstacle = false;
+            string fromObstacleDirection = "";
+            string toObstacleDirection = "";
+            
+            // Unreachable tiles.
+            if (fromName.Contains(HEDGE) || toName.Contains(HEDGE))
+            {
+                return null;
+            }
             if (toX == fromX)
             {
                 // UP or DOWN
                 if (toY > fromY)
                 {
                     // UP
-                    anyObstacle = fromName.Contains(RIGHT) || toName.Contains(LEFT);
+                    fromObstacleDirection = RIGHT;
+                    toObstacleDirection = LEFT;
+                    //anyObstacle = fromName.Contains(RIGHT) || toName.Contains(LEFT);
                 }
                 else
                 {
                     // DOWN
-                    anyObstacle = fromName.Contains(LEFT) || toName.Contains(RIGHT);
+                    fromObstacleDirection = LEFT;
+                    toObstacleDirection = RIGHT;
+                    //anyObstacle = fromName.Contains(LEFT) || toName.Contains(RIGHT);
                 }
             }
             else if (toY == fromY)
@@ -175,73 +187,38 @@ namespace Assets.Scripts.DataStructures
                 if (toX > fromX)
                 {
                     // RIGHT
-
-                    anyObstacle = fromName.Contains(UP) || toName.Contains(DOWN);
+                    fromObstacleDirection = UP;
+                    toObstacleDirection = DOWN;
+                    //anyObstacle = fromName.Contains(UP) || toName.Contains(DOWN);
                 }
                 else
                 {
                     // LEFT
-
-                    anyObstacle = fromName.Contains(DOWN) || toName.Contains(UP);
+                    fromObstacleDirection = DOWN;
+                    toObstacleDirection = UP;
+                    //anyObstacle = fromName.Contains(DOWN) || toName.Contains(UP);
                 }
             }
-            //else if (toX > fromX)
-            //{
-            //    // UP-RIGHT or DOWN-RIGHT
-            //    if (toY > fromY)
-            //    {
-            //        // UP-RIGHT
 
-            //    }
-            //    else
-            //    {
-            //        // DOWN-RIGHT
-            //    }
-            //}
-            //else
-            //{
-            //    // UP-LEFT or DOWN-LEFT
-            //    if (toY > fromY)
-            //    {
-            //        // UP-LEFT
-            //    }
-            //    else
-            //    {
-            //        // DOWN-LEFT
-            //    }
-            //}
+            bool fromObstacle = fromName.Contains(fromObstacleDirection);
+            bool toObstacle = toName.Contains(toObstacleDirection);
 
-            if (anyObstacle)
+
+
+            // Is there an obstacle between tiles?
+            if (fromObstacle || toObstacle)
             {
-                if (fromName.Contains(WINDOW) || toName.Contains(WINDOW))
-                {
-                    return new Edge(toX, toY, EdgeType.WINDOW, 1);
-                }
-                if (fromName.Contains(FENCE) || toName.Contains(FENCE))
-                {
-                    return new Edge(toX, toY, EdgeType.FENCE, 1);
-                }
-                if (fromName.Contains(KEY_GATE) || toName.Contains(KEY_GATE) ||
-                    fromName.Contains(ROLLING_DOOR) || toName.Contains(ROLLING_DOOR))
-                {
-                    return new Edge(toX, toY, EdgeType.KEY_DOOR, 1);
-                }
-                if (fromName.Contains(WINDOW) || toName.Contains(WINDOW))
-                {
-                    return new Edge(toX, toY, EdgeType.WINDOW, 1);
-                }
-                if (fromName.Contains(GATE) || toName.Contains(GATE))
-                {
-                    return new Edge(toX, toY, EdgeType.DOOR, 1);
-                }
+                EdgeType fromType = EdgeTypeUtils.ParseString(fromName);
+                EdgeType toType = EdgeTypeUtils.ParseString(toName);
+                EdgeType edgeType = EdgeType.NONE;
+                if (fromObstacle && !fromType.Equals(EdgeType.NONE)) edgeType = fromType;
+                if (toObstacle && !toType.Equals(EdgeType.NONE)) edgeType = toType;
+                return edgeType.Equals(EdgeType.NONE) ? null : new Edge(toX, toY, edgeType, 1);
             }
             else
             {
                 return new Edge(toX, toY, EdgeType.NORMAL, 1);
             }
-
-
-            return null;
         }
     } 
 }

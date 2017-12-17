@@ -90,7 +90,17 @@ namespace Assets.Scripts.MapEditor
                     {
                         case EdgeType.NORMAL: Gizmos.color = Color.green;
                             break;
-                        default: Gizmos.color = Color.red;
+                        case EdgeType.DOOR: Gizmos.color = Color.magenta;
+                            break;
+                        case EdgeType.KEY_DOOR: Gizmos.color = Color.yellow;
+                            break;
+                        case EdgeType.WINDOW: Gizmos.color = Color.blue;
+                            break;
+                        case EdgeType.FENCE: Gizmos.color = Color.black;
+                            break;
+                        case EdgeType.CARD_DOOR: Gizmos.color = Color.red;
+                            break;
+                        default: Gizmos.color = Color.cyan;
                             break;
                     }
                     
