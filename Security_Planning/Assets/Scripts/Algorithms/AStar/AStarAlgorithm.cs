@@ -1,65 +1,82 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 public static class AStarAlgorithm
 {
-    public static List<IAStarNode> AStar(IAStarNode startNode, IAStarNode endNode, Func<IAStarNode, IAStarNode, float> heuristics)
+    public static List<TNode> AStar<TNode>(TNode startNode, TNode endNode, Heuristics<TNode> heuristics, Action<string> log) where TNode : IAStarNode<TNode>
     {
-        var closedSet = new List<IAStarNode>();
-        var openSet = new SortedList<float, IAStarNode>
+        var closedSet = new List<TNode>();
+        var openSet = new List<TNode>
         {
-            { 0, startNode }
+            startNode 
         };
 
-        var cameFrom = new Dictionary<IAStarNode, IAStarNode>();
+        var cameFrom = new Dictionary<TNode, TNode>();
         
-        var gScores = new LazyDictionary<IAStarNode, float>(float.MaxValue);
+        var gScores = new LazyDictionary<TNode, float>(float.MaxValue);
         gScores[startNode] = 0;
 
-        var fScores = new LazyDictionary<IAStarNode, float>(float.MaxValue);
-        gScores[startNode] = heuristics(startNode, endNode);
+        var fScores = new LazyDictionary<TNode, float>(float.MaxValue);
+        fScores[startNode] = heuristics.ComputeHeuristics(startNode, endNode);
 
         while (openSet.Count != 0)
         {
-            KeyValuePair<float, IAStarNode> first = openSet.First();
-            IAStarNode currentNode = first.Value;
+            TNode currentNode = openSet.First();
+            log("AStar, exploiting node: " + currentNode);
+            float minFValue = fScores[currentNode];
+            foreach (TNode node in openSet)
+            {
+                var fValue = fScores[node];
+                if (fValue < minFValue)
+                {
+                    currentNode = node;
+                    minFValue = fValue;
+                }
+            }
 
-            if (currentNode == endNode)
+            if (currentNode.Equals(endNode))
             {
                 return ReconstructPath(cameFrom, endNode);
             }
 
-            openSet.RemoveAt(0);
+            openSet.Remove(currentNode);
             closedSet.Add(currentNode);
 
-            foreach (IAStarEdge edge in currentNode.Edges)
+            foreach (IAStarEdge<TNode> edge in currentNode.Edges)
             {
-                IAStarNode neighbor = edge.Neighbor;
+                TNode neighbor = edge.Neighbor;
                 if (closedSet.Contains(neighbor)) continue;
+
+                if (!openSet.Contains(neighbor))
+                {
+                    openSet.Add(neighbor);
+                }
 
                 float potentialGScore = gScores[currentNode] + edge.Cost;
                 if (potentialGScore < gScores[neighbor])
                 {
                     cameFrom[neighbor] = currentNode;
                     gScores[neighbor] = potentialGScore;
-                    fScores[neighbor] = potentialGScore + heuristics(neighbor, endNode);
+                    fScores[neighbor] = potentialGScore + heuristics.ComputeHeuristics(neighbor, endNode);
                 }
             }
         }
         return null;
     }
 
-    private static List<IAStarNode> ReconstructPath(Dictionary<IAStarNode, IAStarNode> pathDictionary, IAStarNode endNode)
+    private static List<TNode> ReconstructPath<TNode>(Dictionary<TNode, TNode> pathDictionary, TNode endNode) where TNode : IAStarNode<TNode>
     {
-        var result = new List<IAStarNode>();
-        IAStarNode current = endNode;
+        var result = new List<TNode>();
+        TNode current = endNode;
         while (pathDictionary.Keys.Contains(current))
         {
             result.Insert(0, current);
             current = pathDictionary[current];
         }
+        result.Insert(0, current);
         return result;
     }
 }

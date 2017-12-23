@@ -107,8 +107,23 @@ namespace Assets.Scripts.MapEditor
                     Gizmos.DrawLine(mapTile.transform.position, neighborTile.transform.position);
                 }
             }
+
+            Gizmos.color = Color.red;
+            
             TileNode[,] aiModelTiles = Map.AIModel.Tiles;
-            //AStarAlgorithm.AStar(aiModelTiles[0,0], aiModelTiles[1,1], )
+            EuclideanHeuristics heuristics = new EuclideanHeuristics(Map.Tiles);
+            List<TileNode> path = AStarAlgorithm.AStar(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics, Debug.Log);
+            TileNode previousNode = null;
+            foreach (TileNode currentNode in path)
+            {
+                if (previousNode != null)
+                {
+                    GameObject previous = Map.Tiles.Get(previousNode.Position);
+                    GameObject current = Map.Tiles.Get(currentNode.Position);
+                    Gizmos.DrawLine(previous.transform.position, current.transform.position);
+                }
+                previousNode = currentNode;
+            }
         }
 
     }

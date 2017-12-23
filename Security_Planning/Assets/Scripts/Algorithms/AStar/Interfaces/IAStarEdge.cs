@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAStarEdge
+public interface IAStarEdge<TNode> where TNode : IAStarNode<TNode>
 {
-    IAStarNode Neighbor { get; }
+    TNode Neighbor { get; }
     float Cost { get; }
 }

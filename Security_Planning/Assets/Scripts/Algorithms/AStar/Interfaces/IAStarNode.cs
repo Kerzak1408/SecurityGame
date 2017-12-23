@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAStarNode
+public interface IAStarNode<T> where T : IAStarNode<T>
 {
-    List<IAStarEdge> Edges { get; }
+    List<IAStarEdge<T>> Edges { get; }
 }

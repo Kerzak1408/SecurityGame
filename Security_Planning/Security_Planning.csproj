@@ -92,10 +92,11 @@
     <Compile Include="Assets\External\RPG Character Animation Pack\Elements\ImageEffects\Scripts\ScreenSpaceAmbientOcclusion.cs" />
     <Compile Include="Assets\External\RPG Character Animation Pack\Elements\ImageEffects\Scripts\Triangles.cs" />
     <Compile Include="Assets\Scripts\Algorithms\AStar\AStarAlgorithm.cs" />
+    <Compile Include="Assets\Scripts\Algorithms\AStar\Heuristics\EuclideanHeuristics.cs" />
+    <Compile Include="Assets\Scripts\Algorithms\AStar\Heuristics\Heuristics.cs" />
     <Compile Include="Assets\Scripts\Algorithms\AStar\Interfaces\IAStarEdge.cs" />
     <Compile Include="Assets\Scripts\Algorithms\AStar\Interfaces\IAStarNode.cs" />
     <Compile Include="Assets\Scripts\Algorithms\FloodFill\FloodFill.cs" />
-    <Compile Include="Assets\Scripts\Algorithms\Heuristics.cs" />
     <Compile Include="Assets\Scripts\Animations\MoneyFalling.cs" />
     <Compile Include="Assets\Scripts\BaseObject.cs" />
     <Compile Include="Assets\Scripts\Comparers\ObjectComparer.cs" />

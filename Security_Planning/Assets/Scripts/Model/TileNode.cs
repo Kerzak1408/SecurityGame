@@ -6,14 +6,14 @@ using Assets.Scripts.DataStructures;
 using Assets.Scripts.Model;
 using UnityEngine;
 
-public class TileNode : IAStarNode
+public class TileNode : IAStarNode<TileNode>
 {
     public IntegerTuple Position;
     public List<Edge> Edges { get; private set; }
 
-    List<IAStarEdge> IAStarNode.Edges
+    List<IAStarEdge<TileNode>> IAStarNode<TileNode>.Edges
     {
-        get { return Edges.OfType<IAStarEdge>().ToList(); }
+        get { return Edges.OfType<IAStarEdge<TileNode>>().ToList(); }
     }
 
     public TileNode(int i, int j)
@@ -35,5 +35,16 @@ public class TileNode : IAStarNode
     public bool HasDirectTransitionTo(IntegerTuple integerTuple)
     {
         return Edges.Any(edge => edge.Type.Equals(EdgeType.NORMAL) && edge.Neighbor.Position.Equals(integerTuple));
+    }
+
+    public override string ToString()
+    {
+        string result = Position.ToString() + ", {";
+        foreach (Edge edge in Edges)
+        {
+            result += edge.Neighbor.Position + ", ";
+        }
+        result += "}";
+        return result;
     }
 }
