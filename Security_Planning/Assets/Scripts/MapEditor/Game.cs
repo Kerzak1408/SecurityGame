@@ -76,16 +76,16 @@ namespace Assets.Scripts.MapEditor
 
         private void OnDrawGizmos()
         {
-            
             if (Map == null) return;
-            foreach (TileModel tileModel in Map.AIModel.Tiles)
+
+            foreach (TileNode tileModel in Map.AIModel.Tiles)
             {
                 Gizmos.color = Color.green;
                 GameObject mapTile = Map.Tiles.Get(tileModel.Position);
                 Gizmos.DrawSphere(mapTile.transform.position, 0.1f);
-                foreach (Edge edge in tileModel.Neighbors)
+                foreach (Edge edge in tileModel.Edges)
                 {
-                    GameObject neighborTile = Map.Tiles.Get(edge.OtherIndices);
+                    GameObject neighborTile = Map.Tiles.Get(edge.Neighbor.Position);
                     switch (edge.Type)
                     {
                         case EdgeType.NORMAL: Gizmos.color = Color.green;
@@ -106,8 +106,9 @@ namespace Assets.Scripts.MapEditor
                     
                     Gizmos.DrawLine(mapTile.transform.position, neighborTile.transform.position);
                 }
-
             }
+            TileNode[,] aiModelTiles = Map.AIModel.Tiles;
+            //AStarAlgorithm.AStar(aiModelTiles[0,0], aiModelTiles[1,1], )
         }
 
     }

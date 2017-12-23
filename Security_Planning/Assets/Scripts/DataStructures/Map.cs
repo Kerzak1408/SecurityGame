@@ -31,7 +31,7 @@ namespace Assets.Scripts.DataStructures
             Entities = entities;
             EmptyParent = emptyParent;
             PasswordDictionary = passwordDictionary;
-            AIModel = ExtractAIModel();
+            ExtractAIModel();
         }
 
         public void SetActive(bool active)
@@ -84,17 +84,24 @@ namespace Assets.Scripts.DataStructures
             }
         }
 
-        public AIModel ExtractAIModel()
+        public void ExtractAIModel()
         {
             int width = Tiles.GetLength(0);
             int height = Tiles.GetLength(1);
-            AIModel result = new AIModel(width, height);
-        
+            AIModel = new AIModel(width, height);
+
+            // Nodes
+            for (int i = 0; i < width; i++)
+                for (int j = 0; j < height; j++)
+                {
+                    AIModel.Tiles[i, j] = new TileNode(i, j);
+                }
+
             // Horizontal and vertical edges
             for (int i = 0; i < width; i++)
                 for (int j = 0; j < height; j++)
                 {
-                    TileModel tileModel = new TileModel(i, j);
+                    TileNode tileNode = AIModel.Tiles[i, j];
                     Tuple<int, int>[] neighbors =
                     {
                         Tuple.New(i - 1, j),
@@ -108,10 +115,10 @@ namespace Assets.Scripts.DataStructures
                         if ((edge = CanGetFromTo(i, j, neighbor.First, neighbor.Second)) != null)
                         {
                             // TODO: cost
-                            tileModel.AddNeighbor(edge);
+                            tileNode.AddNeighbor(edge);
                         }
                     }
-                    result.Tiles[i, j] = tileModel;
+                    
                 }
 
             // Diagonal edges
@@ -120,8 +127,8 @@ namespace Assets.Scripts.DataStructures
                 {
                     IntegerTuple transition1 = new IntegerTuple(1, 0);
                     IntegerTuple transition2 = new IntegerTuple(0, 1);
-                    TileModel tileModel = result.Tiles[i, j];
-                    IntegerTuple tileModelPosition = tileModel.Position;
+                    TileNode tileNode = AIModel.Tiles[i, j];
+                    IntegerTuple tileModelPosition = tileNode.Position;
                     for (int first = -1; first <= 1; first += 2)
                         for (int second = -1; second <= 1; second += 2)
                         {
@@ -131,20 +138,21 @@ namespace Assets.Scripts.DataStructures
                             // and vice versa. E.g. if we check whether we can get to the left-up neighbor we need to be able to
                             // get to the left neighbor and from it to its up neighbor. Additionaly we need to be able to get to
                             // the up neighbor and from it to its left neighbor.
-                            if (tileModel.HasDirectTransitionTo(tileModelPosition + currentTransition1) &&
-                                result.Tiles.Get(tileModelPosition + currentTransition1)
+                            if (tileNode.HasDirectTransitionTo(tileModelPosition + currentTransition1) &&
+                                AIModel.Tiles.Get(tileModelPosition + currentTransition1)
                                     .HasDirectTransitionTo(tileModelPosition + currentTransition1 +
                                                            currentTransition2) &&
-                                tileModel.HasDirectTransitionTo(tileModelPosition + currentTransition2) &&
-                                result.Tiles.Get(tileModelPosition + currentTransition2)
+                                tileNode.HasDirectTransitionTo(tileModelPosition + currentTransition2) &&
+                                AIModel.Tiles.Get(tileModelPosition + currentTransition2)
                                     .HasDirectTransitionTo(tileModelPosition + currentTransition2 + currentTransition1))
                             {
-                                tileModel.AddNeighbor(tileModelPosition + currentTransition2 + currentTransition1, EdgeType.NORMAL, Mathf.Sqrt(2));
+                                IntegerTuple indices = tileModelPosition + currentTransition2 + currentTransition1;
+                                TileNode neighbor = AIModel.Tiles[indices.First, indices.Second];
+                                tileNode.AddNeighbor(neighbor, EdgeType.NORMAL, Mathf.Sqrt(2));
                             }
                                 
                         }
                 }
-            return result;
         }
 
         private Edge CanGetFromTo(int fromX, int fromY, int toX, int toY)
@@ -213,11 +221,11 @@ namespace Assets.Scripts.DataStructures
                 EdgeType edgeType = EdgeType.NONE;
                 if (fromObstacle && !fromType.Equals(EdgeType.NONE)) edgeType = fromType;
                 if (toObstacle && !toType.Equals(EdgeType.NONE)) edgeType = toType;
-                return edgeType.Equals(EdgeType.NONE) ? null : new Edge(toX, toY, edgeType, 1);
+                return edgeType.Equals(EdgeType.NONE) ? null : new Edge(AIModel.Tiles[toX, toY], edgeType, 1);
             }
             else
             {
-                return new Edge(toX, toY, EdgeType.NORMAL, 1);
+                return new Edge(AIModel.Tiles[toX, toY], EdgeType.NORMAL, 1);
             }
         }
     } 

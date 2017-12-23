@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class AStarAlgorithm
+public interface IAStarEdge
 {
-    public static void AStar()
-    {
-        
-    }
+    IAStarNode Neighbor { get; }
+    float Cost { get; }
 }

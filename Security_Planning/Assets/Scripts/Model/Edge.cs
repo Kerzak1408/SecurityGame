@@ -5,15 +5,22 @@ using System.Text;
 
 namespace Assets.Scripts.Model
 {
-    public class Edge
+    public class Edge : IAStarEdge
     {
-        public Tuple<int, int> OtherIndices;
+        //public Tuple<int, int> OtherIndices;
+        public TileNode Neighbor { get; private set; }
         public EdgeType Type;
-        public float Cost;
+        public float Cost { get; private set; }
 
-        public Edge(int otherI, int otherJ, EdgeType type, float cost)
+        IAStarNode IAStarEdge.Neighbor
         {
-            OtherIndices = Tuple.New(otherI, otherJ);
+            get { return Neighbor; }
+        }
+
+        public Edge(TileNode neighbor, EdgeType type, float cost)
+        {
+            Neighbor = neighbor;
+            //OtherIndices = Tuple.New(otherI, otherJ);
             Type = type;
             Cost = cost;
         }

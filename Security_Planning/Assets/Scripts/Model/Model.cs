@@ -2,11 +2,11 @@
 {
     public class AIModel
     {
-        public TileModel[,] Tiles;
+        public TileNode[,] Tiles;
 
         public AIModel(int width, int height)
         {
-            Tiles = new TileModel[width, height];
+            Tiles = new TileNode[width, height];
         }
     }
 }

@@ -91,8 +91,11 @@
     <Compile Include="Assets\External\RPG Character Animation Pack\Elements\ImageEffects\Scripts\ScreenSpaceAmbientObscurance.cs" />
     <Compile Include="Assets\External\RPG Character Animation Pack\Elements\ImageEffects\Scripts\ScreenSpaceAmbientOcclusion.cs" />
     <Compile Include="Assets\External\RPG Character Animation Pack\Elements\ImageEffects\Scripts\Triangles.cs" />
-    <Compile Include="Assets\Scripts\Algorithms\AStarAlgorithm.cs" />
-    <Compile Include="Assets\Scripts\Algorithms\FloodFill.cs" />
+    <Compile Include="Assets\Scripts\Algorithms\AStar\AStarAlgorithm.cs" />
+    <Compile Include="Assets\Scripts\Algorithms\AStar\Interfaces\IAStarEdge.cs" />
+    <Compile Include="Assets\Scripts\Algorithms\AStar\Interfaces\IAStarNode.cs" />
+    <Compile Include="Assets\Scripts\Algorithms\FloodFill\FloodFill.cs" />
+    <Compile Include="Assets\Scripts\Algorithms\Heuristics.cs" />
     <Compile Include="Assets\Scripts\Animations\MoneyFalling.cs" />
     <Compile Include="Assets\Scripts\BaseObject.cs" />
     <Compile Include="Assets\Scripts\Comparers\ObjectComparer.cs" />
@@ -100,6 +103,7 @@
     <Compile Include="Assets\Scripts\DataHandlers\ResourcesHolder.cs" />
     <Compile Include="Assets\Scripts\DataStructures\FloodFillResult.cs" />
     <Compile Include="Assets\Scripts\DataStructures\IntegerTuple.cs" />
+    <Compile Include="Assets\Scripts\DataStructures\LazyDictionary.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Map.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Tuple.cs" />
     <Compile Include="Assets\Scripts\Entities\BaseEntity.cs" />
@@ -168,7 +172,7 @@
     <Compile Include="Assets\Scripts\Model\Edge.cs" />
     <Compile Include="Assets\Scripts\Model\EdgeType.cs" />
     <Compile Include="Assets\Scripts\Model\Model.cs" />
-    <Compile Include="Assets\Scripts\Model\TileModel.cs" />
+    <Compile Include="Assets\Scripts\Model\TileNode.cs" />
     <Compile Include="Assets\Scripts\Reflection\ReflectiveEnumerator.cs" />
     <Compile Include="Assets\Scripts\Scenes.cs" />
     <Compile Include="Assets\Scripts\Serialization\BaseEntityData.cs" />
