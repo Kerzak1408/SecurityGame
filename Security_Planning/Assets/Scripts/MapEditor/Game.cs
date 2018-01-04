@@ -15,11 +15,13 @@ namespace Assets.Scripts.MapEditor
         public Image CurrentItemIcon;
 
         public Map Map { get; private set; }
+        public Camera MainCamera;
+        public Camera ObserverCamera;
+        private Vector3? startPointRight;
 
         // Use this for initialization
         protected override void Start ()
         {
-            
             base.Start();
             string mapName = Scenes.GetParam("map");
             Map = LoadMap(mapName, mapVisible:true);
@@ -67,6 +69,33 @@ namespace Assets.Scripts.MapEditor
             {
                 ButtonExit.gameObject.SetActive(!ButtonExit.IsActive());
             }
+            if (Input.GetKeyDown(KeyCode.LeftAlt))
+            {
+                MainCamera.gameObject.SetActive(!MainCamera.gameObject.activeInHierarchy);
+                ObserverCamera.gameObject.SetActive(!ObserverCamera.gameObject.activeInHierarchy);
+            }
+            if (ObserverCamera.gameObject.activeInHierarchy)
+            {
+                // ZOOM
+                float mouseWheel = Input.GetAxis("Mouse ScrollWheel");
+                if (mouseWheel != 0)
+                {
+                    float potentialSize = ObserverCamera.orthographicSize - 5 * mouseWheel;
+                    if (potentialSize >= 1 && potentialSize <= 20)
+                    {
+                       ObserverCamera.orthographicSize = potentialSize;
+                    }
+
+                }
+
+            }
+        }
+
+        private void TranslateBoard(Vector3 delta)
+        {
+            Vector3 result = Map.EmptyParent.transform.position + delta;
+            result.y = 0;
+            Map.EmptyParent.transform.position = result;
         }
 
         public void ExitToMenu()

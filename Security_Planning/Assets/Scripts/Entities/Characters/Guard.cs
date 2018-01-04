@@ -18,7 +18,7 @@ namespace Assets.Scripts.Entities.Characters
         
         private ResourcesHolder resourcesHolder;
         private Rigidbody rigidBody;
-        
+        private Camera mainCamera;
 
         // Use this for initialization
         protected override void Start()
@@ -32,7 +32,7 @@ namespace Assets.Scripts.Entities.Characters
             inputPassword.SetActive(false);
             
             gameObject.AddComponent<ConstantForce>().force = Vector3.forward;
-            
+            mainCamera = Camera.main;
             
             
         }
@@ -43,7 +43,7 @@ namespace Assets.Scripts.Entities.Characters
             
             isMoving = false;
             
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] raycastHits = Physics.RaycastAll(ray);
 
             UpdateCursor(raycastHits);
@@ -131,7 +131,7 @@ namespace Assets.Scripts.Entities.Characters
         private void OnLeftButtonClick()
         {
             var delta = new Vector3(Time.deltaTime * rotationSpeed * (-Input.GetAxis("Mouse Y")), 0, 0);
-            Camera.main.transform.Rotate(delta);
+            mainCamera.transform.Rotate(delta);
         }
 
         public override void RequestPassword(IPasswordOpenable passwordOpenableObject)
