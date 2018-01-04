@@ -8,40 +8,40 @@ namespace Assets.Scripts.Entities.Characters
     public class Guard : BaseCharacter
     {
         GameObject Canvas;
-        float speed;
+        
         float rotationSpeed;
 
         GameObject inputPassword;
 
         IPasswordOpenable passwordOpenableObject;
 
-        CharacterController controller;
+        
         private ResourcesHolder resourcesHolder;
-        private Animator animator;
         private Rigidbody rigidBody;
-        private AudioSource footstepAudio;
+        
 
         // Use this for initialization
-        private void Start()
+        protected override void Start()
         {
-            animator = GetComponentInChildren<Animator>();
+            base.Start();
             rigidBody = GetComponent<Rigidbody>();
             resourcesHolder = ResourcesHolder.Instance;
             rotationSpeed = 90;
             Canvas = GameObject.Find("Canvas");
             inputPassword = GameObject.Find("InputField_Password");
             inputPassword.SetActive(false);
-            controller = GetComponent<CharacterController>();
+            
             gameObject.AddComponent<ConstantForce>().force = Vector3.forward;
-            footstepAudio = gameObject.AttachAudioSource("Footstep");
-            animator.speed = 2;
+            
+            
             
         }
 
         // Update is called once per frame
-        private void Update()
+        protected override void Update()
         {
-            bool isMoving = false;
+            
+            isMoving = false;
             
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] raycastHits = Physics.RaycastAll(ray);
@@ -69,14 +69,6 @@ namespace Assets.Scripts.Entities.Characters
                     passwordOpenableObject.EnterPassword(password, this);
                 }
             }
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                speed = 0.04f;
-            }
-            else
-            {
-                speed = 0.1f;
-            }
 
             if (Input.GetKey(KeyCode.Q))
             {
@@ -94,9 +86,7 @@ namespace Assets.Scripts.Entities.Characters
         
             if (Input.GetKey(KeyCode.W))
             {
-                isMoving = true;
-                var transformedDir = transform.TransformDirection(speed * Vector3.forward);
-                controller.Move(transformedDir);
+                MoveForward();
             }
             if (Input.GetKey(KeyCode.D))
             {
@@ -112,21 +102,8 @@ namespace Assets.Scripts.Entities.Characters
                 var transformedDir = transform.TransformDirection(speed * Vector3.back);
                 controller.Move(transformedDir);
             }
-            animator.SetBool("Moving", isMoving);
-            if (isMoving)
-            {
-                if (!footstepAudio.isPlaying)
-                {
-                    footstepAudio.Play();
-                    animator.speed = 2;
-                }
-            }
-            else
-            {
-                footstepAudio.Stop();
-                animator.speed = 1;
-            }
-            
+            base.Update();
+
         }
 
         private void UpdateCursor(RaycastHit[] raycastHits)
@@ -203,31 +180,7 @@ namespace Assets.Scripts.Entities.Characters
             CurrentGame.TextMoney.text = money.ToString();
         }
 
-        //Animation Events - just to enable Mecanim animations work => Do NOT delete!
-        void Hit()
-        {
 
-        }
-
-        void FootL()
-        {
-
-        }
-
-        void FootR()
-        {
-
-        }
-
-        void Jump()
-        {
-
-        }
-
-        void Land()
-        {
-
-        }
     }
 
 

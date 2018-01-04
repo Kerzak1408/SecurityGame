@@ -20,6 +20,10 @@ namespace Assets.Scripts.Entities.Characters
         private Animator animator;
         private int activeItemIndex;
         protected int money;
+        protected bool isMoving;
+        private AudioSource footstepAudio;
+        protected float speed = 0.04f;
+        protected CharacterController controller;
 
         protected List<GameObject> Items
         {
@@ -43,6 +47,48 @@ namespace Assets.Scripts.Entities.Characters
                 items = value;
                 Data.ItemNames = items.Select(item => item.name).ToArray();
             }
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            footstepAudio = gameObject.AttachAudioSource("Footstep");
+            controller = GetComponent<CharacterController>();
+            animator = GetComponentInChildren<Animator>();
+            animator.speed = 2;
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            if (transform.position.y != 0)
+            {
+                // Just to ensure avoiding flying.
+                Vector3 groundPosition = transform.position;
+                groundPosition.y = 0;
+                transform.position = groundPosition;
+            }
+            animator.SetBool("Moving", isMoving);
+            if (isMoving)
+            {
+                if (!footstepAudio.isPlaying)
+                {
+                    footstepAudio.Play();
+                    animator.speed = 2;
+                }
+            }
+            else
+            {
+                footstepAudio.Stop();
+                animator.speed = 1;
+            }
+        }
+
+        protected void MoveForward()
+        {
+            isMoving = true;
+            var transformedDir = transform.TransformDirection(speed * Vector3.forward);
+            controller.Move(transformedDir);
         }
 
         public override void StartGame()
@@ -177,5 +223,30 @@ namespace Assets.Scripts.Entities.Characters
             animator.applyRootMotion = false;
         }
 
+        //Animation Events - just to enable Mecanim animations work => Do NOT delete!
+        protected void Hit()
+        {
+
+        }
+
+        protected void FootL()
+        {
+
+        }
+
+        protected void FootR()
+        {
+
+        }
+
+        protected void Jump()
+        {
+
+        }
+
+        protected void Land()
+        {
+
+        }
     }
 }

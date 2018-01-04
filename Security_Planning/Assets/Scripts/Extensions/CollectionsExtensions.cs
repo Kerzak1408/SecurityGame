@@ -13,15 +13,6 @@
         return null;
     }
 
-    //public static T Find<T>(this IEnumerable<T> enumerable)
-    //{
-    //    foreach (T item in enumerable)
-    //    {
-            
-    //    }
-    //    return default(T);
-    //}
-
     public static string ToStringExtended<T>(this T[] array)
     {
         if (array.Length == 0)
