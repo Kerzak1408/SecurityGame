@@ -25,7 +25,7 @@ public static class AStarAlgorithm
         while (openSet.Count != 0)
         {
             TNode currentNode = openSet.First();
-            log("AStar, exploiting node: " + currentNode);
+            //log("AStar, exploiting node: " + currentNode);
             float minFValue = fScores[currentNode];
             foreach (TNode node in openSet)
             {

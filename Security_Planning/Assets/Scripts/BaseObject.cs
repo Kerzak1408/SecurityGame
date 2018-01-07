@@ -14,7 +14,7 @@ namespace Assets.Scripts
 
         protected virtual void Update ()
         {
-            Debug.Log("name = " + name + " Destroy = " + destroy);
+            //Debug.Log("name = " + name + " Destroy = " + destroy);
             if (destroy)
             {
                 Debug.Log("Destroy timeCounter = " + timeCounter + " timeOfDestroy = " + timeOfDestroy);

@@ -17,7 +17,7 @@ public static class FloodFillAlgorithm
         Func<TCell[,], IntegerTuple, bool> isTileCertainlyOutside,
         Func<TCell[,], IntegerTuple, IntegerTuple, bool> canGetFromTo)
     {
-        Debug.Log("Flood fill step (" + i + ", " + j + ")");
+        //Debug.Log("Flood fill step (" + i + ", " + j + ")");
         var currentIndices = new IntegerTuple(i, j);
         visited.Add(currentIndices);
         if (isTileCertainlyOutside(grid, currentIndices))

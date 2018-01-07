@@ -25,6 +25,7 @@ namespace Assets.Scripts.MapEditor
             base.Start();
             string mapName = Scenes.GetParam("map");
             Map = LoadMap(mapName, mapVisible:true);
+            Map.ExtractAIModel();
 
             GenerateCeiling(Map.Tiles, Map.EmptyParent.transform);
 

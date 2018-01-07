@@ -47,4 +47,18 @@ public class TileNode : IAStarNode<TileNode>
         result += "}";
         return result;
     }
+
+    public void RemoveAllEdgesBothDirections()
+    {
+        foreach (Edge edge in Edges)
+        {
+            List<Edge> neighborEdges = edge.Neighbor.Edges;
+            Edge oppositeDirectionEdge = neighborEdges.FirstOrDefault(e => e.Neighbor == this);
+            if (!oppositeDirectionEdge.Equals(default(Edge)))
+            {
+                neighborEdges.Remove(oppositeDirectionEdge);
+            }
+        }
+        Edges.Clear();
+    }
 }

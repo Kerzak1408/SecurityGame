@@ -46,10 +46,10 @@ namespace Assets.Scripts.MapEditor
             var passwordDictionary = serializer.Deserialize<Dictionary<Tuple<int, int>, string>>(FileHelper.JoinPath(MAPS_PATH, mapName, PASSWORDS));
             var allTiles = ResourcesHolder.Instance.AllTiles;
 
-            foreach (KeyValuePair<Tuple<int, int>, string> kvPair in passwordDictionary)
-            {
-                Debug.Log("KEY=" + kvPair.Key + " VALUE=" + kvPair.Value);
-            }
+            //foreach (KeyValuePair<Tuple<int, int>, string> kvPair in passwordDictionary)
+            //{
+            //    Debug.Log("KEY=" + kvPair.Key + " VALUE=" + kvPair.Value);
+            //}
 
             int width = namesMatrix.GetLength(1);
             int height = namesMatrix.GetLength(0);
@@ -60,7 +60,7 @@ namespace Assets.Scripts.MapEditor
             for (int j = 0; j < width; j++)
             {
                 string currentName = namesMatrix[i, j].Trim();
-                Debug.Log("Loading tile = +" + currentName + "+");
+                //Debug.Log("Loading tile = +" + currentName + "+");
                 var newTile = allTiles.FindByName(currentName);
                 GameObject newObject = Instantiate(newTile, transform) as GameObject;
                 loadedGrid[i, j] = newObject;
@@ -87,7 +87,8 @@ namespace Assets.Scripts.MapEditor
                 newObject.transform.parent = emptyParent.transform;
                 entities.Add(newObject);
             }
-            return new Map(loadedGrid, entities, emptyParent, passwordDictionary);
+            var result = new Map(loadedGrid, entities, emptyParent, passwordDictionary);
+            return result;
         }
 
         protected void GenerateCeiling(GameObject[,] grid, Transform parent)
@@ -103,9 +104,9 @@ namespace Assets.Scripts.MapEditor
                     if (!currentTile)
                     {
                         FloodFillResult result = new FloodFillResult();
-                        Debug.Log("-------------------------------- Flood fill begun --------------------------------");
+                        //Debug.Log("-------------------------------- Flood fill begun --------------------------------");
                         FloodFillAlgorithm.FloodFill(i, j, grid, result, IsTileCertainlyOutside, CanGetFromTo);
-                        Debug.Log("-------------------------------- Flood fill ended --------------------------------");
+                        //Debug.Log("-------------------------------- Flood fill ended --------------------------------");
                         foreach (IntegerTuple coordinate in result.Coordinates)
                         {
                             ceilingGrid[coordinate.First, coordinate.Second] = true;

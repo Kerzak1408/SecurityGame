@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Assets.Scripts.Entities;
+using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
 using UnityEngine;
@@ -18,6 +20,7 @@ namespace Assets.Scripts.DataStructures
         public static readonly string FENCE = "Fence";
         public static readonly string GATE = "Gate";
         public static readonly string HEDGE = "Hedge";
+        private static readonly float MIN_OBSTACLE_DISTANCE = 0.2f;
 
         public GameObject[,] Tiles { get; private set; }
         public List<GameObject> Entities { get; private set; }
@@ -31,7 +34,6 @@ namespace Assets.Scripts.DataStructures
             Entities = entities;
             EmptyParent = emptyParent;
             PasswordDictionary = passwordDictionary;
-            ExtractAIModel();
         }
 
         public void SetActive(bool active)
@@ -120,7 +122,7 @@ namespace Assets.Scripts.DataStructures
                     }
                     
                 }
-
+              
             // Diagonal edges
             for (int i = 0; i < width; i++)
                 for (int j = 0; j < height; j++)
@@ -153,10 +155,37 @@ namespace Assets.Scripts.DataStructures
                                 
                         }
                 }
+
+            // Remove edges that cannot be used because of obstacles.
+            foreach (GameObject entity in Entities)
+            {
+                Debug.Log("Potential obstacle: " + entity.name);
+                var entityScript = entity.GetComponent<BaseEntity>();
+                // We can get where characters are, other objects are not movable.
+                if (entityScript is BaseCharacter || entityScript is MoneyEntity) continue;
+                RemoveObstacleEdges(entity);
+            }
+        }
+
+        private void RemoveObstacleEdges(GameObject entity)
+        {
+            var entityCollider = entity.GetComponent<Collider>();
+            foreach (TileNode node in AIModel.Tiles)
+            {
+                Vector3 nodePosition = Tiles.Get(node.Position).transform.position;
+                Vector3 closestPointOnCollider = entityCollider.ClosestPointOnBounds(nodePosition);
+                float distance = Vector3.Distance(nodePosition, closestPointOnCollider);
+                if (distance < MIN_OBSTACLE_DISTANCE)
+                {
+                    Debug.Log("Removing all edges from node: " + node.Position);
+                    node.RemoveAllEdgesBothDirections();
+                }
+            }
         }
 
         private Edge CanGetFromTo(int fromX, int fromY, int toX, int toY)
         {
+            //Debug.Log("Can get from [" + fromX + ", " + fromY + "] to [" + toX + ", " + toY + "]?");
             if (toX < 0 || toY < 0 || toX >= Tiles.GetLength(0) || toY >= Tiles.GetLength(1))
             {
                 return null;
