@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.DataStructures;
+using Assets.Scripts.Entities;
 using Assets.Scripts.Model;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class TileNode : IAStarNode<TileNode>
 {
     public IntegerTuple Position;
     public List<Edge> Edges { get; private set; }
+    public List<TransmitterEntity> DetectedBy { get; private set; }
 
     List<IAStarEdge<TileNode>> IAStarNode<TileNode>.Edges
     {
@@ -20,6 +22,7 @@ public class TileNode : IAStarNode<TileNode>
     {
         Position = new IntegerTuple(i, j);
         Edges = new List<Edge>();
+        DetectedBy = new List<TransmitterEntity>();
     }
 
     public void AddNeighbor(TileNode node, EdgeType type, float cost)
@@ -32,9 +35,19 @@ public class TileNode : IAStarNode<TileNode>
         Edges.Add(edge);
     }
 
+    public void AddDetector(TransmitterEntity detector)
+    {
+        DetectedBy.Add(detector);
+    }
+
     public bool HasDirectTransitionTo(IntegerTuple integerTuple)
     {
         return Edges.Any(edge => edge.Type.Equals(EdgeType.NORMAL) && edge.Neighbor.Position.Equals(integerTuple));
+    }
+
+    public bool IsDetectable()
+    {
+        return DetectedBy.Count != 0;
     }
 
     public override string ToString()

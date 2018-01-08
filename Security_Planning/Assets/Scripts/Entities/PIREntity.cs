@@ -5,10 +5,8 @@ using UnityEngine;
 
 namespace Assets.Scripts.Entities
 {
-    public class PIREntity : TransmitterEntity
+    public class PIREntity : DetectorEntity
     {
-        private Camera camera;
-        private Plane[] planes;
         private GameObject relatedObject;
         private PIRAlarm alarm;
         private Ray ray;
@@ -22,13 +20,10 @@ namespace Assets.Scripts.Entities
         {
             Vector3 currentPosition = transform.position;
             transform.position = new Vector3(currentPosition.x, currentPosition.y, -1f);
-            camera = GetComponentInChildren<Camera>();
-            camera.enabled = false;
+            Camera.enabled = false;
             ray = new Ray();
-            ray.origin = camera.transform.position;
+            ray.origin = Camera.transform.position;
 
-
-            planes = GeometryUtility.CalculateFrustumPlanes(camera);
             relatedObject = GameObject.Find(Data.relatedName);
             if (relatedObject != null)
             {
@@ -38,6 +33,7 @@ namespace Assets.Scripts.Entities
 
         public void Update()
         {
+            var planes = GeometryUtility.CalculateFrustumPlanes(Camera);
             bool activate = false;
             foreach (GameObject entity in CurrentGame.Map.Entities)
             {
@@ -47,8 +43,8 @@ namespace Assets.Scripts.Entities
                     // Aim to the center of the collider
                     Vector3 entityColliderCenter = entity.GetComponent<Collider>().bounds.center;
                     // Begin ray at the PIR camera
-                    ray.origin = camera.transform.position;
-                    ray.direction = entityColliderCenter - camera.transform.position;
+                    ray.origin = Camera.transform.position;
+                    ray.direction = entityColliderCenter - Camera.transform.position;
                     RaycastHit hit;
                     // If the first hit is the entity, start alarm -> We have an entity inside PIR camera view + 
                     // nothing is between the entity and the PIR

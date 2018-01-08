@@ -106,11 +106,14 @@ namespace Assets.Scripts.MapEditor
 
         private void OnDrawGizmos()
         {
+
             if (Map == null) return;
+
+            Map.ExtractAIModel();
 
             foreach (TileNode tileModel in Map.AIModel.Tiles)
             {
-                Gizmos.color = Color.green;
+                Gizmos.color = tileModel.IsDetectable() ? Color.red : Color.green;
                 GameObject mapTile = Map.Tiles.Get(tileModel.Position);
                 Gizmos.DrawSphere(mapTile.transform.position, 0.1f);
                 foreach (Edge edge in tileModel.Edges)

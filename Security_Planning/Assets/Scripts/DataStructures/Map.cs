@@ -159,11 +159,19 @@ namespace Assets.Scripts.DataStructures
             // Remove edges that cannot be used because of obstacles.
             foreach (GameObject entity in Entities)
             {
-                Debug.Log("Potential obstacle: " + entity.name);
+                //Debug.Log("Potential obstacle: " + entity.name);
                 var entityScript = entity.GetComponent<BaseEntity>();
                 // We can get where characters are, other objects are not movable.
                 if (entityScript is BaseCharacter || entityScript is MoneyEntity) continue;
                 RemoveObstacleEdges(entity);
+            }
+
+            // Add cameras and other detectors to the model.
+            foreach (GameObject entity in Entities)
+            {
+                var detectorEntity = entity.GetComponent<DetectorEntity>();
+                if (detectorEntity == null) continue;
+                detectorEntity.MarkDetectableNodes(AIModel, Tiles);
             }
         }
 
@@ -177,7 +185,7 @@ namespace Assets.Scripts.DataStructures
                 float distance = Vector3.Distance(nodePosition, closestPointOnCollider);
                 if (distance < MIN_OBSTACLE_DISTANCE)
                 {
-                    Debug.Log("Removing all edges from node: " + node.Position);
+                    //Debug.Log("Removing all edges from node: " + node.Position);
                     node.RemoveAllEdgesBothDirections();
                 }
             }
