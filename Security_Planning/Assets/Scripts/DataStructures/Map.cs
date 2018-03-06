@@ -265,5 +265,22 @@ namespace Assets.Scripts.DataStructures
                 return new Edge(AIModel.Tiles[toX, toY], EdgeType.NORMAL, 1);
             }
         }
+
+        public TileNode GetClosestTile(Vector3 position)
+        {
+            TileNode result = null;
+            float minDistance = float.MaxValue;
+            foreach (TileNode tile in AIModel.Tiles)
+            {
+                GameObject physicalTile = Tiles[tile.Position.First, tile.Position.Second];
+                float potentialDistance = Vector3.Distance(position, physicalTile.transform.position);
+                if (potentialDistance < minDistance)
+                {
+                    minDistance = potentialDistance;
+                    result = tile;
+                }
+            }
+            return result;
+        }
     } 
 }

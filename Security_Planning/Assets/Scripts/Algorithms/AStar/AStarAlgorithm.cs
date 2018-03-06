@@ -6,7 +6,8 @@ using System.Linq;
 
 public static class AStarAlgorithm
 {
-    public static List<TNode> AStar<TNode>(TNode startNode, TNode endNode, Heuristics<TNode> heuristics, Action<string> log) where TNode : IAStarNode<TNode>
+    public static List<TNode> AStar<TNode>(TNode startNode, TNode endNode, Heuristics<TNode> heuristics, Action<string> log, Func<TNode, bool> nodeFilter)
+        where TNode : IAStarNode<TNode>
     {
         var closedSet = new List<TNode>();
         var openSet = new List<TNode>
@@ -48,7 +49,7 @@ public static class AStarAlgorithm
             foreach (IAStarEdge<TNode> edge in currentNode.Edges)
             {
                 TNode neighbor = edge.Neighbor;
-                if (closedSet.Contains(neighbor)) continue;
+                if (closedSet.Contains(neighbor) || nodeFilter(neighbor)) continue;
 
                 if (!openSet.Contains(neighbor))
                 {

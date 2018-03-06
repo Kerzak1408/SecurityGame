@@ -29,12 +29,7 @@ namespace Assets.Scripts.MapEditor
 
             GenerateCeiling(Map.Tiles, Map.EmptyParent.transform);
 
-            foreach (GameObject entity in Map.Entities)
-            {
-                BaseEntity baseEntity = entity.GetComponent<BaseEntity>();
-                baseEntity.CurrentGame = this;
-                baseEntity.StartGame();
-            }
+
 
             foreach (Transform transform in Map.EmptyParent.transform)
             {
@@ -59,6 +54,14 @@ namespace Assets.Scripts.MapEditor
                     tile.GetComponent<BaseObject>().StartGame();
                 }
             }
+
+            foreach (GameObject entity in Map.Entities)
+            {
+                BaseEntity baseEntity = entity.GetComponent<BaseEntity>();
+                baseEntity.CurrentGame = this;
+                baseEntity.StartGame();
+            }
+
             Map.EmptyParent.transform.Rotate(90, 0, 0);
             //Map.EmptyParent.transform.eulerAngles = new Vector3(90, Map.EmptyParent.transform.eulerAngles.y, Map.EmptyParent.transform.eulerAngles.z);
         }
@@ -145,7 +148,7 @@ namespace Assets.Scripts.MapEditor
             
             TileNode[,] aiModelTiles = Map.AIModel.Tiles;
             EuclideanHeuristics heuristics = new EuclideanHeuristics(Map.Tiles);
-            List<TileNode> path = AStarAlgorithm.AStar(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics, Debug.Log);
+            List<TileNode> path = AStarAlgorithm.AStar(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics, Debug.Log, node => node.IsDetectable());
             TileNode previousNode = null;
             foreach (TileNode currentNode in path)
             {
