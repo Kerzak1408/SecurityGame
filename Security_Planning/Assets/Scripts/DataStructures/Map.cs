@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Extensions;
@@ -208,6 +209,19 @@ namespace Assets.Scripts.DataStructures
             {
                 return null;
             }
+
+            Vector3 fromTilePosition = Tiles[fromX, fromY].transform.position;
+            Vector3 toTilePosition = Tiles[toX, toY].transform.position;
+            fromTilePosition.y = 0.5f;
+            toTilePosition.y = 0.5f;
+            Ray fromToRay = new Ray(fromTilePosition, toTilePosition - fromTilePosition);
+            RaycastHit[] hits = Physics.RaycastAll(fromToRay);
+            float fromToDistance = Vector3.Distance(fromTilePosition, toTilePosition);
+            if (hits.Any(hit => hit.distance <= fromToDistance))
+            {
+                return null;
+            }
+
             if (toX == fromX)
             {
                 // UP or DOWN

@@ -29,7 +29,7 @@ public class Burglar : BaseCharacter {
 	    aiModelTiles = CurrentGame.Map.AIModel.Tiles;
         goals = new Queue<IntegerTuple>();
         goals.Enqueue(new IntegerTuple(5, 5));
-        goals.Enqueue(new IntegerTuple(5, 0));
+        //goals.Enqueue(new IntegerTuple(5, 0));
         //path = new Queue<TileNode>(AStarAlgorithm.AStar(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics, Debug.Log, node => node.IsDetectable()));
         //followedNode = path.Dequeue();
     }
@@ -108,7 +108,7 @@ public class Burglar : BaseCharacter {
         Vector3 target = CurrentGame.Map.Tiles.Get(tileNode.Position).transform.position;
         transform.LookAt(target);
         MoveForward();
-        return (Vector3.Distance(transform.position, target) < 0.05f);
+        return (Vector3.Distance(transform.position, target) < 0.4f);
     }
 
     public override void RequestPassword(IPasswordOpenable passwordOpenableObject)
