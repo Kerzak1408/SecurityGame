@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Extensions;
 using UnityEngine;
@@ -40,6 +41,12 @@ namespace Assets.Scripts.MapEditor
             {
                 Button addedButton = AddMapButton(directory.Name.Replace('_', ' '), Color.white);
                 LoadMap(directory.Name, addedButton);
+            }
+            if (MapsDictionary.Count > 0)
+            {
+                SelectedMapButton = MapsDictionary.Keys.First();
+                MapsDictionary[SelectedMapButton].SetActive(true);
+                SelectedMapButton.GetComponent<Image>().color = MyColors.LIGHT_SKY_BLUE;
             }
             cameraOriginalSize = Camera.main.orthographicSize;
         }
