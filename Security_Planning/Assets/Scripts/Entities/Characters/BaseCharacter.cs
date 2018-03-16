@@ -223,6 +223,14 @@ namespace Assets.Scripts.Entities.Characters
             animator.applyRootMotion = false;
         }
 
+        public bool NavigateTo(TileNode tileNode)
+        {
+            Vector3 target = CurrentGame.Map.Tiles.Get(tileNode.Position).transform.position;
+            transform.LookAt(target);
+            MoveForward();
+            return (Vector3.Distance(transform.position, target) < 0.4f);
+        }
+
         //Animation Events - just to enable Mecanim animations work => Do NOT delete!
         protected void Hit()
         {

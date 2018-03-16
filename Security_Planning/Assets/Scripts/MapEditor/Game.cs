@@ -61,6 +61,7 @@ namespace Assets.Scripts.MapEditor
             }
 
             Map.EmptyParent.transform.Rotate(90, 0, 0);
+            Map.ExtractAIModel();
             //Map.EmptyParent.transform.eulerAngles = new Vector3(90, Map.EmptyParent.transform.eulerAngles.y, Map.EmptyParent.transform.eulerAngles.z);
         }
 
