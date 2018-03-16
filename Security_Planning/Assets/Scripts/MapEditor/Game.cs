@@ -29,8 +29,6 @@ namespace Assets.Scripts.MapEditor
 
             GenerateCeiling(Map.Tiles, Map.EmptyParent.transform);
 
-
-
             foreach (Transform transform in Map.EmptyParent.transform)
             {
                 if (transform.name != "CCTV")
@@ -149,18 +147,20 @@ namespace Assets.Scripts.MapEditor
             TileNode[,] aiModelTiles = Map.AIModel.Tiles;
             EuclideanHeuristics heuristics = new EuclideanHeuristics(Map.Tiles);
             List<TileNode> path = AStarAlgorithm.AStar(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics, Debug.Log, node => node.IsDetectable());
-            TileNode previousNode = null;
-            foreach (TileNode currentNode in path)
+            if (path != null)
             {
-                if (previousNode != null)
+                TileNode previousNode = null;
+                foreach (TileNode currentNode in path)
                 {
-                    GameObject previous = Map.Tiles.Get(previousNode.Position);
-                    GameObject current = Map.Tiles.Get(currentNode.Position);
-                    Gizmos.DrawLine(previous.transform.position, current.transform.position);
+                    if (previousNode != null)
+                    {
+                        GameObject previous = Map.Tiles.Get(previousNode.Position);
+                        GameObject current = Map.Tiles.Get(currentNode.Position);
+                        Gizmos.DrawLine(previous.transform.position, current.transform.position);
+                    }
+                    previousNode = currentNode;
                 }
-                previousNode = currentNode;
             }
         }
-
     }
 }

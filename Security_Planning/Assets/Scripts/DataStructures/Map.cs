@@ -210,18 +210,6 @@ namespace Assets.Scripts.DataStructures
                 return null;
             }
 
-            Vector3 fromTilePosition = Tiles[fromX, fromY].transform.position;
-            Vector3 toTilePosition = Tiles[toX, toY].transform.position;
-            fromTilePosition.y = 0.5f;
-            toTilePosition.y = 0.5f;
-            Ray fromToRay = new Ray(fromTilePosition, toTilePosition - fromTilePosition);
-            RaycastHit[] hits = Physics.RaycastAll(fromToRay);
-            float fromToDistance = Vector3.Distance(fromTilePosition, toTilePosition);
-            if (hits.Any(hit => hit.distance <= fromToDistance))
-            {
-                return null;
-            }
-
             if (toX == fromX)
             {
                 // UP or DOWN
@@ -262,8 +250,6 @@ namespace Assets.Scripts.DataStructures
             bool fromObstacle = fromName.Contains(fromObstacleDirection);
             bool toObstacle = toName.Contains(toObstacleDirection);
 
-
-
             // Is there an obstacle between tiles?
             if (fromObstacle || toObstacle)
             {
@@ -276,6 +262,17 @@ namespace Assets.Scripts.DataStructures
             }
             else
             {
+                Vector3 fromTilePosition = Tiles[fromX, fromY].transform.position;
+                Vector3 toTilePosition = Tiles[toX, toY].transform.position;
+                fromTilePosition.y = 0.5f;
+                toTilePosition.y = 0.5f;
+                Ray fromToRay = new Ray(fromTilePosition, toTilePosition - fromTilePosition);
+                RaycastHit[] hits = Physics.RaycastAll(fromToRay);
+                float fromToDistance = Vector3.Distance(fromTilePosition, toTilePosition);
+                if (hits.Any(hit => !hit.collider.name.Contains(GATE) && hit.distance <= fromToDistance))
+                {
+                    return null;
+                }
                 return new Edge(AIModel.Tiles[toX, toY], EdgeType.NORMAL, 1);
             }
         }
