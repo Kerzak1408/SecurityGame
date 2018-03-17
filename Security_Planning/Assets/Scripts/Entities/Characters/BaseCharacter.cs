@@ -143,6 +143,12 @@ namespace Assets.Scripts.Entities.Characters
             }
         }
 
+        public void InteractWith(GameObject gameObject)
+        {
+            if (!CanInteractWith(gameObject)) return;
+            gameObject.GetComponent<IInteractable>().Interact(this);
+        }
+
         protected GameObject GetClosestInteractableHitObject(RaycastHit[] raycastHits,
             out bool isInteractableNow)
         {
@@ -170,7 +176,10 @@ namespace Assets.Scripts.Entities.Characters
                      Vector3.Distance(transform.position, hit.transform.position) <
                      Vector3.Distance(transform.position, closestHit.transform.position))
                 )
+                {
                     closestHit = hit;
+                }
+
             if (closestHit.Equals(default(RaycastHit)))
             {
                 isInteractable = isInteractableNow = false;
@@ -182,6 +191,13 @@ namespace Assets.Scripts.Entities.Characters
             isInteractableNow = distanceToClosest < Constants.Constants.INTERACTABLE_DISTANCE &&
                                 isInteractable;
             return closestGameObject;
+        }
+
+        public bool CanInteractWith(GameObject gameObject)
+        {
+            if (!gameObject.HasScriptOfType(typeof(IInteractable))) return false;
+            var distance = Vector3.Distance(gameObject.transform.position, transform.position);
+            return distance < Constants.Constants.INTERACTABLE_DISTANCE;
         }
 
         protected void ChangeWeapon()

@@ -1,26 +1,18 @@
 ﻿using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters;
-using Assets.Scripts.MapEditor;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Extensions;
+using Entities.Characters.Goals;
 using UnityEngine;
 
 namespace Entities.Characters.Behaviours
 {
     public class CollectEverythingBehaviour : BaseBehaviour
     {
-        private Queue<TileNode> path;
-        private TileNode followedNode;
-        private EuclideanHeuristics heuristics;
-        private TileNode[,] aiModelTiles;
-        private Queue<IntegerTuple> goals;
-        private IntegerTuple currentGoal;
-        private bool waitingForNextNode = true;
+        private Queue<BaseGoal> goals;
+        private BaseGoal currentGoal;
 
         public CollectEverythingBehaviour(BaseCharacter character) : base(character)
         {
@@ -29,64 +21,70 @@ namespace Entities.Characters.Behaviours
         public override void Start()
         {
             Map currentMap = character.CurrentGame.Map;
-            heuristics = new EuclideanHeuristics(currentMap.Tiles);
-            aiModelTiles = currentMap.AIModel.Tiles;
-            goals = new Queue<IntegerTuple>();
+            goals = new Queue<BaseGoal>();
             IEnumerable<GameObject> moneyEntities = currentMap.Entities.Where(go => go.HasScriptOfType<MoneyEntity>());
             foreach (GameObject moneyObject in moneyEntities)
             {
                 TileNode closestTile = currentMap.GetClosestTile(moneyObject.transform.position);
-                goals.Enqueue(closestTile.Position);
+                goals.Enqueue(new NavigationGoal(character, closestTile.Position));
+                goals.Enqueue(new InteractGoal(character, moneyObject));
             }
         }
 
         public override void Update()
         {
-            if (currentGoal == null)
+            if (currentGoal == null || currentGoal.IsCompleted)
             {
-                if (goals.Count > 0) currentGoal = goals.Dequeue();
-                else return;
-            }
-            if (followedNode != null)
-            {
-                if (character.NavigateTo(followedNode))
+                if (goals.Count > 0)
                 {
-                    if (waitingForNextNode)
-                    {
-                        //RecomputePath();
-                        followedNode = path.Count == 0 ? null : path.Dequeue();
-                    }
+                    currentGoal = goals.Dequeue();
+                    currentGoal.Activate();
                 }
                 else
                 {
-                    waitingForNextNode = true;
+                    currentGoal = null;
+                    return;
                 }
             }
-            else
-            {
-                RecomputePath();
-            }
+            currentGoal.Update();
+            //if (followedNode != null)
+            //{
+            //    if (character.NavigateTo(followedNode))
+            //    {
+            //        if (waitingForNextNode)
+            //        {
+            //            followedNode = path.Count == 0 ? null : path.Dequeue();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        waitingForNextNode = true;
+            //    }
+            //}
+            //else
+            //{
+            //    RecomputePath();
+            //}
         }
 
-        private void RecomputePath()
-        {
-            Map currentMap = character.CurrentGame.Map;
-            //currentMap.ExtractAIModel();
-            aiModelTiles = currentMap.AIModel.Tiles;
-            TileNode startNode = followedNode == null ? currentMap.GetClosestTile(character.transform.position) : 
-                aiModelTiles[followedNode.Position.First, followedNode.Position.Second];
-            List<TileNode> fullPath = AStarAlgorithm.AStar(startNode, aiModelTiles[currentGoal.First, currentGoal.Second], heuristics, Debug.Log, node => node.IsDetectable());
-            if (fullPath == null || fullPath.Count <= 1)
-            {
-                currentGoal = goals.Count == 0 ? null : goals.Dequeue();
-                followedNode = null;
-            }
-            else
-            {
-                path = new Queue<TileNode>(fullPath);
-                followedNode = path.Dequeue();
-            }
+        //private void RecomputePath()
+        //{
+        //    Map currentMap = character.CurrentGame.Map;
+        //    aiModelTiles = currentMap.AIModel.Tiles;
+        //    TileNode startNode = followedNode == null ? currentMap.GetClosestTile(character.transform.position) : 
+        //        aiModelTiles[followedNode.Position.First, followedNode.Position.Second];
+        //    List<TileNode> fullPath = AStarAlgorithm.AStar(startNode, aiModelTiles[currentGoal.First, currentGoal.Second], heuristics, Debug.Log, node => node.IsDetectable());
+        //    if (fullPath == null || fullPath.Count <= 1)
+        //    {
+        //        currentGoal = goals.Count == 0 ? null : goals.Dequeue();
+        //        followedNode = null;
+        //    }
+        //    else
+        //    {
+        //        path = new Queue<TileNode>(fullPath);
+        //        followedNode = path.Dequeue();
+        //    }
 
-        }
+        //}
     }
 }

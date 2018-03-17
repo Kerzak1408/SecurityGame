@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.6.3p4</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -118,6 +116,9 @@
     <Compile Include="Assets\Scripts\Entities\Characters\Behaviours\BaseBehaviour.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Behaviours\CollectEverythingBehaviour.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Burglar.cs" />
+    <Compile Include="Assets\Scripts\Entities\Characters\Goals\BaseGoal.cs" />
+    <Compile Include="Assets\Scripts\Entities\Characters\Goals\InteractGoal.cs" />
+    <Compile Include="Assets\Scripts\Entities\Characters\Goals\NavigationGoal.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Guard.cs" />
     <Compile Include="Assets\Scripts\Entities\DetectorEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\Fence.cs" />

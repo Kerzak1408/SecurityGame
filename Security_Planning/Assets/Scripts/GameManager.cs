@@ -5,14 +5,7 @@
         private static GameManager instance;
         public static GameManager Instance
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new GameManager();
-                }
-                return instance;
-            }
+            get { return instance ?? (instance = new GameManager()); }
         }
 
         private GameManager()
