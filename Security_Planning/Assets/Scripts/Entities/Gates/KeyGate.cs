@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Entities.Characters;
+﻿using System;
+using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Items;
@@ -14,7 +15,7 @@ namespace Assets.Scripts.Entities.Gates
             Lock();
         }
 
-        public void Interact(BaseCharacter character)
+        public void Interact(BaseCharacter character, Action successAction = null)
         {
             GameObject activeItemObject = character.GetActiveItem();
             if (activeItemObject.HasScriptOfType<KeyItem>())

@@ -16,8 +16,7 @@ namespace Entities.Characters.Goals
 
         public override void Activate()
         {
-            character.InteractWith(interacted);
-            IsCompleted = true;
+            character.InteractWith(interacted, () => IsCompleted = true);
         }
 
         public override void Update()

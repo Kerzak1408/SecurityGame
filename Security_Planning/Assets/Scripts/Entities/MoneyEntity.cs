@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Entities.Characters;
+﻿using System;
+using System.Collections;
+using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using UnityEngine;
@@ -15,12 +17,18 @@ namespace Assets.Scripts.Entities
             moneyAudio = gameObject.AttachAudioSource("Money");
         }
 
-        public void Interact(BaseCharacter character)
+        public void Interact(BaseCharacter character, Action successAction = null)
         {
             moneyAudio.Play();
-            character.ObtainMoney();
-            CurrentGame.Map.Entities.Remove(gameObject);
-            DestroyAfterTimeout(moneyAudio.clip.length);
+            StartCoroutine(CallAfterTimeout(moneyAudio.clip.length, () => {
+                character.ObtainMoney();
+                CurrentGame.Map.Entities.Remove(gameObject);
+                if (successAction != null)
+                {
+                    successAction();
+                }
+                Destroy(gameObject);
+            }));
         }
     }
 }
