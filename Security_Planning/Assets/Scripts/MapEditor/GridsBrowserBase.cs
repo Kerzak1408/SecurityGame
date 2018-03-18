@@ -75,8 +75,7 @@ namespace Assets.Scripts.MapEditor
         protected virtual void SelectMap()
         {
             eventProcessedByUI = true;
-            Camera.main.transform.position = Vector3.zero;
-            Camera.main.orthographicSize = cameraOriginalSize;
+
             if (SelectedMapButton != null)
             {
                 SelectedMapButton.GetComponent<Image>().color = Color.white;
@@ -84,7 +83,11 @@ namespace Assets.Scripts.MapEditor
             }
             SelectedMapButton = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
             SelectedMapButton.GetComponent<Image>().color = MyColors.LIGHT_SKY_BLUE;
-            MapsDictionary[SelectedMapButton].SetActive(true);
+            Map map = MapsDictionary[SelectedMapButton];
+            map.SetActive(true);
+            Camera.main.orthographicSize = cameraOriginalSize * Mathf.Max(map.Width, map.Height) / 10f;
+            Vector3 center = map.CenterWorld;
+            Camera.main.transform.position = center;
         }
 
         public void DefaultScrollLogic(float scroll, RaycastHit[] raycastHits)

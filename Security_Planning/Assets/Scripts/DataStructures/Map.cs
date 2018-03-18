@@ -29,6 +29,26 @@ namespace Assets.Scripts.DataStructures
         public GameObject EmptyParent { get; private set; }
         public AIModel AIModel { get; private set; }
 
+        public Vector3 CenterWorld
+        {
+            get
+            {
+                Vector3 bottomLeft = Tiles[0, 0].transform.position;
+                Vector3 upperRight = Tiles[Tiles.GetLength(0) - 1, Tiles.GetLength(1) - 1].transform.position;
+                return (bottomLeft + upperRight) / 2;
+            }
+        }
+
+        public int Width
+        {
+            get { return Tiles.GetLength(1); }
+        }
+
+        public int Height
+        {
+            get { return Tiles.GetLength(0); }
+        }
+
         public Map(GameObject[,] tiles, List<GameObject> entities, GameObject emptyParent, Dictionary<Tuple<int, int>, string> passwordDictionary)
         {
             Tiles = tiles;

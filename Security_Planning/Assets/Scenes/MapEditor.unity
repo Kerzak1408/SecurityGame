@@ -1015,7 +1015,6 @@ GameObject:
   - component: {fileID: 219092196}
   - component: {fileID: 219092195}
   - component: {fileID: 219092194}
-  - component: {fileID: 219092193}
   m_Layer: 0
   m_Name: CameraDelete
   m_TagString: Untagged
@@ -1037,13 +1036,6 @@ Transform:
   m_Father: {fileID: 1340260617}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!81 &219092193
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 219092191}
-  m_Enabled: 1
 --- !u!92 &219092194
 Behaviour:
   m_ObjectHideFlags: 0
@@ -1305,7 +1297,6 @@ GameObject:
   - component: {fileID: 327435384}
   - component: {fileID: 327435383}
   - component: {fileID: 327435382}
-  - component: {fileID: 327435381}
   m_Layer: 0
   m_Name: CameraSaveIcon
   m_TagString: Untagged
@@ -1313,13 +1304,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &327435381
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 327435380}
-  m_Enabled: 1
 --- !u!92 &327435382
 Behaviour:
   m_ObjectHideFlags: 0
@@ -1488,7 +1472,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 351953644}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.82623947, y: -0.6132921, z: -0.28320312}
+  m_LocalPosition: {x: 4.22, y: 0.95, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1787,9 +1771,9 @@ RectTransform:
   m_Father: {fileID: 748297388}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 307, y: 136}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -93, y: -30}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &366974928
@@ -4281,7 +4265,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 228887397}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.7571429
+  m_Size: 0.7192857
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4686,7 +4670,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.9724138, b: 0, a: 0.703}
+  m_Color: {r: 0.441, g: 0.61572313, b: 0.99264705, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -4888,7 +4872,6 @@ GameObject:
   - component: {fileID: 1560022087}
   - component: {fileID: 1560022086}
   - component: {fileID: 1560022085}
-  - component: {fileID: 1560022084}
   m_Layer: 0
   m_Name: CameraBack
   m_TagString: Untagged
@@ -4896,13 +4879,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1560022084
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1560022083}
-  m_Enabled: 1
 --- !u!92 &1560022085
 Behaviour:
   m_ObjectHideFlags: 0
@@ -5579,10 +5555,10 @@ RectTransform:
   m_Father: {fileID: 748297388}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -307, y: 3}
-  m_SizeDelta: {x: 155, y: 335}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 75, y: -212.95}
+  m_SizeDelta: {x: 150, y: 319.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1764417648
 MonoBehaviour:
@@ -6527,8 +6503,8 @@ Camera:
   m_GameObject: {fileID: 2042591912}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.78431374, g: 0.78431374, b: 0.7254902, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.8156863, g: 0.8117647, b: 0.9843137, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -6539,7 +6515,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 6
+  orthographic size: 6.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
