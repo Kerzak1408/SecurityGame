@@ -23,12 +23,15 @@ namespace Entities.Characters.Behaviours
             Map currentMap = character.CurrentGame.Map;
             goals = new Queue<BaseGoal>();
             IEnumerable<GameObject> moneyEntities = currentMap.Entities.Where(go => go.HasScriptOfType<MoneyEntity>());
-            foreach (GameObject moneyObject in moneyEntities)
+            IOrderedEnumerable<GameObject> orderedEntities = moneyEntities.OrderBy(
+                entity => Vector3.Distance(character.transform.position, entity.transform.position));
+            foreach (GameObject moneyObject in orderedEntities)
             {
                 TileNode closestTile = currentMap.GetClosestTile(moneyObject.transform.position);
                 goals.Enqueue(new NavigationGoal(character, closestTile.Position));
                 goals.Enqueue(new InteractGoal(character, moneyObject));
             }
+            goals.Enqueue(new NavigationGoal(character, currentMap.GetClosestTile(character.transform.position).Position));
         }
 
         public override void Update()

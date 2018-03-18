@@ -14,13 +14,13 @@ namespace Assets.Scripts.Entities
         protected override void Start()
         {
             base.Start();
-            moneyAudio = gameObject.AttachAudioSource("Money");
+            moneyAudio = gameObject.AttachAudioSource("Money", pitch:10);
         }
 
         public void Interact(BaseCharacter character, Action successAction = null)
         {
             moneyAudio.Play();
-            StartCoroutine(CallAfterTimeout(moneyAudio.clip.length, () => {
+            StartCoroutine(CallAfterTimeout(moneyAudio.clip.length/moneyAudio.pitch, () => {
                 character.ObtainMoney();
                 CurrentGame.Map.Entities.Remove(gameObject);
                 if (successAction != null)
