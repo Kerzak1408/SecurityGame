@@ -381,6 +381,11 @@ namespace Assets.Scripts.MapEditor
                     return;
                 }
             }
+
+            if (SelectedMapButton != null)
+            {
+                SelectedMapButton.ChangeColor(Color.white);
+            }
             SelectedMapButton = AddMapButton(buttonName, MyColors.LIGHT_SKY_BLUE);
 
             InitializeGrid(width, height, SelectedMapButton);

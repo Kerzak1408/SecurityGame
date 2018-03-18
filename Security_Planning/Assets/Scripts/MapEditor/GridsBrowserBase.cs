@@ -117,8 +117,6 @@ namespace Assets.Scripts.MapEditor
             return newMap;
         }
 
-    
-
         protected void HideCurrentMap()
         {
             if (SelectedMapButton != null)

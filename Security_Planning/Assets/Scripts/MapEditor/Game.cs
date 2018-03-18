@@ -18,6 +18,7 @@ namespace Assets.Scripts.MapEditor
         public Camera MainCamera;
         public Camera ObserverCamera;
         private Vector3? startPointRight;
+        private Vector3 previousMousePosition;
 
         // Use this for initialization
         protected override void Start ()
@@ -88,7 +89,17 @@ namespace Assets.Scripts.MapEditor
                     {
                        ObserverCamera.orthographicSize = potentialSize;
                     }
+                }
 
+                if (Input.GetMouseButtonDown(1))
+                {
+                    previousMousePosition = Input.mousePosition;
+                }
+                else if (Input.GetMouseButton(1))
+                {
+                    Vector3 delta = Input.mousePosition - previousMousePosition;
+                    previousMousePosition = Input.mousePosition;
+                    ObserverCamera.transform.position -= 0.02f * new Vector3(delta.x, 0, delta.y);
                 }
 
             }
