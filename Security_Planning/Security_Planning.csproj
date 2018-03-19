@@ -7,19 +7,17 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9417374F-D4D9-9745-1AEC-5FF937ACDA20}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp.dll</AssemblyName>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.6.3p4</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -115,7 +113,12 @@
     <Compile Include="Assets\Scripts\Entities\CameraEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\CardReaderEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\BaseCharacter.cs" />
+    <Compile Include="Assets\Scripts\Entities\Characters\Behaviours\BaseBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Entities\Characters\Behaviours\CollectEverythingBehaviour.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Burglar.cs" />
+    <Compile Include="Assets\Scripts\Entities\Characters\Goals\BaseGoal.cs" />
+    <Compile Include="Assets\Scripts\Entities\Characters\Goals\InteractGoal.cs" />
+    <Compile Include="Assets\Scripts\Entities\Characters\Goals\NavigationGoal.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Guard.cs" />
     <Compile Include="Assets\Scripts\Entities\DetectorEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\Fence.cs" />
@@ -129,6 +132,7 @@
     <Compile Include="Assets\Scripts\Entities\Interfaces\IInteractable.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPIRDetectable.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPasswordOpenable.cs" />
+    <Compile Include="Assets\Scripts\Entities\ItemEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\MoneyEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\MonitorEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\MonitorOnTableEntity.cs" />

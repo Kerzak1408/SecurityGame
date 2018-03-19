@@ -67,7 +67,7 @@ public class TileNode : IAStarNode<TileNode>
         {
             List<Edge> neighborEdges = edge.Neighbor.Edges;
             Edge oppositeDirectionEdge = neighborEdges.FirstOrDefault(e => e.Neighbor == this);
-            if (!oppositeDirectionEdge.Equals(default(Edge)))
+            if (oppositeDirectionEdge != default(Edge))
             {
                 neighborEdges.Remove(oppositeDirectionEdge);
             }

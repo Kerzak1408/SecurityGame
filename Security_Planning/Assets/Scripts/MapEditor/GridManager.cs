@@ -381,6 +381,7 @@ namespace Assets.Scripts.MapEditor
                     return;
                 }
             }
+
             if (SelectedMapButton != null)
             {
                 SelectedMapButton.ChangeColor(Color.white);

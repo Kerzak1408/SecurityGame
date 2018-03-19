@@ -9,6 +9,11 @@ public class Scenes : MonoBehaviour
     public const string MAIN_SCENE = "MainScene";
     public const string MAP_CHOICE_SCREEN = "MapChoiceScreen";
 
+    private void Start()
+    {
+        Application.targetFrameRate = 120;
+    }
+
     private static Dictionary<string, string> Parameters { get; set; }
 
     public static void Load(string sceneName, Dictionary<string, string> parameters = null)

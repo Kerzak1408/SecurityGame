@@ -18,6 +18,7 @@ namespace Assets.Scripts.MapEditor
         public Camera MainCamera;
         public Camera ObserverCamera;
         private Vector3? startPointRight;
+        private Vector3 previousMousePosition;
 
         // Use this for initialization
         protected override void Start ()
@@ -28,13 +29,6 @@ namespace Assets.Scripts.MapEditor
             Map.ExtractAIModel();
 
             GenerateCeiling(Map.Tiles, Map.EmptyParent.transform);
-
-            foreach (GameObject entity in Map.Entities)
-            {
-                BaseEntity baseEntity = entity.GetComponent<BaseEntity>();
-                baseEntity.CurrentGame = this;
-                baseEntity.StartGame();
-            }
 
             foreach (Transform transform in Map.EmptyParent.transform)
             {
@@ -59,7 +53,16 @@ namespace Assets.Scripts.MapEditor
                     tile.GetComponent<BaseObject>().StartGame();
                 }
             }
+
+            foreach (GameObject entity in Map.Entities)
+            {
+                BaseEntity baseEntity = entity.GetComponent<BaseEntity>();
+                baseEntity.CurrentGame = this;
+                baseEntity.StartGame();
+            }
+
             Map.EmptyParent.transform.Rotate(90, 0, 0);
+            Map.ExtractAIModel();
             //Map.EmptyParent.transform.eulerAngles = new Vector3(90, Map.EmptyParent.transform.eulerAngles.y, Map.EmptyParent.transform.eulerAngles.z);
         }
 
@@ -86,7 +89,17 @@ namespace Assets.Scripts.MapEditor
                     {
                        ObserverCamera.orthographicSize = potentialSize;
                     }
+                }
 
+                if (Input.GetMouseButtonDown(1))
+                {
+                    previousMousePosition = Input.mousePosition;
+                }
+                else if (Input.GetMouseButton(1))
+                {
+                    Vector3 delta = Input.mousePosition - previousMousePosition;
+                    previousMousePosition = Input.mousePosition;
+                    ObserverCamera.transform.position -= 0.02f * new Vector3(delta.x, 0, delta.y);
                 }
 
             }
@@ -145,19 +158,21 @@ namespace Assets.Scripts.MapEditor
             
             TileNode[,] aiModelTiles = Map.AIModel.Tiles;
             EuclideanHeuristics heuristics = new EuclideanHeuristics(Map.Tiles);
-            List<TileNode> path = AStarAlgorithm.AStar(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics, Debug.Log);
-            TileNode previousNode = null;
-            foreach (TileNode currentNode in path)
+            List<TileNode> path = AStarAlgorithm.AStar<TileNode, Edge>(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics, Debug.Log, node => node.IsDetectable());
+            if (path != null)
             {
-                if (previousNode != null)
+                TileNode previousNode = null;
+                foreach (TileNode currentNode in path)
                 {
-                    GameObject previous = Map.Tiles.Get(previousNode.Position);
-                    GameObject current = Map.Tiles.Get(currentNode.Position);
-                    Gizmos.DrawLine(previous.transform.position, current.transform.position);
+                    if (previousNode != null)
+                    {
+                        GameObject previous = Map.Tiles.Get(previousNode.Position);
+                        GameObject current = Map.Tiles.Get(currentNode.Position);
+                        Gizmos.DrawLine(previous.transform.position, current.transform.position);
+                    }
+                    previousNode = currentNode;
                 }
-                previousNode = currentNode;
             }
         }
-
     }
 }

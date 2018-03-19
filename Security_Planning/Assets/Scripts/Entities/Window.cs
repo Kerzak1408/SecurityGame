@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Threading;
 using Assets.Scripts.Entities.Characters;
@@ -48,7 +49,7 @@ namespace Assets.Scripts.Entities
             }
         }
 
-        public void Interact(BaseCharacter character)
+        public void Interact(BaseCharacter character, Action successAction = null)
         {
             character.Attack();
             

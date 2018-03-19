@@ -38,7 +38,6 @@ namespace Assets.Scripts.Entities.Characters
                         Instantiate(allItems.First(obj => obj.name == itemName) as GameObject)).ToList();
                     itemIcons = Data.ItemNames.Select(itemName =>
                         Instantiate(allItemIcons.First(obj => obj.name == itemName) as GameObject)).ToList();
-
                 }
                 return items;
             }
@@ -84,6 +83,19 @@ namespace Assets.Scripts.Entities.Characters
             }
         }
 
+        public void AddItem(GameObject itemObject)
+        {
+            Items.Add(itemObject);
+            Object[] allItemIcons = ResourcesHolder.Instance.AllItemsIcons;
+            itemIcons.Add(Instantiate(
+                allItemIcons.First(obj => obj.name == itemObject.GetComponent<ItemEntity>().PrefabName) as GameObject));
+            GameObject activeObject = GetActiveItem();
+            if (activeObject != null) activeObject.SetActive(false);
+            activeItemIndex = Items.Count - 1;
+            InitializeItem(itemObject);
+            GetActiveItem().SetActive(true);
+        }
+
         protected void MoveForward()
         {
             isMoving = true;
@@ -94,16 +106,10 @@ namespace Assets.Scripts.Entities.Characters
         public override void StartGame()
         {
             animator = GetComponent<Animator>();
-            Transform finger =
-                transform.Find("Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Finger_01");
+            
             foreach (GameObject item in Items)
             {
-                //item.transform.position = transform.position + new Vector3(0.2f,-0.375f,0.2f);
-                item.transform.position = finger.position;
-                item.transform.parent = finger;
-                var baseItem = item.GetComponent<BaseItem>();
-                baseItem.DefaultLocalPosition = item.transform.localPosition;
-                item.SetActive(false);
+                InitializeItem(item);
             }
             foreach (GameObject itemIcon in itemIcons)
             {
@@ -112,6 +118,17 @@ namespace Assets.Scripts.Entities.Characters
             GameObject activeItem = GetActiveItem();
             if (activeItem != null)
                 activeItem.SetActive(true);
+        }
+
+        private void InitializeItem(GameObject item)
+        {
+            Transform finger =
+                transform.Find("Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Finger_01");
+            item.transform.position = finger.position;
+            item.transform.parent = finger;
+            var baseItem = item.GetComponent<BaseItem>();
+            baseItem.DefaultLocalPosition = item.transform.localPosition;
+            item.SetActive(false);
         }
 
         public abstract void RequestPassword(IPasswordOpenable passwordOpenableObject);
@@ -143,6 +160,12 @@ namespace Assets.Scripts.Entities.Characters
             }
         }
 
+        public void InteractWith(GameObject gameObject, Action successAction = null)
+        {
+            if (!CanInteractWith(gameObject)) return;
+            gameObject.GetComponent<IInteractable>().Interact(this, successAction);
+        }
+
         protected GameObject GetClosestInteractableHitObject(RaycastHit[] raycastHits,
             out bool isInteractableNow)
         {
@@ -170,7 +193,10 @@ namespace Assets.Scripts.Entities.Characters
                      Vector3.Distance(transform.position, hit.transform.position) <
                      Vector3.Distance(transform.position, closestHit.transform.position))
                 )
+                {
                     closestHit = hit;
+                }
+
             if (closestHit.Equals(default(RaycastHit)))
             {
                 isInteractable = isInteractableNow = false;
@@ -182,6 +208,13 @@ namespace Assets.Scripts.Entities.Characters
             isInteractableNow = distanceToClosest < Constants.Constants.INTERACTABLE_DISTANCE &&
                                 isInteractable;
             return closestGameObject;
+        }
+
+        public bool CanInteractWith(GameObject gameObject)
+        {
+            if (!gameObject.HasScriptOfType(typeof(IInteractable))) return false;
+            var distance = Vector3.Distance(gameObject.transform.position, transform.position);
+            return distance < Constants.Constants.INTERACTABLE_DISTANCE;
         }
 
         protected void ChangeWeapon()
@@ -221,6 +254,14 @@ namespace Assets.Scripts.Entities.Characters
             //canAction = true;
             //canMove = true;
             animator.applyRootMotion = false;
+        }
+
+        public bool NavigateTo(TileNode tileNode)
+        {
+            Vector3 target = CurrentGame.Map.Tiles.Get(tileNode.Position).transform.position;
+            transform.LookAt(target);
+            MoveForward();
+            return (Vector3.Distance(transform.position, target) < 0.4f);
         }
 
         //Animation Events - just to enable Mecanim animations work => Do NOT delete!

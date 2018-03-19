@@ -1,48 +1,47 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Interfaces;
+using Entities.Characters.Behaviours;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Burglar : BaseCharacter {
+public class Burglar : BaseCharacter
+{
 
-    float probability;
-    Vector3 directionVector;
-    CharacterController controller;
-    private Queue<TileNode> path;
-    private TileNode followedNode;
+    private float probability;
+    private Vector3 directionVector;
+    private CharacterController controller;
 
-	// Use this for initialization
+    private bool isPaused = true;
+    private BaseBehaviour behaviour;
+
+    // Use this for initialization
     public override void StartGame()
-    { 
-	    EuclideanHeuristics heuristics = new EuclideanHeuristics(CurrentGame.Map.Tiles);
-	    TileNode[,] aiModelTiles = CurrentGame.Map.AIModel.Tiles;
-	    path = new Queue<TileNode>(AStarAlgorithm.AStar(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics, Debug.Log));
-	    followedNode = path.Dequeue();
-	}
+    {
+        behaviour = new CollectEverythingBehaviour(this);
+        behaviour.Start();
+    }
 
 	// Update is called once per frame
     protected override void Update()
     {
         base.Update();
+        ProcessInputs();
         isMoving = false;
-        if (followedNode != null)
-        {
-            if (NavigateTo(followedNode))
-            {
-                followedNode = path.Count == 0 ? null : path.Dequeue();
-            }
-        }
+        if (isPaused) return;
+        behaviour.Update();
     }
 
-    private bool NavigateTo(TileNode tileNode)
+    private void ProcessInputs()
     {
-        Vector3 target = CurrentGame.Map.Tiles.Get(tileNode.Position).transform.position;
-        transform.LookAt(target);
-        MoveForward();
-        return (Vector3.Distance(transform.position, target) < 0.05f);
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            isPaused = !isPaused;
+        }
     }
 
     public override void RequestPassword(IPasswordOpenable passwordOpenableObject)
@@ -59,4 +58,5 @@ public class Burglar : BaseCharacter {
     {
         cardReader.VerifyCard();
     }
+    
 }

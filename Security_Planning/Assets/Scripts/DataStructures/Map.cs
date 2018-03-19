@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Extensions;
@@ -27,6 +28,26 @@ namespace Assets.Scripts.DataStructures
         public Dictionary<Tuple<int, int>, string> PasswordDictionary { get; private set; }
         public GameObject EmptyParent { get; private set; }
         public AIModel AIModel { get; private set; }
+
+        public Vector3 CenterWorld
+        {
+            get
+            {
+                Vector3 bottomLeft = Tiles[0, 0].transform.position;
+                Vector3 upperRight = Tiles[Tiles.GetLength(0) - 1, Tiles.GetLength(1) - 1].transform.position;
+                return (bottomLeft + upperRight) / 2;
+            }
+        }
+
+        public int Width
+        {
+            get { return Tiles.GetLength(1); }
+        }
+
+        public int Height
+        {
+            get { return Tiles.GetLength(0); }
+        }
 
         public Map(GameObject[,] tiles, List<GameObject> entities, GameObject emptyParent, Dictionary<Tuple<int, int>, string> passwordDictionary)
         {
@@ -159,6 +180,7 @@ namespace Assets.Scripts.DataStructures
             // Remove edges that cannot be used because of obstacles.
             foreach (GameObject entity in Entities)
             {
+                if (entity.HasScriptOfType<ItemEntity>()) continue;
                 //Debug.Log("Potential obstacle: " + entity.name);
                 var entityScript = entity.GetComponent<BaseEntity>();
                 // We can get where characters are, other objects are not movable.
@@ -208,6 +230,7 @@ namespace Assets.Scripts.DataStructures
             {
                 return null;
             }
+
             if (toX == fromX)
             {
                 // UP or DOWN
@@ -248,8 +271,6 @@ namespace Assets.Scripts.DataStructures
             bool fromObstacle = fromName.Contains(fromObstacleDirection);
             bool toObstacle = toName.Contains(toObstacleDirection);
 
-
-
             // Is there an obstacle between tiles?
             if (fromObstacle || toObstacle)
             {
@@ -262,8 +283,36 @@ namespace Assets.Scripts.DataStructures
             }
             else
             {
+                Vector3 fromTilePosition = Tiles[fromX, fromY].transform.position;
+                Vector3 toTilePosition = Tiles[toX, toY].transform.position;
+                fromTilePosition.y = 0.5f;
+                toTilePosition.y = 0.5f;
+                Ray fromToRay = new Ray(fromTilePosition, toTilePosition - fromTilePosition);
+                RaycastHit[] hits = Physics.RaycastAll(fromToRay);
+                float fromToDistance = Vector3.Distance(fromTilePosition, toTilePosition);
+                if (hits.Any(hit => !hit.collider.name.Contains(GATE) && hit.distance <= fromToDistance))
+                {
+                    return null;
+                }
                 return new Edge(AIModel.Tiles[toX, toY], EdgeType.NORMAL, 1);
             }
+        }
+
+        public TileNode GetClosestTile(Vector3 position)
+        {
+            TileNode result = null;
+            float minDistance = float.MaxValue;
+            foreach (TileNode tile in AIModel.Tiles)
+            {
+                GameObject physicalTile = Tiles[tile.Position.First, tile.Position.Second];
+                float potentialDistance = Vector3.Distance(position, physicalTile.transform.position);
+                if (potentialDistance < minDistance)
+                {
+                    minDistance = potentialDistance;
+                    result = tile;
+                }
+            }
+            return result;
         }
     } 
 }

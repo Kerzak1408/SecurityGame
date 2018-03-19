@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Threading;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Interfaces;
@@ -18,12 +19,20 @@ namespace Assets.Scripts.Entities
             audioSource = gameObject.AttachAudioSource("CuttingWire");
         }
 
-        public void Interact(BaseCharacter character)
+        public void Interact(BaseCharacter character, Action successAction = null)
         {
             if (character.GetActiveItem().HasScriptOfType<WireCutterItem>())
             {
                 audioSource.Play();
-                DestroyAfterTimeout(audioSource.clip.length);
+                StartCoroutine(CallAfterTimeout(audioSource.clip.length, () =>
+                {
+                    if (successAction != null)
+                    {
+                        successAction();
+                    }
+
+                    Destroy(gameObject);
+                }));
             }
         }
     }
