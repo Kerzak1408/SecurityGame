@@ -158,7 +158,7 @@ namespace Assets.Scripts.MapEditor
             
             TileNode[,] aiModelTiles = Map.AIModel.Tiles;
             EuclideanHeuristics heuristics = new EuclideanHeuristics(Map.Tiles);
-            List<TileNode> path = AStarAlgorithm.AStar(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics, Debug.Log, node => node.IsDetectable());
+            List<TileNode> path = AStarAlgorithm.AStar<TileNode, Edge>(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics, Debug.Log, node => node.IsDetectable());
             if (path != null)
             {
                 TileNode previousNode = null;
