@@ -102,6 +102,11 @@ namespace Assets.Scripts.MapEditor
             }
             DropdownMode.options = options;
             DropdownMode.value = indexOfDrag;
+
+            if (MapsDictionary.Count > 0)
+            {
+                DropdownMode.gameObject.SetActive(true);
+            }
         }
 
         // Update is called once per frame
@@ -111,16 +116,6 @@ namespace Assets.Scripts.MapEditor
             {
                 eventProcessedByUI = false;
                 return;
-            }
-
-            if (Input.GetKey(KeyCode.E))
-            {
-                ExportMap.Export(FileHelper.JoinPath(MAPS_PATH, CurrentMapSaveName), CurrentMapSaveName);
-            }
-
-            if (Input.GetKey(KeyCode.I))
-            {
-                ExportMap.Import(MAPS_PATH);
             }
 
             base.Update();
@@ -348,8 +343,10 @@ namespace Assets.Scripts.MapEditor
             var parent = MapsDictionary[SelectedMapButton].EmptyParent;
             Destroy(parent);
             MapsDictionary.Remove(SelectedMapButton);
+            SelectedMapButton.transform.parent = null;
             Destroy(SelectedMapButton.gameObject);
             SelectedMapButton = null;
+            AdjustScrollContentSize();
         }
 
         public void AddMap()
@@ -377,7 +374,7 @@ namespace Assets.Scripts.MapEditor
                 TextError.text = "Both width and height must be greater than 0.";
                 return;
             }
-            string buttonName = InputName.text + " (" + width + " x " + height + ")";
+            string buttonName = InputName.text;
             if (buttonName.Contains("_") || buttonName.Contains("*"))
             {
                 TextError.text = "Characters '_' and '*' are not allowed in the map name. ";
@@ -385,9 +382,10 @@ namespace Assets.Scripts.MapEditor
             }
             foreach (var button in MapsDictionary.Keys)
             {
-                if (button.GetComponentInChildren<Text>().text == buttonName)
+                string anotherButtonName = button.GetComponentInChildren<Text>().text;
+                if (anotherButtonName == buttonName || anotherButtonName == buttonName + "*")
                 {
-                    TextError.text = "Such map already exists. Change at least one of: name, width, height.";
+                    TextError.text = "A map with the given name already exists.";
                     return;
                 }
             }
@@ -401,8 +399,8 @@ namespace Assets.Scripts.MapEditor
             InitializeGrid(width, height, SelectedMapButton);
 
             // To leave AddButton at the last position.
-            ButtonAddMap.transform.parent = null;
-            ButtonAddMap.transform.parent = ScrollViewContent.transform;
+            //ButtonAddMap.transform.parent = null;
+            //ButtonAddMap.transform.parent = ScrollViewContent.transform;
             PanelNewMapForm.SetActive(false);
             Grids.SetActive(true);
             FlagCurrentButton();
@@ -477,6 +475,35 @@ namespace Assets.Scripts.MapEditor
             foreach (string elementName in affectedCanvasElements)
             {
                 Canvas.transform.Find(elementName).gameObject.SetActive(active);
+            }
+        }
+
+        public void Export()
+        {
+            ExportMap.Export(FileHelper.JoinPath(MAPS_PATH, CurrentMapSaveName), CurrentMapSaveName);
+        }
+
+        public void ExportAll()
+        {
+            var mapPaths = new List<string>();
+            var mapNames = new List<string>();
+            foreach (Button button in MapsDictionary.Keys)
+            {
+                string name = GetSavedName(button);
+                mapPaths.Add(FileHelper.JoinPath(MAPS_PATH, name));
+                mapNames.Add(name);
+            }
+            ExportMap.ExportToFolder(mapPaths.ToArray(), mapNames.ToArray());
+        }
+
+        public void Import()
+        {
+            string[] importedNames = ExportMap.Import(MAPS_PATH);
+            foreach (string name in importedNames)
+            {
+                Button addedButton = AddMapButton(name.Replace('_', ' '), Color.white);
+                LoadMap(name, addedButton);
+                SelectMap(addedButton);
             }
         }
     }

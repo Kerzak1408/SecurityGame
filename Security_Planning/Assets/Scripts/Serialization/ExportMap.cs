@@ -2,6 +2,8 @@
 using System.IO.Compression;
 using System.Text;
 using System;
+using System.Diagnostics;
+using Boo.Lang;
 using SFB;
 
 namespace CustomSerialization
@@ -10,12 +12,7 @@ namespace CustomSerialization
     {
         public static void Export(string directoryPath, string mapName)
         {
-            if (directoryPath == null)
-            {
-                return;
-            }
-
-            string path = StandaloneFileBrowser.SaveFilePanel("Export map", "", mapName, "gz");
+            string path = StandaloneFileBrowser.SaveFilePanel("Export map", "", mapName, "map");
 
             if (path.Length != 0)
             {
@@ -23,13 +20,45 @@ namespace CustomSerialization
             }
         }
 
-        public static void Import(string mapsPath)
+        public static void ExportToFolder(string[] mapPaths, string[] mapNames)
         {
-            string[] paths = StandaloneFileBrowser.OpenFilePanel("Import map", "", "", true);
+            Debug.Assert(mapPaths.Length == mapNames.Length);
+            string[] paths = StandaloneFileBrowser.OpenFolderPanel("Choose folder", "", false);
+
+            if (paths.Length != 0)
+            {
+                string path = paths[0];
+                if (path.Length != 0)
+                {
+                    for (int i = 0; i < mapPaths.Length; i++)
+                    {
+                        CompressDirectory(mapPaths[i], FileHelper.JoinPath(path, mapNames[i]));
+                    }
+                }
+            }
+        }
+
+        public static string[] Import(string mapsPath)
+        {
+            var importedNames = new List<string>();
+            string[] paths = StandaloneFileBrowser.OpenFilePanel("Import map", "", "map", true);
             foreach (string path in paths)
             {
-                DecompressToDirectory(path, FileHelper.JoinPath(mapsPath, FileHelper.GetFileNameOnly(path)));
+                string name = FileHelper.GetFileNameOnly(path);
+                string potentialName = name;
+                int i = 1;
+                string potentialPath = FileHelper.JoinPath(mapsPath, name);
+                while (Directory.Exists(potentialPath))
+                {
+                    potentialName = name + "_(" + i + ")";
+                    potentialPath = FileHelper.JoinPath(mapsPath, potentialName);
+                    i++;
+                }
+                DecompressToDirectory(path, potentialPath);
+                importedNames.Add(potentialName);
             }
+
+            return importedNames.ToArray();
         }
 
         static void CompressDirectory(string sInDir, string sOutFile)

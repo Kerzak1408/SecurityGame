@@ -27,10 +27,13 @@ namespace Assets.Scripts.MapEditor
 
         public string CurrentMapSaveName
         {
-            get { return SelectedMapButton.GetComponentInChildren<Text>().text.Replace(' ', '_'); }
+            get { return GetSavedName(SelectedMapButton); }
         }
 
-
+        protected string GetSavedName(Button button)
+        {
+            return button.GetComponentInChildren<Text>().text.Replace(' ', '_');
+        }
 
         // Use this for initialization
         protected override void Start ()
@@ -49,13 +52,12 @@ namespace Assets.Scripts.MapEditor
                 Button addedButton = AddMapButton(directory.Name.Replace('_', ' '), Color.white);
                 LoadMap(directory.Name, addedButton);
             }
+            cameraOriginalSize = Camera.main.orthographicSize;
             if (MapsDictionary.Count > 0)
             {
-                SelectedMapButton = MapsDictionary.Keys.First();
-                MapsDictionary[SelectedMapButton].SetActive(true);
-                SelectedMapButton.GetComponent<Image>().color = MyColors.LIGHT_SKY_BLUE;
+                SelectMap(MapsDictionary.Keys.First());
             }
-            cameraOriginalSize = Camera.main.orthographicSize;
+            
         }
 	
         // Update is called once per frame
@@ -80,22 +82,27 @@ namespace Assets.Scripts.MapEditor
             }
         }
 
-        protected virtual void SelectMap()
+        protected void SelectMap(Button selectedMapButton)
         {
-            eventProcessedByUI = true;
-
             if (SelectedMapButton != null)
             {
                 SelectedMapButton.GetComponent<Image>().color = Color.white;
                 HideCurrentMap();
             }
-            SelectedMapButton = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
-            SelectedMapButton.GetComponent<Image>().color = MyColors.LIGHT_SKY_BLUE;
+            SelectedMapButton = selectedMapButton;
             Map map = MapsDictionary[SelectedMapButton];
             map.SetActive(true);
+            SelectedMapButton.GetComponent<Image>().color = MyColors.LIGHT_SKY_BLUE;
             Camera.main.orthographicSize = cameraOriginalSize * Mathf.Max(map.Width, map.Height) / 10f;
             Vector3 center = map.CenterWorld;
             Camera.main.transform.position = center;
+        }
+
+        protected virtual void SelectMap()
+        {
+            eventProcessedByUI = true;
+            Button clickedButton = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+            SelectMap(clickedButton);
         }
 
         public void DefaultScrollLogic(float scroll, RaycastHit[] raycastHits)
@@ -118,11 +125,21 @@ namespace Assets.Scripts.MapEditor
         {
             Button newMap = Instantiate(ResourcesHolder.Instance.MapButton);
             newMap.transform.parent = ScrollViewContent.transform;
+            AdjustScrollContentSize();
             newMap.GetComponent<RectTransform>().localScale = Vector3.one;
             newMap.GetComponent<Image>().color = color;
             newMap.onClick.AddListener(SelectMap);
             newMap.GetComponentInChildren<Text>().text = name;
+            ScrollView.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 0);
             return newMap;
+        }
+
+        protected void AdjustScrollContentSize()
+        {
+            var contentRectTransform = ScrollViewContent.GetComponent<RectTransform>();
+            contentRectTransform.sizeDelta = new Vector2(contentRectTransform.sizeDelta.x,
+                ScrollViewContent.transform.childCount *
+                ResourcesHolder.Instance.MapButton.GetComponent<RectTransform>().sizeDelta.y);
         }
 
         protected void HideCurrentMap()
