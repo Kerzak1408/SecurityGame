@@ -2,22 +2,34 @@
 using System.IO.Compression;
 using System.Text;
 using System;
+using SFB;
 
 namespace CustomSerialization
 {
     public static class ExportMap
     {
-        public static void Export(string directoryPath)
+        public static void Export(string directoryPath, string mapName)
         {
             if (directoryPath == null)
             {
                 return;
             }
-            
-            //if (path.Length != 0)
-            //{
-            //    CompressDirectory(directoryPath, path);
-            //}
+
+            string path = StandaloneFileBrowser.SaveFilePanel("Export map", "", mapName, "gz");
+
+            if (path.Length != 0)
+            {
+                CompressDirectory(directoryPath, path);
+            }
+        }
+
+        public static void Import(string mapsPath)
+        {
+            string[] paths = StandaloneFileBrowser.OpenFilePanel("Import map", "", "", true);
+            foreach (string path in paths)
+            {
+                DecompressToDirectory(path, FileHelper.JoinPath(mapsPath, FileHelper.GetFileNameOnly(path)));
+            }
         }
 
         static void CompressDirectory(string sInDir, string sOutFile)

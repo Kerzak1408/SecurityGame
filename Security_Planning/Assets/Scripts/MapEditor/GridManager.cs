@@ -10,6 +10,7 @@ using Assets.Scripts.Extensions;
 using Assets.Scripts.MapEditor.EditorHandlers;
 using Assets.Scripts.Reflection;
 using Assets.Scripts.Serialization;
+using CustomSerialization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -110,6 +111,16 @@ namespace Assets.Scripts.MapEditor
             {
                 eventProcessedByUI = false;
                 return;
+            }
+
+            if (Input.GetKey(KeyCode.E))
+            {
+                ExportMap.Export(FileHelper.JoinPath(MAPS_PATH, CurrentMapSaveName), CurrentMapSaveName);
+            }
+
+            if (Input.GetKey(KeyCode.I))
+            {
+                ExportMap.Import(MAPS_PATH);
             }
 
             base.Update();
@@ -300,9 +311,8 @@ namespace Assets.Scripts.MapEditor
             }
             var currentGrid = currentMap.Tiles;
             byte[] serializedMap = Serializer.Instance.SerializeGrid(currentGrid);
-            string currentMapName = SelectedMapButton.GetComponentInChildren<Text>().text.Replace(' ','_');
 
-            var mapDirectoryPath = FileHelper.JoinPath(MAPS_PATH, currentMapName);
+            var mapDirectoryPath = FileHelper.JoinPath(MAPS_PATH, CurrentMapSaveName);
 
             DirectoryHelper.CreateDirectoryLazy(mapDirectoryPath);
 
@@ -330,10 +340,10 @@ namespace Assets.Scripts.MapEditor
         public void DeleteMap()
         {
             eventProcessedByUI = true;
-            var mapPath = MAPS_PATH + "/" + SelectedMapButton.GetComponentInChildren<Text>().text;
-            if (File.Exists(mapPath))
+            var mapPath = FileHelper.JoinPath(MAPS_PATH, CurrentMapSaveName);
+            if (Directory.Exists(mapPath))
             {
-                File.Delete(mapPath);
+                Directory.Delete(mapPath, true);
             }
             var parent = MapsDictionary[SelectedMapButton].EmptyParent;
             Destroy(parent);

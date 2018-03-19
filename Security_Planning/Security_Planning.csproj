@@ -73,6 +73,12 @@
     <Reference Include="UnityEngine.VR">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
     </Reference>
+    <Reference Include="Ookii.Dialogs">
+      <HintPath>Assets/External/StandaloneFileBrowser/Plugins/Ookii.Dialogs.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>Assets/External/StandaloneFileBrowser/Plugins/System.Windows.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
@@ -91,6 +97,11 @@
     <Compile Include="Assets\External\RPG Character Animation Pack\Elements\ImageEffects\Scripts\ScreenSpaceAmbientObscurance.cs" />
     <Compile Include="Assets\External\RPG Character Animation Pack\Elements\ImageEffects\Scripts\ScreenSpaceAmbientOcclusion.cs" />
     <Compile Include="Assets\External\RPG Character Animation Pack\Elements\ImageEffects\Scripts\Triangles.cs" />
+    <Compile Include="Assets\External\StandaloneFileBrowser\IStandaloneFileBrowser.cs" />
+    <Compile Include="Assets\External\StandaloneFileBrowser\StandaloneFileBrowser.cs" />
+    <Compile Include="Assets\External\StandaloneFileBrowser\StandaloneFileBrowserEditor.cs" />
+    <Compile Include="Assets\External\StandaloneFileBrowser\StandaloneFileBrowserMac.cs" />
+    <Compile Include="Assets\External\StandaloneFileBrowser\StandaloneFileBrowserWindows.cs" />
     <Compile Include="Assets\Scripts\Algorithms\AStar\AStarAlgorithm.cs" />
     <Compile Include="Assets\Scripts\Algorithms\AStar\Heuristics\EuclideanHeuristics.cs" />
     <Compile Include="Assets\Scripts\Algorithms\AStar\Heuristics\Heuristics.cs" />
@@ -185,6 +196,7 @@
     <Compile Include="Assets\Scripts\Scenes.cs" />
     <Compile Include="Assets\Scripts\Serialization\BaseEntityData.cs" />
     <Compile Include="Assets\Scripts\Serialization\CharacterData.cs" />
+    <Compile Include="Assets\Scripts\Serialization\ExportMap.cs" />
     <Compile Include="Assets\Scripts\Serialization\Serializer.cs" />
     <Compile Include="Assets\Scripts\Serialization\TransmitterEntityData.cs" />
     <Compile Include="Assets\Scripts\Serialization\Vector3Wrapper.cs" />

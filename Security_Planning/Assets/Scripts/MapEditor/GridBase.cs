@@ -27,13 +27,15 @@ namespace Assets.Scripts.MapEditor
         protected AIModel model;
 
         // Use this for initialization
-        protected virtual void Start () {
+        protected virtual void Start ()
+        {
             MAPS_PATH = FileHelper.JoinPath(Application.persistentDataPath, "Maps");
             Physics.gravity = Vector3.forward;
         }
 
         // Update is called once per frame
-        void Update () {
+        void Update ()
+        {
 		
         }
 

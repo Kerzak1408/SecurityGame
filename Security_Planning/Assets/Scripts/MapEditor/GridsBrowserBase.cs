@@ -19,15 +19,22 @@ namespace Assets.Scripts.MapEditor
         protected Dictionary<Button, Map> MapsDictionary;
 
         protected Button SelectedMapButton;
-    
+
         public float cameraOriginalSize;
         protected bool eventProcessedByUI;
 
         private Vector3 previousMousePosition;
-    
+
+        public string CurrentMapSaveName
+        {
+            get { return SelectedMapButton.GetComponentInChildren<Text>().text.Replace(' ', '_'); }
+        }
+
+
 
         // Use this for initialization
-        protected override void Start () {
+        protected override void Start ()
+        {
             base.Start();
             MapsDictionary = new Dictionary<Button, Map>();
 
@@ -52,7 +59,8 @@ namespace Assets.Scripts.MapEditor
         }
 	
         // Update is called once per frame
-        protected virtual void Update () {
+        protected virtual void Update ()
+        {
 
             if (eventProcessedByUI)
             {

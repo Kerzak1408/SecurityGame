@@ -11,4 +11,12 @@
         return result;
     }
 
+    public static string GetFileNameOnly(string path)
+    {
+        string[] array = path.Split('\\');
+        string nameWithExtension = array[array.Length - 1];
+        array = nameWithExtension.Split('.');
+        return array[0];
+    }
+
 }
