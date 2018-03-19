@@ -180,6 +180,7 @@ namespace Assets.Scripts.DataStructures
             // Remove edges that cannot be used because of obstacles.
             foreach (GameObject entity in Entities)
             {
+                if (entity.HasScriptOfType<ItemEntity>()) continue;
                 //Debug.Log("Potential obstacle: " + entity.name);
                 var entityScript = entity.GetComponent<BaseEntity>();
                 // We can get where characters are, other objects are not movable.
