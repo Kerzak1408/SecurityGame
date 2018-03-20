@@ -117,6 +117,7 @@
     <Compile Include="Assets\Scripts\DataStructures\IntegerTuple.cs" />
     <Compile Include="Assets\Scripts\DataStructures\LazyDictionary.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Map.cs" />
+    <Compile Include="Assets\Scripts\DataStructures\Path.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Tuple.cs" />
     <Compile Include="Assets\Scripts\Entities\BaseEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\BaseEntityWithBaseData.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="Assets\Scripts\Model\Edge.cs" />
     <Compile Include="Assets\Scripts\Model\EdgeType.cs" />
     <Compile Include="Assets\Scripts\Model\Model.cs" />
+    <Compile Include="Assets\Scripts\Model\PlanningNode.cs" />
     <Compile Include="Assets\Scripts\Model\TileNode.cs" />
     <Compile Include="Assets\Scripts\Reflection\ReflectiveEnumerator.cs" />
     <Compile Include="Assets\Scripts\Scenes.cs" />

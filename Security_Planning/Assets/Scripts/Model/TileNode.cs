@@ -27,7 +27,7 @@ public class TileNode : IAStarNode<TileNode>
 
     public void AddNeighbor(TileNode node, EdgeType type, float cost)
     {
-        Edges.Add(new Edge(node, type, cost));
+        Edges.Add(new Edge(this, node, type, cost));
     }
 
     public void AddNeighbor(Edge edge)

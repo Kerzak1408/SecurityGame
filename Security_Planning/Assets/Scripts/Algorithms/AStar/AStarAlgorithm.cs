@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Assets.Scripts.DataStructures;
 
 public static class AStarAlgorithm
 {
-    public static List<TNode> AStar<TNode, TEdge>(TNode startNode, TNode endNode, Heuristics<TNode> heuristics,
+    public static Path<TNode, TEdge> AStar<TNode, TEdge>(TNode startNode, TNode endNode, Heuristics<TNode> heuristics,
         Action<string> log, Func<TNode, bool> nodeFilter, Func<TEdge, bool> edgeFilter = null)
         where TNode : IAStarNode<TNode>
         where TEdge : IAStarEdge<TNode>
@@ -17,7 +18,8 @@ public static class AStarAlgorithm
             startNode 
         };
 
-        var cameFrom = new Dictionary<TNode, TNode>();
+        // Key - where I came, Value-First - from where I came, Value-Second - which edge I used.
+        var cameFrom = new Dictionary<TNode, Tuple<TNode, TEdge>>();
         
         var gScores = new LazyDictionary<TNode, float>(float.MaxValue);
         gScores[startNode] = 0;
@@ -63,7 +65,7 @@ public static class AStarAlgorithm
                 float potentialGScore = gScores[currentNode] + edge.Cost;
                 if (potentialGScore < gScores[neighbor])
                 {
-                    cameFrom[neighbor] = currentNode;
+                    cameFrom[neighbor] = new Tuple<TNode, TEdge>(currentNode, edge);
                     gScores[neighbor] = potentialGScore;
                     fScores[neighbor] = potentialGScore + heuristics.ComputeHeuristics(neighbor, endNode);
                 }
@@ -72,16 +74,18 @@ public static class AStarAlgorithm
         return null;
     }
 
-    private static List<TNode> ReconstructPath<TNode>(Dictionary<TNode, TNode> pathDictionary, TNode endNode) where TNode : IAStarNode<TNode>
+    private static Path<TNode, TEdge> ReconstructPath<TNode, TEdge>(Dictionary<TNode, Tuple<TNode, TEdge>> pathDictionary, TNode endNode)
+        where TNode : IAStarNode<TNode>
+        where TEdge : IAStarEdge<TNode>
     {
-        var result = new List<TNode>();
+        var result = new Path<TNode, TEdge>();
         TNode current = endNode;
         while (pathDictionary.Keys.Contains(current))
         {
-            result.Insert(0, current);
-            current = pathDictionary[current];
+            Tuple<TNode, TEdge> currentTuple = pathDictionary[current];
+            result.AddEdgeToBeginning(currentTuple.Second);
+            current = currentTuple.First;
         }
-        result.Insert(0, current);
         return result;
     }
 }

@@ -10,7 +10,7 @@ namespace Entities.Characters.Goals
     public class NavigationGoal : BaseGoal
     {
         private IntegerTuple goalCoords;
-        private Queue<TileNode> path;
+        private Queue<Edge> path;
         private TileNode followedNode;
 
         public NavigationGoal(BaseCharacter character, IntegerTuple goalCoords) : base(character)
@@ -23,19 +23,19 @@ namespace Entities.Characters.Goals
             Map currentMap = character.CurrentGame.Map;
             TileNode[,] aiModelTiles = currentMap.AIModel.Tiles;
             TileNode startNode = currentMap.GetClosestTile(character.transform.position);
-            List<TileNode> pathList = AStarAlgorithm.AStar<TileNode, Edge>(
+            List<Edge> pathList = AStarAlgorithm.AStar<TileNode, Edge>(
                 startNode, 
                 aiModelTiles[goalCoords.First, goalCoords.Second],
                 new EuclideanHeuristics(currentMap.Tiles), 
                 Debug.Log, 
                 node => node.IsDetectable(),
-                edge => edge.Type == EdgeType.CARD_DOOR || edge.Type == EdgeType.KEY_DOOR);
+                edge => edge.Type == EdgeType.CARD_DOOR || edge.Type == EdgeType.KEY_DOOR).Edges;
             if (pathList == null)
             {
                 IsCompleted = true;
                 return;
             }
-            path = new Queue<TileNode>(pathList);
+            path = new Queue<Edge>(pathList);
         }
 
         public override void Update()
@@ -45,7 +45,8 @@ namespace Entities.Characters.Goals
             {
                 if (path.Count > 0)
                 {
-                    followedNode = path.Dequeue();
+                    Edge currentEdge = path.Dequeue();
+                    followedNode = currentEdge.Neighbor;
                 }
                 else
                 {

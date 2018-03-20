@@ -135,7 +135,7 @@ namespace Assets.Scripts.DataStructures
                     foreach (Tuple<int, int> neighbor in neighbors)
                     {
                         Edge edge;
-                        if ((edge = CanGetFromTo(i, j, neighbor.First, neighbor.Second)) != null)
+                        if ((edge = CanGetFromTo(tileNode, i, j, neighbor.First, neighbor.Second)) != null)
                         {
                             // TODO: cost
                             tileNode.AddNeighbor(edge);
@@ -213,7 +213,7 @@ namespace Assets.Scripts.DataStructures
             }
         }
 
-        private Edge CanGetFromTo(int fromX, int fromY, int toX, int toY)
+        private Edge CanGetFromTo(TileNode start, int fromX, int fromY, int toX, int toY)
         {
             //Debug.Log("Can get from [" + fromX + ", " + fromY + "] to [" + toX + ", " + toY + "]?");
             if (toX < 0 || toY < 0 || toX >= Tiles.GetLength(0) || toY >= Tiles.GetLength(1))
@@ -279,7 +279,7 @@ namespace Assets.Scripts.DataStructures
                 EdgeType edgeType = EdgeType.NONE;
                 if (fromObstacle && !fromType.Equals(EdgeType.NONE)) edgeType = fromType;
                 if (toObstacle && !toType.Equals(EdgeType.NONE)) edgeType = toType;
-                return edgeType.Equals(EdgeType.NONE) ? null : new Edge(AIModel.Tiles[toX, toY], edgeType, 1);
+                return edgeType.Equals(EdgeType.NONE) ? null : new Edge(start, AIModel.Tiles[toX, toY], edgeType, 1);
             }
             else
             {
@@ -294,7 +294,7 @@ namespace Assets.Scripts.DataStructures
                 {
                     return null;
                 }
-                return new Edge(AIModel.Tiles[toX, toY], EdgeType.NORMAL, 1);
+                return new Edge(start, AIModel.Tiles[toX, toY], EdgeType.NORMAL, 1);
             }
         }
 
