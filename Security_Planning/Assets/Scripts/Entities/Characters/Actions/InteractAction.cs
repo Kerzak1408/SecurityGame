@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using Assets.Scripts.Entities.Characters;
 using UnityEngine;
 
-namespace Entities.Characters.Goals
+namespace Entities.Characters.Actions
 {
-    public class InteractGoal : BaseGoal
+    public class InteractAction : BaseAction
     {
         private GameObject interacted;
 
-        public InteractGoal(BaseCharacter character, GameObject interacted) : base(character)
+        public InteractAction(BaseCharacter character, GameObject interacted) : base(character)
         {
             this.interacted = interacted;
         }

@@ -222,8 +222,11 @@ namespace Assets.Scripts.DataStructures
             {
                 return null;
             }
-            string fromName = Tiles[fromX, fromY].name;
-            string toName = Tiles[toX, toY].name;
+
+            GameObject fromObject = Tiles[fromX, fromY];
+            GameObject toObject = Tiles[toX, toY];
+            string fromName = fromObject.name;
+            string toName = toObject.name;
             string fromObstacleDirection = "";
             string toObstacleDirection = "";
             
@@ -317,7 +320,7 @@ namespace Assets.Scripts.DataStructures
             return result;
         }
 
-        public void GetPlanningModel(BaseCharacter character, IntegerTuple goalCoords, out PlanningNode startNode, out PlanningNode goalNode)
+        public void GetPlanningModel(BaseCharacter character, IntegerTuple goalCoords, GameObject finalObject, out PlanningNode startNode, out PlanningNode goalNode)
         {
             IEnumerable<EdgeType> currentItems =
                 character.Items.Select(gameObject => gameObject.GetComponent<BaseItem>().CorrespondingEdgeType);
@@ -334,17 +337,19 @@ namespace Assets.Scripts.DataStructures
 
             goalNode = new PlanningNode(goalCoords, null);
             TileNode goalTileNode = AIModel.Tiles[goalCoords.First, goalCoords.Second];
-            BuildPlanningGraph(startNode, startTileNode, goalNode, goalTileNode, itemsDictionary);
+            BuildPlanningGraph(startNode, startTileNode, goalNode, goalTileNode, itemsDictionary, character, finalObject);
         }
 
-        private void BuildPlanningGraph(PlanningNode currentNode, TileNode startTileNode, PlanningNode goalNode, TileNode goalTileNode, Dictionary<BaseItem, TileNode> itemsDictionary)
+        private void BuildPlanningGraph(PlanningNode currentNode, TileNode startTileNode, PlanningNode goalNode, 
+            TileNode goalTileNode, Dictionary<BaseItem, TileNode> itemsDictionary, BaseCharacter character,
+            GameObject finalObject)
         {
             Path<TileNode, TileEdge> pathToGoal = AStarAlgorithm.AStar(startTileNode, goalTileNode,
                 new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
-                Filters.DetectableFilter, Filters.EdgeFilter());
+                Filters.DetectableFilter, Filters.EdgeFilter(currentNode.UnlockedEdges));
             if (pathToGoal.Cost < float.MaxValue)
             {
-                PlanningEdge edge = new PlanningEdge(currentNode, goalNode, PlanningEdgeType.NORMAL, pathToGoal.Cost);
+                PlanningEdge edge = new PlanningEdge(currentNode, goalNode, PlanningEdgeType.MONEY, character, pathToGoal, finalObject);
                 currentNode.AddEdge(edge);
             }
 
@@ -359,9 +364,9 @@ namespace Assets.Scripts.DataStructures
                     PlanningNode neighbor = new PlanningNode(neighborTileNode.Position, edgeTypes);
                     Path<TileNode, TileEdge> path = AStarAlgorithm.AStar(startTileNode, neighborTileNode, new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
                         Filters.DetectableFilter, Filters.EdgeFilter(edgeTypes));
-                    PlanningEdge edge = new PlanningEdge(currentNode, neighbor, item.PlanningEdgeType, path.Cost);
+                    PlanningEdge edge = new PlanningEdge(currentNode, neighbor, item.PlanningEdgeType, character, path, item.gameObject);
                     currentNode.AddEdge(edge);
-                    BuildPlanningGraph(neighbor, neighborTileNode, goalNode, goalTileNode, itemsDictionary);
+                    BuildPlanningGraph(neighbor, neighborTileNode, goalNode, goalTileNode, itemsDictionary, character, finalObject);
                 }
             }
         }

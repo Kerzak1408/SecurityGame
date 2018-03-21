@@ -3,8 +3,8 @@ using Assets.Scripts.Entities.Characters;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Entities;
-using Assets.Scripts.Extensions;
 using Entities.Characters.Goals;
+using Assets.Scripts.Extensions;
 using UnityEngine;
 
 namespace Entities.Characters.Behaviours
@@ -28,15 +28,13 @@ namespace Entities.Characters.Behaviours
             foreach (GameObject moneyObject in orderedEntities)
             {
                 TileNode closestTile = currentMap.GetClosestTile(moneyObject.transform.position);
-                goals.Enqueue(new NavigationGoal(character, closestTile.Position));
-                goals.Enqueue(new InteractGoal(character, moneyObject));
+                goals.Enqueue(new MoneyGoal(character, closestTile.Position, moneyObject));
             }
-            goals.Enqueue(new NavigationGoal(character, currentMap.GetClosestTile(character.transform.position).Position));
         }
 
         public override void Update()
         {
-            if (currentGoal == null || currentGoal.IsCompleted)
+            if (currentGoal == null || currentGoal.IsFinished)
             {
                 if (goals.Count > 0)
                 {

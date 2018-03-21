@@ -10,6 +10,7 @@ namespace Assets.Scripts.Entities
         {
             character.AddItem(gameObject);
             Destroy(this);
+            sucsess();
         }
     }
 }
