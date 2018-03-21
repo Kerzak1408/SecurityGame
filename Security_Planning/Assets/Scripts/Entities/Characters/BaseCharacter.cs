@@ -25,7 +25,7 @@ namespace Assets.Scripts.Entities.Characters
         protected float speed = 0.04f;
         protected CharacterController controller;
 
-        protected List<GameObject> Items
+        public List<GameObject> Items
         {
             get
             {

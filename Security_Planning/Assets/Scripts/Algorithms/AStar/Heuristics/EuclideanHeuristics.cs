@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EuclideanHeuristics : Heuristics<TileNode>
+public class EuclideanHeuristics<TNode> : Heuristics<TNode> where TNode : IAStarNode<TNode>
 {
     private GameObject[,] grid;
 
@@ -11,7 +11,7 @@ public class EuclideanHeuristics : Heuristics<TileNode>
         this.grid = grid;
     }
 
-    public override float ComputeHeuristics(TileNode from, TileNode to)
+    public override float ComputeHeuristics(TNode from, TNode to)
     {
         Vector3 fromPosition = grid.Get(from.Position).transform.position;
         Vector3 toPosition = grid.Get(to.Position).transform.position;

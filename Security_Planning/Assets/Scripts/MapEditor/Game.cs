@@ -129,7 +129,7 @@ namespace Assets.Scripts.MapEditor
                 Gizmos.color = tileModel.IsDetectable() ? Color.red : Color.green;
                 GameObject mapTile = Map.Tiles.Get(tileModel.Position);
                 Gizmos.DrawSphere(mapTile.transform.position, 0.1f);
-                foreach (Edge edge in tileModel.Edges)
+                foreach (TileEdge edge in tileModel.Edges)
                 {
                     GameObject neighborTile = Map.Tiles.Get(edge.Neighbor.Position);
                     switch (edge.Type)
@@ -157,13 +157,13 @@ namespace Assets.Scripts.MapEditor
             Gizmos.color = Color.red;
             
             TileNode[,] aiModelTiles = Map.AIModel.Tiles;
-            EuclideanHeuristics heuristics = new EuclideanHeuristics(Map.Tiles);
-            List<Edge> path = AStarAlgorithm.AStar<TileNode, Edge>(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics,
+            var heuristics = new EuclideanHeuristics<TileNode>(Map.Tiles);
+            List<TileEdge> path = AStarAlgorithm.AStar<TileNode, TileEdge>(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics,
                 Debug.Log, node => node.IsDetectable()).Edges;
             if (path != null)
             {
                 TileNode previousNode = null;
-                foreach (Edge edge in path)
+                foreach (TileEdge edge in path)
                 {
                     GameObject start = Map.Tiles.Get(edge.Start.Position);
                     GameObject end = Map.Tiles.Get(edge.Neighbor.Position);

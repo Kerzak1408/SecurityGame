@@ -5,6 +5,7 @@ using UnityEngine;
 
 public interface IAStarEdge<TNode> where TNode : IAStarNode<TNode>
 {
+    TNode Start { get; }
     TNode Neighbor { get; }
     float Cost { get; }
 }

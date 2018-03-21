@@ -5,25 +5,35 @@ using System.Text;
 
 namespace Assets.Scripts.Model
 {
-    public class Edge : IAStarEdge<TileNode>
+    public class Edge<TNode, TEdgeType> : IAStarEdge<TNode> where TNode : IAStarNode<TNode>
     {
-        public TileNode Start { get; private set; }
-        public TileNode Neighbor { get; private set; }
-        public EdgeType Type;
+        public TEdgeType Type;
         public float Cost { get; private set; }
 
-        public Edge(TileNode start, TileNode neighbor, EdgeType type, float cost)
+        private TNode start;
+        private TNode neighbor;
+
+        public TNode Neighbor
         {
-            Start = start;
-            Neighbor = neighbor;
-            //OtherIndices = Tuple.New(otherI, otherJ);
+            get { return neighbor; }
+        }
+
+        public TNode Start
+        {
+            get { return start; }
+        }
+
+        public Edge(TNode start, TNode neighbor, TEdgeType type, float cost)
+        {
+            this.start = start;
+            this.neighbor = neighbor;
             Type = type;
             Cost = cost;
         }
 
         public override string ToString()
         {
-            return string.Join(", ", new string[] { Neighbor.Position.ToString(), Type.ToString(), Cost.ToString() });
+            return string.Join(", ", new string[] { Type.ToString(), Cost.ToString() });
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Assets.Scripts.Reflection
 {
     public static class ReflectiveEnumerator
     {
-        public static IEnumerable<T> GetEnumerableOfType<T>(params object[] constructorArgs) where T : class
+        public static IEnumerable<T> GetAllImplementationsOfAbstractClass<T>(params object[] constructorArgs) where T : class
         {
             List<T> objects = new List<T>();
             foreach (Type type in

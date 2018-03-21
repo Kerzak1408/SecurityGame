@@ -1,4 +1,6 @@
-﻿public static class CollectionsExtensions
+﻿using System.Collections.Generic;
+
+public static class CollectionsExtensions
 {
     public static Tuple<int, int> GetIndices<T>(this T[,] array, T item)
     {
@@ -49,5 +51,16 @@
     public static Tuple<int, int> MultiplyBy(this Tuple<int, int> tuple, int n)
     {
         return Tuple.New(tuple.First * n, tuple.Second * n);
+    }
+
+    public static List<T> Copy<T>(this List<T> original)
+    {
+        var copy = new List<T>();
+        foreach (T item in original)
+        {
+            copy.Add(item);
+        }
+
+        return copy;
     }
 }

@@ -4,7 +4,9 @@ using System.Linq;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Items;
 using Assets.Scripts.Model;
+using Assets.Scripts.Reflection;
 using UnityEngine;
 
 namespace Assets.Scripts.DataStructures
@@ -134,7 +136,7 @@ namespace Assets.Scripts.DataStructures
                     };
                     foreach (Tuple<int, int> neighbor in neighbors)
                     {
-                        Edge edge;
+                        TileEdge edge;
                         if ((edge = CanGetFromTo(tileNode, i, j, neighbor.First, neighbor.Second)) != null)
                         {
                             // TODO: cost
@@ -213,7 +215,7 @@ namespace Assets.Scripts.DataStructures
             }
         }
 
-        private Edge CanGetFromTo(TileNode start, int fromX, int fromY, int toX, int toY)
+        private TileEdge CanGetFromTo(TileNode start, int fromX, int fromY, int toX, int toY)
         {
             //Debug.Log("Can get from [" + fromX + ", " + fromY + "] to [" + toX + ", " + toY + "]?");
             if (toX < 0 || toY < 0 || toX >= Tiles.GetLength(0) || toY >= Tiles.GetLength(1))
@@ -279,7 +281,7 @@ namespace Assets.Scripts.DataStructures
                 EdgeType edgeType = EdgeType.NONE;
                 if (fromObstacle && !fromType.Equals(EdgeType.NONE)) edgeType = fromType;
                 if (toObstacle && !toType.Equals(EdgeType.NONE)) edgeType = toType;
-                return edgeType.Equals(EdgeType.NONE) ? null : new Edge(start, AIModel.Tiles[toX, toY], edgeType, 1);
+                return edgeType.Equals(EdgeType.NONE) ? null : new TileEdge(start, AIModel.Tiles[toX, toY], edgeType, 1);
             }
             else
             {
@@ -294,7 +296,7 @@ namespace Assets.Scripts.DataStructures
                 {
                     return null;
                 }
-                return new Edge(start, AIModel.Tiles[toX, toY], EdgeType.NORMAL, 1);
+                return new TileEdge(start, AIModel.Tiles[toX, toY], EdgeType.NORMAL, 1);
             }
         }
 
@@ -313,6 +315,55 @@ namespace Assets.Scripts.DataStructures
                 }
             }
             return result;
+        }
+
+        public void GetPlanningModel(BaseCharacter character, IntegerTuple goalCoords, out PlanningNode startNode, out PlanningNode goalNode)
+        {
+            IEnumerable<EdgeType> currentItems =
+                character.Items.Select(gameObject => gameObject.GetComponent<BaseItem>().CorrespondingEdgeType);
+            TileNode startTileNode = GetClosestTile(character.transform.position);
+            startNode =
+                new PlanningNode(startTileNode.Position, currentItems.ToList());
+            var itemsDictionary = new Dictionary<BaseItem, TileNode>();
+            foreach (GameObject gameObject in Entities)
+            {
+                if (!gameObject.HasScriptOfType<BaseItem>()) continue;
+                var baseItem = gameObject.GetComponent<BaseItem>();
+                itemsDictionary[baseItem] = GetClosestTile(gameObject.transform.position);
+            }
+
+            goalNode = new PlanningNode(goalCoords, null);
+            TileNode goalTileNode = AIModel.Tiles[goalCoords.First, goalCoords.Second];
+            BuildPlanningGraph(startNode, startTileNode, goalNode, goalTileNode, itemsDictionary);
+        }
+
+        private void BuildPlanningGraph(PlanningNode currentNode, TileNode startTileNode, PlanningNode goalNode, TileNode goalTileNode, Dictionary<BaseItem, TileNode> itemsDictionary)
+        {
+            Path<TileNode, TileEdge> pathToGoal = AStarAlgorithm.AStar(startTileNode, goalTileNode,
+                new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
+                Filters.DetectableFilter, Filters.EdgeFilter());
+            if (pathToGoal.Cost < float.MaxValue)
+            {
+                PlanningEdge edge = new PlanningEdge(currentNode, goalNode, PlanningEdgeType.NORMAL, pathToGoal.Cost);
+                currentNode.AddEdge(edge);
+            }
+
+            foreach (KeyValuePair<BaseItem, TileNode> keyValuePair in itemsDictionary)
+            {
+                BaseItem item = keyValuePair.Key;
+                if (!currentNode.UnlockedEdges.Contains(item.CorrespondingEdgeType))
+                {
+                    List<EdgeType> edgeTypes = currentNode.UnlockedEdges.Copy();
+                    edgeTypes.Add(item.CorrespondingEdgeType);
+                    TileNode neighborTileNode = keyValuePair.Value;
+                    PlanningNode neighbor = new PlanningNode(neighborTileNode.Position, edgeTypes);
+                    Path<TileNode, TileEdge> path = AStarAlgorithm.AStar(startTileNode, neighborTileNode, new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
+                        Filters.DetectableFilter, Filters.EdgeFilter(edgeTypes));
+                    PlanningEdge edge = new PlanningEdge(currentNode, neighbor, item.PlanningEdgeType, path.Cost);
+                    currentNode.AddEdge(edge);
+                    BuildPlanningGraph(neighbor, neighborTileNode, goalNode, goalTileNode, itemsDictionary);
+                }
+            }
         }
     } 
 }

@@ -81,7 +81,7 @@ namespace Assets.Scripts.MapEditor
             InitializePanelGroup(ResourcesHolder.Instance.AllEntitiesIcons, PanelEntitiesStart.transform.position, Entities);
 
             originalPanelScale = Panel.transform.localScale;
-            editorHandlers = ReflectiveEnumerator.GetEnumerableOfType<BaseEditorHandler>(this);
+            editorHandlers = ReflectiveEnumerator.GetAllImplementationsOfAbstractClass<BaseEditorHandler>(this);
             currentEditorHandler = editorHandlers.First(x => x is DragHandler);
 
             IEnumerable<BaseUserSelectableHandler> baseUserSelectableHandlers = editorHandlers.OfType<BaseUserSelectableHandler>();

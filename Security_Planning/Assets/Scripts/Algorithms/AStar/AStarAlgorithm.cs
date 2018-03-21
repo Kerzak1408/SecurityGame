@@ -8,7 +8,7 @@ using Assets.Scripts.DataStructures;
 public static class AStarAlgorithm
 {
     public static Path<TNode, TEdge> AStar<TNode, TEdge>(TNode startNode, TNode endNode, Heuristics<TNode> heuristics,
-        Action<string> log, Func<TNode, bool> nodeFilter, Func<TEdge, bool> edgeFilter = null)
+        Action<string> log, Func<TNode, bool> nodeFilter = null, Func<TEdge, bool> edgeFilter = null)
         where TNode : IAStarNode<TNode>
         where TEdge : IAStarEdge<TNode>
     {
@@ -54,7 +54,7 @@ public static class AStarAlgorithm
             {
                 TNode neighbor = edge.Neighbor;
                 if (closedSet.Contains(neighbor) || 
-                    nodeFilter(neighbor) || 
+                    (nodeFilter != null && nodeFilter(neighbor)) || 
                     (edgeFilter != null && edgeFilter(edge)))
                     continue;
                 if (!openSet.Contains(neighbor))
@@ -71,7 +71,7 @@ public static class AStarAlgorithm
                 }
             }
         }
-        return null;
+        return new Path<TNode, TEdge>(null, float.MaxValue);
     }
 
     private static Path<TNode, TEdge> ReconstructPath<TNode, TEdge>(Dictionary<TNode, Tuple<TNode, TEdge>> pathDictionary, TNode endNode)

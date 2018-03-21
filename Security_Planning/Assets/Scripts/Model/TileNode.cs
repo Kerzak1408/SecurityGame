@@ -9,8 +9,8 @@ using UnityEngine;
 
 public class TileNode : IAStarNode<TileNode>
 {
-    public IntegerTuple Position;
-    public List<Edge> Edges { get; private set; }
+    public IntegerTuple Position { get; set; }
+    public List<TileEdge> Edges { get; private set; }
     public List<TransmitterEntity> DetectedBy { get; private set; }
 
     List<IAStarEdge<TileNode>> IAStarNode<TileNode>.Edges
@@ -21,16 +21,16 @@ public class TileNode : IAStarNode<TileNode>
     public TileNode(int i, int j)
     {
         Position = new IntegerTuple(i, j);
-        Edges = new List<Edge>();
+        Edges = new List<TileEdge>();
         DetectedBy = new List<TransmitterEntity>();
     }
 
     public void AddNeighbor(TileNode node, EdgeType type, float cost)
     {
-        Edges.Add(new Edge(this, node, type, cost));
+        Edges.Add(new TileEdge(this, node, type, cost));
     }
 
-    public void AddNeighbor(Edge edge)
+    public void AddNeighbor(TileEdge edge)
     {
         Edges.Add(edge);
     }
@@ -53,7 +53,7 @@ public class TileNode : IAStarNode<TileNode>
     public override string ToString()
     {
         string result = Position.ToString() + ", {";
-        foreach (Edge edge in Edges)
+        foreach (TileEdge edge in Edges)
         {
             result += edge.Neighbor.Position + ", ";
         }
@@ -63,11 +63,11 @@ public class TileNode : IAStarNode<TileNode>
 
     public void RemoveAllEdgesBothDirections()
     {
-        foreach (Edge edge in Edges)
+        foreach (TileEdge edge in Edges)
         {
-            List<Edge> neighborEdges = edge.Neighbor.Edges;
-            Edge oppositeDirectionEdge = neighborEdges.FirstOrDefault(e => e.Neighbor == this);
-            if (oppositeDirectionEdge != default(Edge))
+            List<TileEdge> neighborEdges = edge.Neighbor.Edges;
+            TileEdge oppositeDirectionEdge = neighborEdges.FirstOrDefault(e => e.Neighbor == this);
+            if (oppositeDirectionEdge != default(TileEdge))
             {
                 neighborEdges.Remove(oppositeDirectionEdge);
             }

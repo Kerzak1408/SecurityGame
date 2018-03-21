@@ -15,6 +15,12 @@ namespace Assets.Scripts.DataStructures
             Edges = new List<TEdge>();
         }
 
+        public Path(List<TEdge> edges, float cost)
+        {
+            Edges = edges;
+            Cost = cost;
+        }
+
         public void AddEdgeToBeginning(TEdge edge)
         {
             Edges.Insert(0, edge);
