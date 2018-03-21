@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4666043662996402}
   - component: {fileID: 212591065887997780}
   - component: {fileID: 65059709118500458}
+  - component: {fileID: 114248201068802980}
   m_Layer: 0
   m_Name: 036_Fence_DownRight
   m_TagString: Untagged
@@ -221,6 +222,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 5, y: 3.0000005, z: 0.13683328}
   m_Center: {x: -2.5, y: 1.5000002, z: 0}
+--- !u!114 &114248201068802980
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1062050571044228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc623f5bed64d7e4697884e60f55e70f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114496273491632138
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -5,13 +5,24 @@ using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Items;
+using Assets.Scripts.Model;
 using UnityEngine;
 
 namespace Assets.Scripts.Entities
 {
-    public class Fence : BaseObject, IInteractable
+    public class Fence : BaseObject, IInteractable, IObstacle
     {
         private AudioSource audioSource;
+
+        public EdgeType EdgeType
+        {
+            get { return EdgeType.FENCE; }
+        }
+
+        public IInteractable InteractableObject
+        {
+            get { return this; }
+        }
 
         protected override void Start()
         {

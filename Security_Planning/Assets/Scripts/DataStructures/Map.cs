@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Items;
 using Assets.Scripts.Model;
@@ -279,12 +280,24 @@ namespace Assets.Scripts.DataStructures
             // Is there an obstacle between tiles?
             if (fromObstacle || toObstacle)
             {
-                EdgeType fromType = EdgeTypeUtils.ParseString(fromName);
-                EdgeType toType = EdgeTypeUtils.ParseString(toName);
+                var fromIObstacle = fromObject.GetComponentInGameObjectOrChildren<IObstacle>();
+                var toIObstacle = toObject.GetComponentInGameObjectOrChildren<IObstacle>();
+                
+                EdgeType fromType = fromIObstacle == null ? EdgeType.NONE : fromIObstacle.EdgeType;
+                EdgeType toType = toIObstacle == null ? EdgeType.NONE : toIObstacle.EdgeType;
                 EdgeType edgeType = EdgeType.NONE;
-                if (fromObstacle && !fromType.Equals(EdgeType.NONE)) edgeType = fromType;
-                if (toObstacle && !toType.Equals(EdgeType.NONE)) edgeType = toType;
-                return edgeType.Equals(EdgeType.NONE) ? null : new TileEdge(start, AIModel.Tiles[toX, toY], edgeType, 1);
+                IInteractable interactable = null;
+                if (fromObstacle && !fromType.Equals(EdgeType.NONE))
+                {
+                    edgeType = fromType;
+                    interactable = fromIObstacle.InteractableObject;
+                }
+                if (toObstacle && !toType.Equals(EdgeType.NONE))
+                {
+                    edgeType = toType;
+                    interactable = toIObstacle.InteractableObject;
+                }
+                return edgeType.Equals(EdgeType.NONE) ? null : new TileEdge(start, AIModel.Tiles[toX, toY], edgeType, 1, interactable);
             }
             else
             {
@@ -299,7 +312,7 @@ namespace Assets.Scripts.DataStructures
                 {
                     return null;
                 }
-                return new TileEdge(start, AIModel.Tiles[toX, toY], EdgeType.NORMAL, 1);
+                return new TileEdge(start, AIModel.Tiles[toX, toY], EdgeType.NORMAL, 1, null);
             }
         }
 

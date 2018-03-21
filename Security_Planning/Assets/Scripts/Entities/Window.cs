@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Interfaces;
+using Assets.Scripts.Model;
 using UnityEngine;
 
 namespace Assets.Scripts.Entities
 {
-    public class Window : MonoBehaviour, IInteractable
+    public class Window : MonoBehaviour, IInteractable, IObstacle
     {
         private int crackState;
         private int maxCrack;
@@ -17,6 +18,16 @@ namespace Assets.Scripts.Entities
         private AudioSource glassBreak2;
         private bool destroy;
         private float destroyCounter;
+
+        public EdgeType EdgeType
+        {
+            get { return EdgeType.WINDOW; }
+        }
+
+        public IInteractable InteractableObject
+        {
+            get { return this; }
+        }
 
         private void Start()
         {

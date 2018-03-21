@@ -23,6 +23,7 @@ namespace Assets.Scripts.Entities
             if (relateGateObject != null)
             {
                 relatedGate = relateGateObject.GetComponent<GateOpen>();
+                relatedGate.RelatedCardReader = this;
                 relatedGate.Lock();
             }
             transform.position += Vector3.back;

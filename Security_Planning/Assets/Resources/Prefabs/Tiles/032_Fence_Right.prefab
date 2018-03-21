@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4357560690639292}
   - component: {fileID: 212048565208727944}
   - component: {fileID: 65048713016291332}
+  - component: {fileID: 114003207267731146}
   m_Layer: 0
   m_Name: 032_Fence_Right
   m_TagString: Untagged
@@ -143,6 +144,17 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1274905077321050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc623f5bed64d7e4697884e60f55e70f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114003207267731146
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1229073088560062}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc623f5bed64d7e4697884e60f55e70f, type: 3}

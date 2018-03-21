@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4870112962482346}
   - component: {fileID: 212899620562911666}
   - component: {fileID: 65846853800909838}
+  - component: {fileID: 114076879378203900}
   m_Layer: 0
   m_Name: 031_Fence_Left
   m_TagString: Untagged
@@ -137,6 +138,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 5, y: 3.0000005, z: 0.13683328}
   m_Center: {x: -2.5, y: 1.5000002, z: 0}
+--- !u!114 &114076879378203900
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1246407597550056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc623f5bed64d7e4697884e60f55e70f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114304650713108006
 MonoBehaviour:
   m_ObjectHideFlags: 1

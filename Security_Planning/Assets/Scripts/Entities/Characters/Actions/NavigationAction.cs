@@ -35,7 +35,7 @@ namespace Entities.Characters.Actions
                     switch (currentEdge.Type)
                     {
                         case EdgeType.KEY_DOOR:
-
+                            currentEdge.Interactable.Interact(character);
                             break;
                     }
                 }

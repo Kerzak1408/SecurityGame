@@ -110,5 +110,16 @@ namespace Assets.Scripts.Extensions
 
             return result;
         }
+
+        public static T GetComponentInGameObjectOrChildren<T>(this GameObject gameObject)
+        {
+            var result = gameObject.GetComponent<T>();
+            if (result != null)
+            {
+                return result;
+            }
+            result = gameObject.GetComponentInChildren<T>();
+            return result;
+        }
     }
 }

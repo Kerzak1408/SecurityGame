@@ -144,6 +144,7 @@
     <Compile Include="Assets\Scripts\Entities\Gates\PasswordGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Hedge.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IInteractable.cs" />
+    <Compile Include="Assets\Scripts\Entities\Interfaces\IObstacle.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPIRDetectable.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPasswordOpenable.cs" />
     <Compile Include="Assets\Scripts\Entities\ItemEntity.cs" />
