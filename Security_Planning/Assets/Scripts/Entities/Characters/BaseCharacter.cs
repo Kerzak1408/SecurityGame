@@ -16,6 +16,7 @@ namespace Assets.Scripts.Entities.Characters
 {
     public abstract class BaseCharacter : BaseGenericEntity<CharacterData>, IPIRDetectable
     {
+        private CastAction activeCastAction;
         private List<GameObject> items;
         private List<GameObject> itemIcons;
         private Animator animator;
@@ -23,8 +24,10 @@ namespace Assets.Scripts.Entities.Characters
         protected int money;
         protected bool isMoving;
         private AudioSource footstepAudio;
-        protected float speed = 0.04f;
+        protected float speed = 0.02f;
         protected CharacterController controller;
+
+        public bool IsActive { get; set; }
 
         public List<GameObject> Items
         {
@@ -76,6 +79,10 @@ namespace Assets.Scripts.Entities.Characters
                     footstepAudio.Play();
                     animator.speed = 2;
                 }
+                if (activeCastAction != null)
+                {
+                    activeCastAction.Interrupt();
+                }
             }
             else
             {
@@ -100,7 +107,7 @@ namespace Assets.Scripts.Entities.Characters
         protected void MoveForward()
         {
             isMoving = true;
-            var transformedDir = transform.TransformDirection(speed * Vector3.forward);
+            var transformedDir = transform.TransformDirection(Time.deltaTime * Vector3.forward);
             controller.Move(transformedDir);
         }
 
@@ -268,6 +275,11 @@ namespace Assets.Scripts.Entities.Characters
         public void ActivateItem<T>() where T : BaseItem
         {
             activeItemIndex = Items.IndexOf(Items.First(item => item.HasScriptOfType<T>()));
+        }
+
+        public void Cast(CastAction action)
+        {
+            activeCastAction = action;
         }
 
         //Animation Events - just to enable Mecanim animations work => Do NOT delete!

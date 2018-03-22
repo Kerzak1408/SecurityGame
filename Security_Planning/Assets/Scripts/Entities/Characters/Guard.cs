@@ -172,6 +172,7 @@ namespace Assets.Scripts.Entities.Characters
             mainCamera.transform.parent = transform;
             mainCamera.transform.localPosition = new Vector3(0, 1.3f, 0.22f);
             mainCamera.transform.localRotation = Quaternion.identity;
+            IsActive = true;
         }
 
         public override void ObtainMoney()

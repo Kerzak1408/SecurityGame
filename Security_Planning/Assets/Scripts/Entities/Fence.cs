@@ -43,7 +43,7 @@ namespace Assets.Scripts.Entities
             if (character.GetActiveItem().HasScriptOfType<WireCutterItem>())
             {
                 audioSource.Play();
-                StartCoroutine(CallAfterTimeout(audioSource.clip.length, () =>
+                Action wrapperSuccesAction = () =>
                 {
                     if (successAction != null)
                     {
@@ -59,7 +59,10 @@ namespace Assets.Scripts.Entities
                             Destroy(siblingObject);
                         }
                     }
-                }));
+                };
+                Action interruptAction = () => audioSource.Stop();
+                CastManager.Instance.Cast(character, audioSource.clip.length, interruptAction, wrapperSuccesAction);
+                
             }
         }
     }

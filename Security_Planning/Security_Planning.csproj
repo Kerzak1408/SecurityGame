@@ -124,6 +124,8 @@
     <Compile Include="Assets\Scripts\Entities\BaseGenericEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\CameraEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\CardReaderEntity.cs" />
+    <Compile Include="Assets\Scripts\Entities\Casting\CastAction.cs" />
+    <Compile Include="Assets\Scripts\Entities\Casting\CastManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Actions\BaseAction.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Actions\InteractAction.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Actions\NavigationAction.cs" />
