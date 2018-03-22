@@ -20,6 +20,11 @@ namespace Assets.Scripts.Entities.Gates
             get { return this; }
         }
 
+        public bool IsOpen
+        {
+            get { return IsGateFullyOpen; }
+        }
+
         protected override void Start()
         {
             base.Start();
@@ -33,6 +38,12 @@ namespace Assets.Scripts.Entities.Gates
             {
                 UnlockOnce();
             }
+        }
+
+        public void Open(BaseCharacter character)
+        {
+            character.ActivateItem<KeyItem>();
+            Interact(character);
         }
 
     }

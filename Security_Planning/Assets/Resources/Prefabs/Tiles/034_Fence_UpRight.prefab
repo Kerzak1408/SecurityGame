@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4639857603252634}
   - component: {fileID: 212284639649327164}
   - component: {fileID: 65807922797057440}
-  - component: {fileID: 114919356734490432}
   m_Layer: 0
   m_Name: 034_Fence_UpRight
   m_TagString: Untagged
@@ -239,17 +238,6 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1779853618339894}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc623f5bed64d7e4697884e60f55e70f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114919356734490432
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1505446535475076}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc623f5bed64d7e4697884e60f55e70f, type: 3}

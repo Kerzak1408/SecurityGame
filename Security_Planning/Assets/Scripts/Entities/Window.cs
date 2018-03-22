@@ -29,6 +29,8 @@ namespace Assets.Scripts.Entities
             get { return this; }
         }
 
+        public bool IsOpen { get; private set; }
+
         private void Start()
         {
             crackState = 0;
@@ -52,6 +54,8 @@ namespace Assets.Scripts.Entities
                             Destroy(sibling.gameObject);
                         }
                     }
+
+                    IsOpen = true;
                 }
                 else
                 {
@@ -84,10 +88,12 @@ namespace Assets.Scripts.Entities
             }
         }
 
-        private IEnumerator PlaySound()
+        public void Open(BaseCharacter character)
         {
-            GetComponent<AudioSource>().Play();
-            yield return null;
+            while (!destroy)
+            {
+                Interact(character);
+            }
         }
     }
 }

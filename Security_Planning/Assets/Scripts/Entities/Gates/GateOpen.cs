@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Entities.Interfaces;
+﻿using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Entities.Interfaces;
+using Assets.Scripts.Items;
 using Assets.Scripts.Model;
 using UnityEngine;
 
@@ -16,6 +18,19 @@ namespace Assets.Scripts.Entities.Gates
         public IInteractable InteractableObject
         {
             get { return RelatedCardReader; }
+        }
+
+        public bool IsOpen
+        {
+            get { return IsGateFullyOpen; }
+        }
+        public void Open(BaseCharacter character)
+        {
+            if (RelatedCardReader != null)
+            {
+                character.ActivateItem<CardItem>();
+                RelatedCardReader.Interact(character);
+            }
         }
     }
 }

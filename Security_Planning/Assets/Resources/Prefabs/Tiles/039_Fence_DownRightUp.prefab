@@ -40,7 +40,6 @@ GameObject:
   - component: {fileID: 4888274186985242}
   - component: {fileID: 212657342003140672}
   - component: {fileID: 65089034337268946}
-  - component: {fileID: 114539145419357456}
   m_Layer: 0
   m_Name: 039_Fence_DownRightUp
   m_TagString: Untagged
@@ -323,17 +322,6 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1713732577447788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc623f5bed64d7e4697884e60f55e70f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114539145419357456
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1448272456073892}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc623f5bed64d7e4697884e60f55e70f, type: 3}

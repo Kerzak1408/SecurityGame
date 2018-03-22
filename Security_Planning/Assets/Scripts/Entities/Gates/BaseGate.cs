@@ -6,7 +6,7 @@ namespace Assets.Scripts.Entities.Gates
 {
     public abstract class BaseGate : MonoBehaviour
     {
-        private int noMovementsTurn;
+        private float noMovementTime;
         protected bool lockAfterOpening;
         public bool Locked { get; private set; }
 
@@ -22,11 +22,11 @@ namespace Assets.Scripts.Entities.Gates
 
         protected virtual void Update()
         {
-            if (noMovementsTurn > 20)
+            if (noMovementTime > 1.5f)
             {
                 Close();
             }
-            noMovementsTurn++;
+            noMovementTime += Time.deltaTime;
         }
 
         public virtual void Lock()
@@ -49,7 +49,7 @@ namespace Assets.Scripts.Entities.Gates
         protected virtual void OnTriggerEnter(Collider other)
         {
             if (!other.transform.gameObject.HasScriptOfType<BaseCharacter>()) return;
-            noMovementsTurn = 0;
+            noMovementTime = 0;
             if (!Locked)
             {
                 Open();
@@ -59,7 +59,7 @@ namespace Assets.Scripts.Entities.Gates
         protected virtual void OnTriggerStay(Collider other)
         {
             if (!other.transform.gameObject.HasScriptOfType<BaseCharacter>()) return;
-            noMovementsTurn = 0;
+            noMovementTime = 0;
             if (!Locked)
             {
                 Open();
@@ -69,7 +69,7 @@ namespace Assets.Scripts.Entities.Gates
         protected virtual void OnTriggerExit(Collider other)
         {
             if (!other.transform.gameObject.HasScriptOfType<BaseCharacter>()) return;
-            noMovementsTurn = 0;
+            noMovementTime = 0;
         }
 
     }

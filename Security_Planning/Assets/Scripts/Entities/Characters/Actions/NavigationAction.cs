@@ -11,7 +11,7 @@ namespace Entities.Characters.Actions
     {
         private IntegerTuple goalCoords;
         private Queue<TileEdge> pathQueue;
-        private TileNode followedNode;
+        private TileEdge currentEdge;
 
         public NavigationAction(BaseCharacter character, List<TileEdge> navigationEdges) : base(character)
         {
@@ -26,17 +26,14 @@ namespace Entities.Characters.Actions
         public override void Update()
         {
             if (IsCompleted) return;
-            if (followedNode == null || character.NavigateTo(followedNode))
+            if (currentEdge == null || (currentEdge.IsOpen && character.NavigateTo(currentEdge.Neighbor)))
             {
                 if (pathQueue.Count > 0)
                 {
-                    TileEdge currentEdge = pathQueue.Dequeue();
-                    followedNode = currentEdge.Neighbor;
-                    switch (currentEdge.Type)
+                    currentEdge = pathQueue.Dequeue();
+                    if (!currentEdge.IsOpen)
                     {
-                        case EdgeType.KEY_DOOR:
-                            currentEdge.Interactable.Interact(character);
-                            break;
+                        currentEdge.Open(character);
                     }
                 }
                 else

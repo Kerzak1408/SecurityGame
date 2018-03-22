@@ -16,6 +16,15 @@ namespace Assets.Scripts.Entities.Gates
         private AudioSource slidingDoorClose;
         private double DOOR_SIZE = 1.1;
 
+        protected bool IsGateFullyOpen
+        {
+            get
+            {
+                return !(gate.transform.position.GetVectorCoord(Direction) <
+                         defaultPosition.GetVectorCoord(Direction) + DOOR_SIZE);
+            }
+        }
+
         protected override void Start()
         {
             base.Start();
@@ -47,9 +56,8 @@ namespace Assets.Scripts.Entities.Gates
             }
             else
             {
-                bool gateFullyOpen = !(gate.transform.position.GetVectorCoord(Direction) < defaultPosition.GetVectorCoord(Direction) + DOOR_SIZE);
 
-                if (!gateFullyOpen)
+                if (!IsGateFullyOpen)
                 {
                     gate.transform.position += speed * translationDirection * Time.deltaTime;
                 }

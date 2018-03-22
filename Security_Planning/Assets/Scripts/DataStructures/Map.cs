@@ -286,18 +286,18 @@ namespace Assets.Scripts.DataStructures
                 EdgeType fromType = fromIObstacle == null ? EdgeType.NONE : fromIObstacle.EdgeType;
                 EdgeType toType = toIObstacle == null ? EdgeType.NONE : toIObstacle.EdgeType;
                 EdgeType edgeType = EdgeType.NONE;
-                IInteractable interactable = null;
+                IObstacle obstacle = null;
                 if (fromObstacle && !fromType.Equals(EdgeType.NONE))
                 {
                     edgeType = fromType;
-                    interactable = fromIObstacle.InteractableObject;
+                    obstacle = fromIObstacle;
                 }
                 if (toObstacle && !toType.Equals(EdgeType.NONE))
                 {
                     edgeType = toType;
-                    interactable = toIObstacle.InteractableObject;
+                    obstacle = toIObstacle;
                 }
-                return edgeType.Equals(EdgeType.NONE) ? null : new TileEdge(start, AIModel.Tiles[toX, toY], edgeType, 1, interactable);
+                return edgeType.Equals(EdgeType.NONE) ? null : new TileEdge(start, AIModel.Tiles[toX, toY], edgeType, 1, obstacle);
             }
             else
             {

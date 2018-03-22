@@ -265,6 +265,11 @@ namespace Assets.Scripts.Entities.Characters
             return (Vector3.Distance(transform.position, target) < 0.4f);
         }
 
+        public void ActivateItem<T>() where T : BaseItem
+        {
+            activeItemIndex = Items.IndexOf(Items.First(item => item.HasScriptOfType<T>()));
+        }
+
         //Animation Events - just to enable Mecanim animations work => Do NOT delete!
         protected void Hit()
         {
@@ -290,5 +295,6 @@ namespace Assets.Scripts.Entities.Characters
         {
 
         }
+
     }
 }

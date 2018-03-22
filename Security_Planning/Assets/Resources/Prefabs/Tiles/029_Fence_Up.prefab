@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4187586719126408}
   - component: {fileID: 212381582102796530}
   - component: {fileID: 65556710559611688}
-  - component: {fileID: 114030507759105576}
   m_Layer: 0
   m_Name: 029_Fence_Up
   m_TagString: Untagged
@@ -138,17 +137,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 5, y: 3.0000005, z: 0.13683328}
   m_Center: {x: -2.5, y: 1.5000002, z: 0}
---- !u!114 &114030507759105576
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1309946098929000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc623f5bed64d7e4697884e60f55e70f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114206053898362064
 MonoBehaviour:
   m_ObjectHideFlags: 1

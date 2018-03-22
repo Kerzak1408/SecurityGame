@@ -24,10 +24,18 @@ namespace Assets.Scripts.Entities
             get { return this; }
         }
 
+        public bool IsOpen { get; private set; }
+
         protected override void Start()
         {
             base.Start();
             audioSource = gameObject.AttachAudioSource("CuttingWire");
+        }
+
+        public void Open(BaseCharacter character)
+        {
+            character.ActivateItem<WireCutterItem>();
+            Interact(character, () => IsOpen = true);
         }
 
         public void Interact(BaseCharacter character, Action successAction = null)
@@ -43,6 +51,14 @@ namespace Assets.Scripts.Entities
                     }
 
                     Destroy(gameObject);
+                    foreach (Transform sibling in transform.parent)
+                    {
+                        GameObject siblingObject = sibling.gameObject;
+                        if (siblingObject.HasScriptOfType<Fence>())
+                        {
+                            Destroy(siblingObject);
+                        }
+                    }
                 }));
             }
         }
