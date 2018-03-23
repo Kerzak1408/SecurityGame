@@ -78,7 +78,7 @@ namespace Assets.Scripts.MapEditor
                 MainCamera.gameObject.SetActive(!MainCamera.gameObject.activeInHierarchy);
                 ObserverCamera.gameObject.SetActive(!ObserverCamera.gameObject.activeInHierarchy);
             }
-            if (ObserverCamera.gameObject.activeInHierarchy)
+            if (ObserverCamera != null && ObserverCamera.gameObject.activeInHierarchy)
             {
                 // ZOOM
                 float mouseWheel = Input.GetAxis("Mouse ScrollWheel");

@@ -54,4 +54,9 @@ public class Scenes : MonoBehaviour
     {
         Load(MAP_CHOICE_SCREEN);
     }
+
+    public static bool IsCurrentScene(string sceneName)
+    {
+        return SceneManager.GetActiveScene().name == sceneName;
+    }
 }

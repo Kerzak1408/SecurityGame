@@ -55,7 +55,6 @@ public class CastManager : MonoBehaviour
     {
         if (Instance == null)
         {
-            DontDestroyOnLoad(gameObject);
             Instance = this;
             characterDictionary = new Dictionary<BaseCharacter, CastAction>();
         }
