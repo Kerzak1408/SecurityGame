@@ -20,15 +20,20 @@ namespace Assets.Scripts.Entities
         public void Interact(BaseCharacter character, Action successAction = null)
         {
             moneyAudio.Play();
-            StartCoroutine(CallAfterTimeout(moneyAudio.clip.length/moneyAudio.pitch, () => {
+            Action wrapperSuccessAction = () =>
+            {
                 character.ObtainMoney();
                 CurrentGame.Map.Entities.Remove(gameObject);
                 if (successAction != null)
                 {
                     successAction();
                 }
+
                 Destroy(gameObject);
-            }));
+            };
+            Action interruptAction = () => moneyAudio.Stop();
+            float castTime = moneyAudio.clip.length / moneyAudio.pitch;
+            CastManager.Instance.Cast(character, castTime, interruptAction, wrapperSuccessAction);
         }
     }
 }
