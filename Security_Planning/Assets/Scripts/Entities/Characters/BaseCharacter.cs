@@ -267,9 +267,13 @@ namespace Assets.Scripts.Entities.Characters
         public bool NavigateTo(TileNode tileNode)
         {
             Vector3 target = CurrentGame.Map.Tiles.Get(tileNode.Position).transform.position;
-            transform.LookAt(target);
-            MoveForward();
-            return (Vector3.Distance(transform.position, target) < 0.4f);
+            bool isCloseEnough = Vector3.Distance(transform.position, target) < 0.4f;
+            if (!isCloseEnough)
+            {
+                transform.LookAt(target);
+                MoveForward();
+            }
+            return isCloseEnough;
         }
 
         public void ActivateItem<T>() where T : BaseItem
@@ -280,6 +284,12 @@ namespace Assets.Scripts.Entities.Characters
         public void Cast(CastAction action)
         {
             activeCastAction = action;
+            isMoving = false;
+        }
+
+        public void FinishCasting()
+        {
+            activeCastAction = null;
         }
 
         //Animation Events - just to enable Mecanim animations work => Do NOT delete!
@@ -307,6 +317,5 @@ namespace Assets.Scripts.Entities.Characters
         {
 
         }
-
     }
 }

@@ -37,9 +37,11 @@ public class CastManager : MonoBehaviour
     {
         KeyValuePair<BaseCharacter, CastAction> dictionaryPair = 
             characterDictionary.FirstOrDefault(kvPair => kvPair.Value == action);
+        BaseCharacter castingCharacter = dictionaryPair.Key;
+        castingCharacter.FinishCasting();
         if (!default(KeyValuePair<BaseCharacter, CastAction>).Equals(dictionaryPair))
         {
-            characterDictionary.Remove(dictionaryPair.Key);
+            characterDictionary.Remove(castingCharacter);
         }
 
         if (visualizedAction == action)
@@ -65,7 +67,8 @@ public class CastManager : MonoBehaviour
 
     public void Update()
     {
-        foreach (CastAction castAction in characterDictionary.Values)
+        var actions = new List<CastAction>(characterDictionary.Values);
+        foreach (CastAction castAction in actions)
         {
             castAction.Update();
         }

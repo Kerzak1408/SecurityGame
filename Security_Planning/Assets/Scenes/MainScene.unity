@@ -410,9 +410,7 @@ GameObject:
   - component: {fileID: 187137592}
   - component: {fileID: 187137591}
   - component: {fileID: 187137596}
-  - component: {fileID: 187137597}
   - component: {fileID: 187137598}
-  - component: {fileID: 187137599}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -502,22 +500,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Canvas: {fileID: 0}
---- !u!114 &187137597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 187137590}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2307054ebf157a4468b9d797873f3b02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TextMoney: {fileID: 1419006492}
-  ButtonExit: {fileID: 1220992587}
-  CurrentItemIcon: {fileID: 1182855435}
-  MainCamera: {fileID: 187137594}
-  ObserverCamera: {fileID: 1907314902}
 --- !u!45 &187137598
 Skybox:
   m_ObjectHideFlags: 0
@@ -526,18 +508,6 @@ Skybox:
   m_GameObject: {fileID: 187137590}
   m_Enabled: 1
   m_CustomSkybox: {fileID: 2100000, guid: 4468cf691a0d9e74183ca9beb3c7c990, type: 2}
---- !u!114 &187137599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 187137590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a52a1a02f27efe040b289081d813087a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ProgressBar: {fileID: 162836746}
 --- !u!1 &276182966
 GameObject:
   m_ObjectHideFlags: 0
@@ -634,6 +604,7 @@ GameObject:
   - component: {fileID: 820030858}
   - component: {fileID: 820030857}
   - component: {fileID: 820030861}
+  - component: {fileID: 820030862}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -737,6 +708,18 @@ MonoBehaviour:
   CurrentItemIcon: {fileID: 1182855435}
   MainCamera: {fileID: 187137594}
   ObserverCamera: {fileID: 1907314902}
+--- !u!114 &820030862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 820030856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a52a1a02f27efe040b289081d813087a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ProgressBar: {fileID: 162836746}
 --- !u!1 &840624535
 GameObject:
   m_ObjectHideFlags: 0
@@ -1290,7 +1273,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 187137597}
+      - m_Target: {fileID: 0}
         m_MethodName: ExitToMenu
         m_Mode: 1
         m_Arguments:
