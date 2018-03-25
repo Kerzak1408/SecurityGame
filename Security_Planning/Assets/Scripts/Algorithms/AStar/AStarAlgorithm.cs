@@ -8,7 +8,7 @@ using Assets.Scripts.DataStructures;
 public static class AStarAlgorithm
 {
     public static Path<TNode, TEdge> AStar<TNode, TEdge>(TNode startNode, TNode endNode, Heuristics<TNode> heuristics,
-        Action<string> log, Func<TNode, bool> nodeFilter = null, Func<TEdge, bool> edgeFilter = null)
+        Action<string> log, Func<TNode, bool> nodeFilter = null, Func<TEdge, bool> edgeFilter = null, Func<TEdge, float> computeCost = null)
         where TNode : IAStarNode<TNode>
         where TEdge : IAStarEdge<TNode>
     {
@@ -62,7 +62,8 @@ public static class AStarAlgorithm
                     openSet.Add(neighbor);
                 }
 
-                float potentialGScore = gScores[currentNode] + edge.Cost;
+                float cost = computeCost == null ? edge.Cost : computeCost(edge);
+                float potentialGScore = gScores[currentNode] + cost;
                 if (potentialGScore < gScores[neighbor])
                 {
                     cameFrom[neighbor] = new Tuple<TNode, TEdge>(currentNode, edge);

@@ -24,6 +24,12 @@ namespace Assets.Scripts.Entities.Gates
         {
             get { return IsGateFullyOpen; }
         }
+
+        public float DelayTime
+        {
+            get { return slidingDoorOpen.clip.length; }
+        }
+
         public void Open(BaseCharacter character)
         {
             if (RelatedCardReader != null)

@@ -30,6 +30,10 @@ namespace Assets.Scripts.Entities
         }
 
         public bool IsOpen { get; private set; }
+        public float DelayTime
+        {
+            get { return ComputeDelayTime(glassBreak1) + ComputeDelayTime(glassBreak2); }
+        }
 
         private void Start()
         {
@@ -38,6 +42,11 @@ namespace Assets.Scripts.Entities
             AudioSource[] audioSources = GetComponents<AudioSource>();
             glassBreak1 = audioSources.First(audio => audio.clip.name == "GlassBreak1");
             glassBreak2 = audioSources.First(audio => audio.clip.name == "GlassBreak2");
+        }
+
+        private float ComputeDelayTime(AudioSource audioSource)
+        {
+            return audioSource == null ? 0 : audioSource.clip.length;
         }
 
         private void Update()

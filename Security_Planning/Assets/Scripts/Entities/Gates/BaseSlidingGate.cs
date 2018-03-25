@@ -12,8 +12,8 @@ namespace Assets.Scripts.Entities.Gates
         private Vector3 defaultPosition;
         private Vector3 translationDirection;
         private float speed;
-        private AudioSource slidingDoorOpen;
-        private AudioSource slidingDoorClose;
+        protected AudioSource slidingDoorOpen;
+        protected AudioSource slidingDoorClose;
         private double DOOR_SIZE = 1.1;
 
         protected bool IsGateFullyOpen

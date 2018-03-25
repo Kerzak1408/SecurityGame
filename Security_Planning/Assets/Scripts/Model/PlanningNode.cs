@@ -10,15 +10,17 @@ namespace Assets.Scripts.Model
     public class PlanningNode : IAStarNode<PlanningNode>
     {
         public IntegerTuple Position { get; set; }
-        public List<EdgeType> UnlockedEdges;
+        public List<EdgeType> UnlockedEdges { get; set; }
+        public List<IObstacle> DestroyedObstacles { get; set; }
 
         public List<IAStarEdge<PlanningNode>> Edges { get; private set; }
 
-        public PlanningNode(IntegerTuple position, List<EdgeType> unlockedEdges)
+        public PlanningNode(IntegerTuple position, List<EdgeType> unlockedEdges, List<IObstacle> destroyedObstacles = null)
         {
             Edges = new List<IAStarEdge<PlanningNode>>();
             Position = position;
             UnlockedEdges = unlockedEdges;
+            DestroyedObstacles = destroyedObstacles ?? new List<IObstacle>();
         }
 
         public void AddEdge(PlanningEdge edge)

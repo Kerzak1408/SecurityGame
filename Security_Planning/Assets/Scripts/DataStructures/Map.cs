@@ -359,7 +359,8 @@ namespace Assets.Scripts.DataStructures
         {
             Path<TileNode, TileEdge> pathToGoal = AStarAlgorithm.AStar(startTileNode, goalTileNode,
                 new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
-                Filters.DetectableFilter, Filters.EdgeFilter(currentNode.UnlockedEdges));
+                Filters.DetectableFilter, Filters.EdgeFilter(currentNode.UnlockedEdges),
+                edge => ComputeEdgeCost(edge, currentNode.DestroyedObstacles));
             if (pathToGoal.Cost < float.MaxValue)
             {
                 PlanningEdge edge = new PlanningEdge(currentNode, goalNode, PlanningEdgeType.MONEY, character, pathToGoal, finalObject);
@@ -374,14 +375,38 @@ namespace Assets.Scripts.DataStructures
                     List<EdgeType> edgeTypes = currentNode.UnlockedEdges.Copy();
                     edgeTypes.Add(item.CorrespondingEdgeType);
                     TileNode neighborTileNode = keyValuePair.Value;
-                    PlanningNode neighbor = new PlanningNode(neighborTileNode.Position, edgeTypes);
+                    PlanningNode neighbor = new PlanningNode(neighborTileNode.Position, edgeTypes, currentNode.DestroyedObstacles.Copy());
                     Path<TileNode, TileEdge> path = AStarAlgorithm.AStar(startTileNode, neighborTileNode, new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
-                        Filters.DetectableFilter, Filters.EdgeFilter(edgeTypes));
-                    PlanningEdge edge = new PlanningEdge(currentNode, neighbor, item.PlanningEdgeType, character, path, item.gameObject);
-                    currentNode.AddEdge(edge);
+                        Filters.DetectableFilter, Filters.EdgeFilter(edgeTypes), edge => ComputeEdgeCost(edge, currentNode.DestroyedObstacles));
+                    if (path.Edges != null)
+                    {
+                        foreach (TileEdge pathEdge in path.Edges)
+                        {
+                            IObstacle destroyedObstacle = pathEdge.Obstacle;
+                            if (destroyedObstacle != null)
+                            {
+                                neighbor.DestroyedObstacles.Add(destroyedObstacle);
+                            }
+                        }
+                    }
+
+                    PlanningEdge planningEdge = new PlanningEdge(currentNode, neighbor, item.PlanningEdgeType, character, path, item.gameObject);
+                    currentNode.AddEdge(planningEdge);
                     BuildPlanningGraph(neighbor, neighborTileNode, goalNode, goalTileNode, itemsDictionary, character, finalObject);
                 }
             }
+        }
+
+        private float ComputeEdgeCost(TileEdge edge, IEnumerable<IObstacle> destroyedObstacles)
+        {
+            float result = edge.Cost;
+            IObstacle obstacle = edge.Obstacle;
+            if (obstacle != null && !destroyedObstacles.Contains(obstacle))
+            {
+                result += obstacle.DelayTime;
+            }
+
+            return result;
         }
     } 
 }

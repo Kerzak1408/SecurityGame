@@ -10,5 +10,6 @@ public interface IObstacle
     EdgeType EdgeType { get; }
     IInteractable InteractableObject { get; }
     bool IsOpen { get; }
+    float DelayTime { get; }
     void Open(BaseCharacter character);
 }

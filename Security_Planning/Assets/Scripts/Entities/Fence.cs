@@ -26,6 +26,11 @@ namespace Assets.Scripts.Entities
 
         public bool IsOpen { get; private set; }
 
+        public float DelayTime
+        {
+            get { return (audioSource == null || IsOpen ) ? 0 : 10; }
+        }
+
         protected override void Start()
         {
             base.Start();
