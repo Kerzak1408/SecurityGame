@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
+using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
 using UnityEngine;
@@ -11,12 +12,14 @@ namespace Assets.Scripts.MapEditor
     public class Game : GridBase
     {
         public Text TextMoney;
-        public Button ButtonExit;
+        public GameObject Menu;
         public Image CurrentItemIcon;
 
         public Map Map { get; private set; }
-        public Camera MainCamera;
         public Camera ObserverCamera;
+
+        private Camera[] cameras;
+        private int activeCameraIndex;
         private Vector3? startPointRight;
         private Vector3 previousMousePosition;
 
@@ -24,6 +27,8 @@ namespace Assets.Scripts.MapEditor
         protected override void Start ()
         {
             base.Start();
+            var camerasList = new List<Camera>();
+            camerasList.Add(ObserverCamera);
             string mapName = Scenes.GetParam("map");
             Map = LoadMap(mapName, mapVisible:true);
             Map.ExtractAIModel();
@@ -59,7 +64,22 @@ namespace Assets.Scripts.MapEditor
                 BaseEntity baseEntity = entity.GetComponent<BaseEntity>();
                 baseEntity.CurrentGame = this;
                 baseEntity.StartGame();
+                if (entity.HasScriptOfType<BaseCharacter>())
+                {
+                    camerasList.Add(entity.GetComponentInChildren<Camera>());
+                    if (entity.HasScriptOfType<Guard>())
+                    {
+                        activeCameraIndex = camerasList.Count - 1;
+                    }
+                }
             }
+
+            cameras = camerasList.ToArray();
+            foreach (Camera camera in cameras)
+            {
+                camera.gameObject.SetActive(false);
+            }
+            cameras[activeCameraIndex].gameObject.SetActive(true);
 
             Map.EmptyParent.transform.Rotate(90, 0, 0);
             Map.ExtractAIModel();
@@ -71,12 +91,13 @@ namespace Assets.Scripts.MapEditor
         {
             if (Input.GetKeyUp(KeyCode.Escape))
             {
-                ButtonExit.gameObject.SetActive(!ButtonExit.IsActive());
+                Menu.SetActive(!Menu.activeInHierarchy);
             }
             if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
-                MainCamera.gameObject.SetActive(!MainCamera.gameObject.activeInHierarchy);
-                ObserverCamera.gameObject.SetActive(!ObserverCamera.gameObject.activeInHierarchy);
+                cameras[activeCameraIndex].gameObject.SetActive(false);
+                activeCameraIndex = (activeCameraIndex + 1) % cameras.Length;
+                cameras[activeCameraIndex].gameObject.SetActive(true);
             }
             if (ObserverCamera != null && ObserverCamera.gameObject.activeInHierarchy)
             {
@@ -170,6 +191,11 @@ namespace Assets.Scripts.MapEditor
                     Gizmos.DrawLine(start.transform.position, end.transform.position);
                 }
             }
+        }
+
+        public void Restart()
+        {
+            Scenes.Load(Scenes.MAIN_SCENE, Scenes.Parameters);
         }
     }
 }

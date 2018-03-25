@@ -24,7 +24,7 @@ namespace Assets.Scripts.Entities.Characters
         protected int money;
         protected bool isMoving;
         private AudioSource footstepAudio;
-        protected float speed = 0.02f;
+        protected float speed = 1f;
         protected CharacterController controller;
 
         public bool IsActive { get; set; }
@@ -107,7 +107,7 @@ namespace Assets.Scripts.Entities.Characters
         protected void MoveForward()
         {
             isMoving = true;
-            var transformedDir = transform.TransformDirection(Time.deltaTime * Vector3.forward);
+            var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.forward);
             controller.Move(transformedDir);
         }
 
@@ -151,7 +151,10 @@ namespace Assets.Scripts.Entities.Characters
             }
             else
             {
-                CurrentGame.CurrentItemIcon.sprite = itemIcons[activeItemIndex].GetComponent<SpriteRenderer>().sprite;
+                if (IsActive)
+                {
+                    CurrentGame.CurrentItemIcon.sprite = itemIcons[activeItemIndex].GetComponent<SpriteRenderer>().sprite;
+                }
                 return Items[activeItemIndex];
             }
                 
@@ -225,7 +228,7 @@ namespace Assets.Scripts.Entities.Characters
             return distance < Constants.Constants.INTERACTABLE_DISTANCE;
         }
 
-        protected void ChangeWeapon()
+        protected void ChangeActiveItem()
         {
             if (Items.Count == 0) return;
             GetActiveItem().SetActive(false);
@@ -268,7 +271,7 @@ namespace Assets.Scripts.Entities.Characters
         {
             Vector3 target = CurrentGame.Map.Tiles.Get(tileNode.Position).transform.position;
             bool isCloseEnough = Vector3.Distance(transform.position, target) < 0.4f;
-            if (!isCloseEnough)
+            //if (!isCloseEnough)
             {
                 transform.LookAt(target);
                 MoveForward();

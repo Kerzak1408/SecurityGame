@@ -18,7 +18,7 @@ namespace Assets.Scripts.Entities.Characters
         
         private ResourcesHolder resourcesHolder;
         private Rigidbody rigidBody;
-        private Camera mainCamera;
+        private Camera guardCamera;
 
         // Use this for initialization
         protected override void Start()
@@ -32,9 +32,9 @@ namespace Assets.Scripts.Entities.Characters
             inputPassword.SetActive(false);
             
             gameObject.AddComponent<ConstantForce>().force = Vector3.forward;
-            mainCamera = Camera.main;
-            
-            
+            guardCamera = GetComponentInChildren<Camera>();
+
+
         }
 
         // Update is called once per frame
@@ -43,7 +43,7 @@ namespace Assets.Scripts.Entities.Characters
             
             isMoving = false;
             
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = guardCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] raycastHits = Physics.RaycastAll(ray);
 
             UpdateCursor(raycastHits);
@@ -59,7 +59,7 @@ namespace Assets.Scripts.Entities.Characters
 
             if (Input.GetKeyUp(KeyCode.Tab))
             {
-                ChangeWeapon();
+                ChangeActiveItem();
             }
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
@@ -131,7 +131,7 @@ namespace Assets.Scripts.Entities.Characters
         private void OnLeftButtonClick()
         {
             var delta = new Vector3(Time.deltaTime * rotationSpeed * (-Input.GetAxis("Mouse Y")), 0, 0);
-            mainCamera.transform.Rotate(delta);
+            guardCamera.transform.Rotate(delta);
         }
 
         public override void RequestPassword(IPasswordOpenable passwordOpenableObject)
@@ -166,12 +166,12 @@ namespace Assets.Scripts.Entities.Characters
 
             var guardPosition = transform.position;
             transform.position = new Vector3(guardPosition.x, guardPosition.y, 0);
-            Camera mainCamera = Camera.main;
-            mainCamera.transform.position = guardPosition;
-            mainCamera.orthographicSize = 1;
-            mainCamera.transform.parent = transform;
-            mainCamera.transform.localPosition = new Vector3(0, 1.3f, 0.22f);
-            mainCamera.transform.localRotation = Quaternion.identity;
+            Camera guardCamera = GetComponentInChildren<Camera>();
+            guardCamera.transform.position = guardPosition;
+            guardCamera.orthographicSize = 1;
+            guardCamera.transform.parent = transform;
+            guardCamera.transform.localPosition = new Vector3(0, 1.3f, 0.22f);
+            guardCamera.transform.localRotation = Quaternion.identity;
             IsActive = true;
         }
 

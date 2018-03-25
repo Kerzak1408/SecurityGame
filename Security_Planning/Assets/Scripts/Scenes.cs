@@ -14,7 +14,7 @@ public class Scenes : MonoBehaviour
         Application.targetFrameRate = 120;
     }
 
-    private static Dictionary<string, string> Parameters { get; set; }
+    public static Dictionary<string, string> Parameters { get; private set; }
 
     public static void Load(string sceneName, Dictionary<string, string> parameters = null)
     {

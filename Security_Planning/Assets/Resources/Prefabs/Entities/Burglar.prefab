@@ -508,6 +508,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1434761059183108
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4133843261658068}
+  - component: {fileID: 20752624645990234}
+  - component: {fileID: 124877738304267106}
+  - component: {fileID: 92954997172282346}
+  - component: {fileID: 81654078548250406}
+  m_Layer: 0
+  m_Name: Camera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1437368541679102
 GameObject:
   m_ObjectHideFlags: 1
@@ -1201,7 +1220,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1980579073377912}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -13.109766, y: -2.9333482, z: -11.858765}
+  m_LocalPosition: {x: -115.43228, y: 43.54582, z: -16.616234}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4726766649798902}
@@ -1215,6 +1234,7 @@ Transform:
   - {fileID: 4359670336925570}
   - {fileID: 4590619223321754}
   - {fileID: 4215612394625442}
+  - {fileID: 4133843261658068}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
@@ -1312,6 +1332,19 @@ Transform:
   - {fileID: 4260601766293550}
   m_Father: {fileID: 4336444966190130}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4133843261658068
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1434761059183108}
+  m_LocalRotation: {x: -0.012940928, y: 0.023205489, z: -0.02461648, w: 0.9993439}
+  m_LocalPosition: {x: 0.06048006, y: 1.3250132, z: 0.23320591}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4017052023142118}
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4156544832199064
 Transform:
@@ -2231,6 +2264,42 @@ Transform:
   m_Father: {fileID: 4994084245809780}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &20752624645990234
+Camera:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1434761059183108}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+  m_StereoMirrorMode: 0
 --- !u!23 &23029944901906084
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -2831,6 +2900,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!81 &81654078548250406
+AudioListener:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1434761059183108}
+  m_Enabled: 1
+--- !u!92 &92954997172282346
+Behaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1434761059183108}
+  m_Enabled: 1
 --- !u!95 &95133873558004570
 Animator:
   serializedVersion: 3
@@ -2859,6 +2942,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef17fafeafa08bd4e9ead7ec23f533e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!124 &124877738304267106
+Behaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1434761059183108}
+  m_Enabled: 1
 --- !u!135 &135003904976852026
 SphereCollider:
   m_ObjectHideFlags: 1
