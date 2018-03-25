@@ -215,7 +215,9 @@ namespace Assets.Scripts.Entities.Characters
             }
             GameObject closestGameObject = closestHit.transform.gameObject;
             isInteractable = true;
-            var distanceToClosest = Vector3.Distance(closestGameObject.transform.position, transform.position);
+            Vector3 closestPosition = closestGameObject.transform.position;
+            Vector3 myPosition = transform.position;
+            var distanceToClosest = Vector3.Distance(new Vector3(closestPosition.x, closestPosition.z), new Vector3(myPosition.x, myPosition.z));
             isInteractableNow = distanceToClosest < Constants.Constants.INTERACTABLE_DISTANCE &&
                                 isInteractable;
             return closestGameObject;

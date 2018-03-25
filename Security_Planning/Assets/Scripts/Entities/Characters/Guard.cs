@@ -74,13 +74,13 @@ namespace Assets.Scripts.Entities.Characters
             {
                 isMoving = true;
 
-                var transformedDir = transform.TransformDirection(speed * Vector3.left);
+                var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.left);
                 controller.Move(transformedDir);
             }
             if (Input.GetKey(KeyCode.E))
             {
                 isMoving = true;
-                var transformedDir = transform.TransformDirection(speed * Vector3.right);
+                var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.right);
                 controller.Move(transformedDir);
             }
         
@@ -99,7 +99,7 @@ namespace Assets.Scripts.Entities.Characters
             if (Input.GetKey(KeyCode.S))
             {
                 isMoving = true;
-                var transformedDir = transform.TransformDirection(speed * Vector3.back);
+                var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.back);
                 controller.Move(transformedDir);
             }
             base.Update();

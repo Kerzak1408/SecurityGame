@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
 using UnityEngine;
 
 namespace Assets.Scripts.Entities
 {
-    public abstract class DetectorEntity : TransmitterEntity
+    public abstract class DetectorEntity : TransmitterEntity, IInteractable
     {
         private new Camera camera;
 
@@ -42,6 +44,19 @@ namespace Assets.Scripts.Entities
                         }
                     }
                 }
+        }
+        public void Interact(BaseCharacter character, Action success = null)
+        {
+            Action wrapperSuccess = () =>
+            {
+                if (success != null)
+                {
+                    success();
+                }
+                CurrentGame.Map.Entities.Remove(gameObject);
+                Destroy(gameObject);
+            };
+            CastManager.Instance.Cast(character, Constants.Constants.DESTROY_TIME, null, wrapperSuccess);
         }
     }
 }

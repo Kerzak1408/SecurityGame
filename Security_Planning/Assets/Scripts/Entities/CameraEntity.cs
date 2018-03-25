@@ -1,4 +1,6 @@
 ﻿using System;
+using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Entities.Interfaces;
 using UnityEngine;
 
 namespace Assets.Scripts.Entities
