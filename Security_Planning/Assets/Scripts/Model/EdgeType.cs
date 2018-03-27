@@ -12,6 +12,11 @@ namespace Assets.Scripts.Model
 
     public static class EdgeTypeUtils
     {
+        public static IEnumerable<EdgeType> BannableEdgeType
+        {
+            get { return new[] { EdgeType.FENCE, EdgeType.WINDOW }; }
+        }
+
         public static EdgeType ParseString(string tileName)
         {
             if (tileName.Contains(Map.WINDOW))

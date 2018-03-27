@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class ResourcesHolder {
 
@@ -12,6 +13,7 @@ public class ResourcesHolder {
     public UnityEngine.UI.Button MapButton { get; private set; }
     public Texture2D CogwheelTexture;
     public Texture2D CogwheelPaleTaxture;
+    public GameObject BehaviourToggle { get; private set; }
 
     public static readonly string PATH_PREFABS = "Prefabs/";
     public static readonly string PATH_PREFABS_TILES = PATH_PREFABS + "Tiles/";
@@ -44,5 +46,6 @@ public class ResourcesHolder {
         AllItemsIcons = Resources.LoadAll(PATH_PREFABS_ITEMSICONS);
         CogwheelTexture = Resources.Load<Texture2D>(PATH_IMAGES + "Cogwheel");
         CogwheelPaleTaxture = Resources.Load<Texture2D>(PATH_IMAGES + "CogwheelPale");
+        BehaviourToggle = Resources.Load<GameObject>(PATH_PREFABS_UI + "BehaviourToggle");
     }
 }

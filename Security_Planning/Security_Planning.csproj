@@ -188,6 +188,7 @@
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\ConnectEntitiesHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\DeleteHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\DragHandler.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\EditBehaviourHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\EditItemsHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\EditParametersHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorHandlers\NewMapHandler.cs" />

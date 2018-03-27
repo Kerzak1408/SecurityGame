@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,6 +37,12 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         public override void Scroll(float scroll, RaycastHit[] raycastHits)
         {
             gridManager.DefaultScrollLogic(scroll, raycastHits);
+        }
+
+
+        public Func<RaycastHit, bool> HasScriptOfTypePredicate<T>() where T : MonoBehaviour
+        {
+            return hit => hit.transform.gameObject.HasScriptOfType<T>();
         }
     }
 }

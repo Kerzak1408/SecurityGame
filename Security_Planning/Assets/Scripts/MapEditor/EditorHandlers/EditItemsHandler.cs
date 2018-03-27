@@ -64,8 +64,8 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         {
             if (selectedCharacter != null)
             {
-                System.Func<RaycastHit, bool> addItemPredicate = hit => hit.transform.gameObject.IsChildOf(allItems);
-                System.Func<RaycastHit, bool> removeItemPredicate = hit => hit.transform.gameObject.IsChildOf(items);
+                Func<RaycastHit, bool> addItemPredicate = hit => hit.transform.gameObject.IsChildOf(allItems);
+                Func<RaycastHit, bool> removeItemPredicate = hit => hit.transform.gameObject.IsChildOf(items);
                 if (raycastHits.Any(addItemPredicate))
                 {
                     RefreshItems(raycastHits, addItemPredicate, (list, obj) => list.Add(obj));
@@ -84,10 +84,9 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 }
 
             }
-            else if (raycastHits.Any(hit => hit.transform.gameObject.HasScriptOfType<BaseCharacter>()))
+            else if (raycastHits.Any(HasScriptOfTypePredicate<BaseCharacter>()))
             {
-                RaycastHit characterHit =
-                    raycastHits.First(hit => hit.transform.gameObject.HasScriptOfType<BaseCharacter>());
+                RaycastHit characterHit = raycastHits.First(HasScriptOfTypePredicate<BaseCharacter>());
                 selectedCharacter = characterHit.transform.gameObject.GetComponent<BaseCharacter>();
                 string[] itemNames = selectedCharacter.Data.ItemNames;
                 Object[] allItemsIcons = ResourcesHolder.Instance.AllItemsIcons;

@@ -48,8 +48,8 @@ namespace Assets.Scripts.MapEditor
         public GameObject PanelPassword;
         public GameObject PanelError;
         public Dropdown DropdownMode;
-        
-    
+
+        public GameObject PanelEditBehaviour;
         
         public GameObject ClickedTile;
 
@@ -505,6 +505,20 @@ namespace Assets.Scripts.MapEditor
                 LoadMap(name, addedButton);
                 SelectMap(addedButton);
             }
+        }
+
+        public void ClosePanelEditBehaviour()
+        {
+            EditBehaviourHandler handler = (EditBehaviourHandler) currentEditorHandler;
+            foreach (KeyValuePair<Toggle, bool> keyValuePair in handler.PreviousValues)
+            {
+                if (keyValuePair.Key.isOn != keyValuePair.Value)
+                {
+                    FlagCurrentButton();
+                    break;
+                }
+            }
+            PanelEditBehaviour.SetActive(false);
         }
     }
 }
