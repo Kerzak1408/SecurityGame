@@ -1,12 +1,17 @@
 ﻿using System;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Interfaces;
+using Assets.Scripts.Model;
 using UnityEngine;
 
 namespace Assets.Scripts.Entities
 {
     public class CameraEntity : DetectorEntity
     {
+        public override PlanningEdgeType PlanningEdgeType
+        {
+            get { return PlanningEdgeType.CAMERA; }
+        }
 
         public override void StartGame()
         {
@@ -34,5 +39,6 @@ namespace Assets.Scripts.Entities
         {
             return typeof(MonitorEntity);
         }
+
     }
 }

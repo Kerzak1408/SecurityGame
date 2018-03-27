@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Entities;
 
 namespace Assets.Scripts.Model
 {
     public static class Filters
     {
-        public static Func<TileNode, bool> DetectableFilter = node => node.IsDetectable();
+        public static Func<TileNode, bool> DetectableFilter(IEnumerable<DetectorEntity> deactivatedDetectors=null)
+        {
+            return node => node.IsDetectable(deactivatedDetectors);
+        } 
 
         public static Func<TileEdge, bool> EdgeFilter(IEnumerable<EdgeType> unlockedEdgeTypes=null)
         {

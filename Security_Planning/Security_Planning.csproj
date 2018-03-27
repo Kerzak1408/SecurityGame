@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.6.3p4</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -149,6 +151,7 @@
     <Compile Include="Assets\Scripts\Entities\Interfaces\IObstacle.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPIRDetectable.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPasswordOpenable.cs" />
+    <Compile Include="Assets\Scripts\Entities\Interfaces\IPlanningEdgeCreator.cs" />
     <Compile Include="Assets\Scripts\Entities\ItemEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\MoneyEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\MonitorEntity.cs" />
@@ -168,6 +171,7 @@
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Helpers\DirectoryHelper.cs" />
     <Compile Include="Assets\Scripts\Helpers\FileHelper.cs" />
+    <Compile Include="Assets\Scripts\Helpers\InteractHelper.cs" />
     <Compile Include="Assets\Scripts\Items\BaseItem.cs" />
     <Compile Include="Assets\Scripts\Items\CardItem.cs" />
     <Compile Include="Assets\Scripts\Items\KeyItem.cs" />

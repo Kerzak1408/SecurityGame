@@ -10,13 +10,29 @@ using UnityEngine;
 
 namespace Assets.Scripts.Entities
 {
-    public abstract class DetectorEntity : TransmitterEntity, IInteractable
+    public abstract class DetectorEntity : TransmitterEntity, IInteractable, IPlanningEdgeCreator
     {
         private new Camera camera;
 
         protected Camera Camera
         {
             get { return camera ?? (camera = GetComponentInChildren<Camera>()); }
+        }
+        
+        public abstract PlanningEdgeType PlanningEdgeType { get; }
+        public GameObject GameObject
+        {
+            get { return gameObject; }
+        }
+
+        public bool ShouldExplore(PlanningNode node)
+        {
+            return !node.DestroyedDetectors.Contains(this);
+        }
+
+        public void ModifyNextNode(PlanningNode node)
+        {
+            node.DestroyedDetectors.Add(this);
         }
 
         public void MarkDetectableNodes(AIModel aiModel, GameObject[,] grid)

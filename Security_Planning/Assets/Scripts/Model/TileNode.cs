@@ -11,7 +11,7 @@ public class TileNode : IAStarNode<TileNode>
 {
     public IntegerTuple Position { get; set; }
     public List<TileEdge> Edges { get; private set; }
-    public List<TransmitterEntity> DetectedBy { get; private set; }
+    public List<DetectorEntity> DetectedBy { get; private set; }
 
     List<IAStarEdge<TileNode>> IAStarNode<TileNode>.Edges
     {
@@ -22,7 +22,7 @@ public class TileNode : IAStarNode<TileNode>
     {
         Position = new IntegerTuple(i, j);
         Edges = new List<TileEdge>();
-        DetectedBy = new List<TransmitterEntity>();
+        DetectedBy = new List<DetectorEntity>();
     }
 
     public void AddNeighbor(TileNode node, EdgeType type, float cost)
@@ -35,7 +35,7 @@ public class TileNode : IAStarNode<TileNode>
         Edges.Add(edge);
     }
 
-    public void AddDetector(TransmitterEntity detector)
+    public void AddDetector(DetectorEntity detector)
     {
         DetectedBy.Add(detector);
     }
@@ -45,8 +45,12 @@ public class TileNode : IAStarNode<TileNode>
         return Edges.Any(edge => edge.Type.Equals(EdgeType.NORMAL) && edge.Neighbor.Position.Equals(integerTuple));
     }
 
-    public bool IsDetectable()
+    public bool IsDetectable(IEnumerable<DetectorEntity> deactivatedDetectors=null)
     {
+        if (deactivatedDetectors != null)
+        {
+            return DetectedBy.Any(detector => !deactivatedDetectors.Contains(detector));
+        }
         return DetectedBy.Count != 0;
     }
 

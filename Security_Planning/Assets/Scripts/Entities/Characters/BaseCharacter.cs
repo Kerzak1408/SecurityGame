@@ -171,10 +171,10 @@ namespace Assets.Scripts.Entities.Characters
             }
         }
 
-        public void InteractWith(GameObject gameObject, Action successAction = null)
+        public void InteractWith(GameObject interacted, Action successAction = null)
         {
-            if (!CanInteractWith(gameObject)) return;
-            gameObject.GetComponent<IInteractable>().Interact(this, successAction);
+            if (!InteractHelper.AreCloseToInteract(gameObject, interacted)) return;
+            interacted.GetComponent<IInteractable>().Interact(this, successAction);
         }
 
         protected GameObject GetClosestInteractableHitObject(RaycastHit[] raycastHits,

@@ -54,7 +54,7 @@ namespace Assets.Scripts.Entities
         public void Interact(BaseCharacter character, Action successAction = null)
         {
             GameObject activeItem = character.GetActiveItem();
-            if (Vector3.Distance(transform.position, character.transform.position) < Constants.Constants.INTERACTABLE_DISTANCE 
+            if (Vector3.Distance(transform.position, character.transform.position) < 2
                 && activeItem.HasScriptOfType<CardItem>())
             {
                 activeItem.transform.position = transform.position;

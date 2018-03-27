@@ -8,6 +8,6 @@ namespace Assets.Scripts.Model
 {
     public enum PlanningEdgeType
     {
-        KEY, WIRE_CUTTER, CARD, MONEY
+        KEY, WIRE_CUTTER, CARD, MONEY, CAMERA, PIR
     }
 }

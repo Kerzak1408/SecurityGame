@@ -1,6 +1,7 @@
 ﻿using System;
 using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Model;
 using UnityEngine;
 
 namespace Assets.Scripts.Entities
@@ -10,6 +11,11 @@ namespace Assets.Scripts.Entities
         private GameObject relatedObject;
         private PIRAlarm alarm;
         private Ray ray;
+
+        public override PlanningEdgeType PlanningEdgeType
+        {
+            get { return PlanningEdgeType.PIR; }
+        }
 
         public override Type GetReceiverType()
         {

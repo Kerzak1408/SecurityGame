@@ -350,16 +350,39 @@ namespace Assets.Scripts.DataStructures
 
             goalNode = new PlanningNode(goalCoords, null);
             TileNode goalTileNode = AIModel.Tiles[goalCoords.First, goalCoords.Second];
-            BuildPlanningGraph(startNode, startTileNode, goalNode, goalTileNode, itemsDictionary, character, finalObject);
+            IEnumerable<GameObject> detectorEntities =
+                Entities.Where(entity => entity.HasScriptOfType(typeof(IPlanningEdgeCreator)));
+            Dictionary<IPlanningEdgeCreator, List<TileNode>> creatorsDictionary =
+                BuildTileDictionary<IPlanningEdgeCreator>(detectorEntities);
+            BuildPlanningGraph(startNode, startTileNode, goalNode, goalTileNode, creatorsDictionary, character, finalObject);
+        }
+
+        // Keys are the gameObjects, values the lists of the TileNodes that are close enough. 
+        private Dictionary<T, List<TileNode>> BuildTileDictionary<T>(IEnumerable<GameObject> gameObjects)
+        {
+            var result = new Dictionary<T, List<TileNode>>();
+            foreach (GameObject gameObject in gameObjects)
+            {
+                T component = gameObject.GetComponent<T>();
+                foreach (TileNode tileNode in AIModel.Tiles)
+                {
+                    GameObject tileObject = Tiles[tileNode.Position.First, tileNode.Position.Second];
+                    if (InteractHelper.AreCloseToInteract(tileObject, gameObject))
+                    {
+                        result.LazyAdd(component, tileNode);
+                    }
+                }
+            }
+            return result;
         }
 
         private void BuildPlanningGraph(PlanningNode currentNode, TileNode startTileNode, PlanningNode goalNode, 
-            TileNode goalTileNode, Dictionary<BaseItem, TileNode> itemsDictionary, BaseCharacter character,
-            GameObject finalObject)
+            TileNode goalTileNode, Dictionary<IPlanningEdgeCreator, List<TileNode>> creatorsDictionary, 
+            BaseCharacter character, GameObject finalObject)
         {
             Path<TileNode, TileEdge> pathToGoal = AStarAlgorithm.AStar(startTileNode, goalTileNode,
                 new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
-                Filters.DetectableFilter, Filters.EdgeFilter(currentNode.UnlockedEdges),
+                Filters.DetectableFilter(currentNode.DestroyedDetectors), Filters.EdgeFilter(currentNode.UnlockedEdges),
                 edge => ComputeEdgeCost(edge, currentNode.DestroyedObstacles));
             if (pathToGoal.Cost < float.MaxValue)
             {
@@ -367,32 +390,37 @@ namespace Assets.Scripts.DataStructures
                 currentNode.AddEdge(edge);
             }
 
-            foreach (KeyValuePair<BaseItem, TileNode> keyValuePair in itemsDictionary)
+            foreach (KeyValuePair<IPlanningEdgeCreator, List<TileNode>> keyValuePair in creatorsDictionary)
             {
-                BaseItem item = keyValuePair.Key;
-                if (!currentNode.UnlockedEdges.Contains(item.CorrespondingEdgeType))
+                IPlanningEdgeCreator creator = keyValuePair.Key;
+                if (creator.ShouldExplore(currentNode))
                 {
-                    List<EdgeType> edgeTypes = currentNode.UnlockedEdges.Copy();
-                    edgeTypes.Add(item.CorrespondingEdgeType);
-                    TileNode neighborTileNode = keyValuePair.Value;
-                    PlanningNode neighbor = new PlanningNode(neighborTileNode.Position, edgeTypes, currentNode.DestroyedObstacles.Copy());
-                    Path<TileNode, TileEdge> path = AStarAlgorithm.AStar(startTileNode, neighborTileNode, new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
-                        Filters.DetectableFilter, Filters.EdgeFilter(edgeTypes), edge => ComputeEdgeCost(edge, currentNode.DestroyedObstacles));
-                    if (path.Edges != null)
+                    foreach (TileNode neighborTileNode in keyValuePair.Value)
                     {
-                        foreach (TileEdge pathEdge in path.Edges)
+                        Path<TileNode, TileEdge> path = AStarAlgorithm.AStar(startTileNode, neighborTileNode,
+                            new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
+                            Filters.DetectableFilter(currentNode.DestroyedDetectors), Filters.EdgeFilter(currentNode.UnlockedEdges),
+                            edge => ComputeEdgeCost(edge, currentNode.DestroyedObstacles));
+
+                        if (path.Edges != null)
                         {
-                            IObstacle destroyedObstacle = pathEdge.Obstacle;
-                            if (destroyedObstacle != null)
+                            PlanningNode neighbor = new PlanningNode(neighborTileNode.Position, currentNode.UnlockedEdges.Copy(),
+                                currentNode.DestroyedObstacles.Copy());
+                            creator.ModifyNextNode(neighbor);
+                            foreach (TileEdge pathEdge in path.Edges)
                             {
-                                neighbor.DestroyedObstacles.Add(destroyedObstacle);
+                                IObstacle destroyedObstacle = pathEdge.Obstacle;
+                                if (destroyedObstacle != null)
+                                {
+                                    neighbor.DestroyedObstacles.Add(destroyedObstacle);
+                                }
                             }
+                            PlanningEdge planningEdge = new PlanningEdge(currentNode, neighbor, creator.PlanningEdgeType,
+                                character, path, creator.GameObject);
+                            currentNode.AddEdge(planningEdge);
+                            BuildPlanningGraph(neighbor, neighborTileNode, goalNode, goalTileNode, creatorsDictionary, character, finalObject);
                         }
                     }
-
-                    PlanningEdge planningEdge = new PlanningEdge(currentNode, neighbor, item.PlanningEdgeType, character, path, item.gameObject);
-                    currentNode.AddEdge(planningEdge);
-                    BuildPlanningGraph(neighbor, neighborTileNode, goalNode, goalTileNode, itemsDictionary, character, finalObject);
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 public static class CollectionsExtensions
 {
@@ -62,5 +63,26 @@ public static class CollectionsExtensions
         }
 
         return copy;
+    }
+
+    /// <summary>
+    /// Add to the dictionary where values is a collection. In case there is no such key yet,
+    /// instantiate the collection first.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TCollection"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="dictionary"></param>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    public static void LazyAdd<TKey, TCollection, TValue>(this Dictionary<TKey, TCollection> dictionary, 
+        TKey key, TValue value)
+        where TCollection : ICollection<TValue>, new()
+    {
+        if (!dictionary.ContainsKey(key))
+        {
+            dictionary[key] = new TCollection();
+        }
+        dictionary[key].Add(value);
     }
 }
