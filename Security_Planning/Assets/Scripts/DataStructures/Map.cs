@@ -382,7 +382,7 @@ namespace Assets.Scripts.DataStructures
         {
             Path<TileNode, TileEdge> pathToGoal = AStarAlgorithm.AStar(startTileNode, goalTileNode,
                 new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
-                Filters.DetectableFilter(currentNode.DestroyedDetectors), Filters.EdgeFilter(currentNode.UnlockedEdges),
+                Filters.DetectableFilter(currentNode.DestroyedDetectors), Filters.EdgeFilter(currentNode.UnlockedEdges, character.Data.ForbiddenEdgeTypes),
                 edge => ComputeEdgeCost(edge, currentNode.DestroyedObstacles));
             if (pathToGoal.Cost < float.MaxValue)
             {
@@ -399,7 +399,7 @@ namespace Assets.Scripts.DataStructures
                     {
                         Path<TileNode, TileEdge> path = AStarAlgorithm.AStar(startTileNode, neighborTileNode,
                             new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
-                            Filters.DetectableFilter(currentNode.DestroyedDetectors), Filters.EdgeFilter(currentNode.UnlockedEdges),
+                            Filters.DetectableFilter(currentNode.DestroyedDetectors), Filters.EdgeFilter(currentNode.UnlockedEdges, character.Data.ForbiddenEdgeTypes),
                             edge => ComputeEdgeCost(edge, currentNode.DestroyedObstacles));
 
                         if (path.Edges != null)

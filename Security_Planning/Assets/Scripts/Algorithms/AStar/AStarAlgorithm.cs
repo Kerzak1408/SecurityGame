@@ -7,8 +7,9 @@ using Assets.Scripts.DataStructures;
 
 public static class AStarAlgorithm
 {
-    public static Path<TNode, TEdge> AStar<TNode, TEdge>(TNode startNode, TNode endNode, Heuristics<TNode> heuristics,
-        Action<string> log, Func<TNode, bool> nodeFilter = null, Func<TEdge, bool> edgeFilter = null, Func<TEdge, float> computeCost = null)
+    public static Path<TNode, TEdge> AStar<TNode, TEdge>(TNode startNode, TNode endNode,
+        Heuristics<TNode> heuristics, Action<string> log, Func<TNode, bool> nodeFilter = null,
+        Func<TEdge, bool> edgeFilter = null, Func<TEdge, float> computeCost = null)
         where TNode : IAStarNode<TNode>
         where TEdge : IAStarEdge<TNode>
     {

@@ -26,7 +26,8 @@ public class MoneyGoal : BaseGoal
             startNode,
             goalNode,
             new EuclideanHeuristics<PlanningNode>(currentMap.Tiles),
-            Debug.Log);
+            Debug.Log,
+            edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type));
         if (plannedPath.Cost == float.MaxValue || plannedPath.Edges == null)
         {
             IsFinished = true;

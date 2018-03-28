@@ -13,9 +13,9 @@ namespace Assets.Scripts.Model
             return node => node.IsDetectable(deactivatedDetectors);
         } 
 
-        public static Func<TileEdge, bool> EdgeFilter(IEnumerable<EdgeType> unlockedEdgeTypes=null)
+        public static Func<TileEdge, bool> EdgeFilter(IEnumerable<EdgeType> unlockedEdgeTypes=null, IEnumerable<EdgeType> hardlyForbiddenTypes=null)
         {
-            List<EdgeType> forbiddenTypes = new List<EdgeType> {EdgeType.FENCE, EdgeType.CARD_DOOR, EdgeType.KEY_DOOR};
+            HashSet<EdgeType> forbiddenTypes = new HashSet<EdgeType> {EdgeType.FENCE, EdgeType.CARD_DOOR, EdgeType.KEY_DOOR};
             if (unlockedEdgeTypes != null)
             {
                 foreach (EdgeType unlockedType in unlockedEdgeTypes)
@@ -24,6 +24,13 @@ namespace Assets.Scripts.Model
                 }
             }
 
+            if (hardlyForbiddenTypes != null)
+            {
+                foreach (EdgeType forbiddenType in hardlyForbiddenTypes)
+                {
+                    forbiddenTypes.Add(forbiddenType);
+                }
+            }
             return edge => forbiddenTypes.Contains(edge.Type);
         }
     }
