@@ -61,8 +61,17 @@ public static class CollectionsExtensions
         {
             copy.Add(item);
         }
-
         return copy;
+    }
+
+    public static Dictionary<TKey, TValue> Copy<TKey, TValue>(this Dictionary<TKey, TValue> original)
+    {
+        var result = new Dictionary<TKey, TValue>();
+        foreach (KeyValuePair<TKey, TValue> keyValuePair in original)
+        {
+            result[keyValuePair.Key] = keyValuePair.Value;
+        }
+        return result;
     }
 
     /// <summary>

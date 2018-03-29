@@ -149,7 +149,7 @@ namespace Assets.Scripts.MapEditor
             Color color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
             foreach (IntegerTuple coordinate in coordinates)
             {
-                Debug.Log("Celeing: (" + coordinate.First + ", " + coordinate.Second + ") + color = " + color);
+                //Debug.Log("Celeing: (" + coordinate.First + ", " + coordinate.Second + ") + color = " + color);
                 GameObject ceilingTile =
                     Instantiate(ResourcesHolder.Instance.AllTiles.FindByName(GridManager.EMPTY_SQUARE)) as GameObject;
                 ceilingTile.transform.position = grid[coordinate.First, coordinate.Second].transform.position 

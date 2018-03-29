@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
@@ -9,11 +10,14 @@ using Assets.Scripts.Items;
 using Assets.Scripts.Model;
 using Assets.Scripts.Reflection;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Assets.Scripts.DataStructures
 {
     public class Map
     {
+        private int astarsCount;
+
         public static readonly string UP = "Up";
         public static readonly string DOWN = "Down";
         public static readonly string LEFT = "Left";
@@ -52,7 +56,8 @@ namespace Assets.Scripts.DataStructures
             get { return Tiles.GetLength(0); }
         }
 
-        public Map(GameObject[,] tiles, List<GameObject> entities, GameObject emptyParent, Dictionary<Tuple<int, int>, string> passwordDictionary)
+        public Map(GameObject[,] tiles, List<GameObject> entities, GameObject emptyParent,
+            Dictionary<Tuple<int, int>, string> passwordDictionary)
         {
             Tiles = tiles;
             Entities = entities;
@@ -75,7 +80,7 @@ namespace Assets.Scripts.DataStructures
         /// Deactivate all the other entities.
         /// </summary>
         /// <typeparam name="T"> Type of the scripts defining the entities that will be activated. At least <see cref="MonoBehaviour"/> </typeparam>
-        public void DeactivateEntitiesExceptOfType(Type type) 
+        public void DeactivateEntitiesExceptOfType(Type type)
         {
             foreach (GameObject entity in Entities)
             {
@@ -101,6 +106,7 @@ namespace Assets.Scripts.DataStructures
                 int id = int.Parse(splitName[splitName.Length - 1]);
                 ids.Add(id);
             }
+
             for (int i = 0;; i++)
             {
                 if (!ids.Contains(i))
@@ -118,67 +124,67 @@ namespace Assets.Scripts.DataStructures
 
             // Nodes
             for (int i = 0; i < width; i++)
-                for (int j = 0; j < height; j++)
-                {
-                    AIModel.Tiles[i, j] = new TileNode(i, j);
-                }
+            for (int j = 0; j < height; j++)
+            {
+                AIModel.Tiles[i, j] = new TileNode(i, j);
+            }
 
             // Horizontal and vertical edges
             for (int i = 0; i < width; i++)
-                for (int j = 0; j < height; j++)
+            for (int j = 0; j < height; j++)
+            {
+                TileNode tileNode = AIModel.Tiles[i, j];
+                Tuple<int, int>[] neighbors =
                 {
-                    TileNode tileNode = AIModel.Tiles[i, j];
-                    Tuple<int, int>[] neighbors =
+                    Tuple.New(i - 1, j),
+                    Tuple.New(i + 1, j),
+                    Tuple.New(i, j - 1),
+                    Tuple.New(i, j + 1)
+                };
+                foreach (Tuple<int, int> neighbor in neighbors)
+                {
+                    TileEdge edge;
+                    if ((edge = CanGetFromTo(tileNode, i, j, neighbor.First, neighbor.Second)) != null)
                     {
-                        Tuple.New(i - 1, j),
-                        Tuple.New(i + 1, j),
-                        Tuple.New(i, j - 1),
-                        Tuple.New(i, j + 1)
-                    };
-                    foreach (Tuple<int, int> neighbor in neighbors)
-                    {
-                        TileEdge edge;
-                        if ((edge = CanGetFromTo(tileNode, i, j, neighbor.First, neighbor.Second)) != null)
-                        {
-                            // TODO: cost
-                            tileNode.AddNeighbor(edge);
-                        }
+                        // TODO: cost
+                        tileNode.AddNeighbor(edge);
                     }
-                    
                 }
-              
+
+            }
+
             // Diagonal edges
             for (int i = 0; i < width; i++)
-                for (int j = 0; j < height; j++)
+            for (int j = 0; j < height; j++)
+            {
+                IntegerTuple transition1 = new IntegerTuple(1, 0);
+                IntegerTuple transition2 = new IntegerTuple(0, 1);
+                TileNode tileNode = AIModel.Tiles[i, j];
+                IntegerTuple tileModelPosition = tileNode.Position;
+                for (int first = -1; first <= 1; first += 2)
+                for (int second = -1; second <= 1; second += 2)
                 {
-                    IntegerTuple transition1 = new IntegerTuple(1, 0);
-                    IntegerTuple transition2 = new IntegerTuple(0, 1);
-                    TileNode tileNode = AIModel.Tiles[i, j];
-                    IntegerTuple tileModelPosition = tileNode.Position;
-                    for (int first = -1; first <= 1; first += 2)
-                        for (int second = -1; second <= 1; second += 2)
-                        {
-                            IntegerTuple currentTransition1 = transition1 * first;
-                            IntegerTuple currentTransition2 = transition2 * second;
-                            // We have to check 4 things: whether we can perform the first transition and the second afterwards
-                            // and vice versa. E.g. if we check whether we can get to the left-up neighbor we need to be able to
-                            // get to the left neighbor and from it to its up neighbor. Additionaly we need to be able to get to
-                            // the up neighbor and from it to its left neighbor.
-                            if (tileNode.HasDirectTransitionTo(tileModelPosition + currentTransition1) &&
-                                AIModel.Tiles.Get(tileModelPosition + currentTransition1)
-                                    .HasDirectTransitionTo(tileModelPosition + currentTransition1 +
-                                                           currentTransition2) &&
-                                tileNode.HasDirectTransitionTo(tileModelPosition + currentTransition2) &&
-                                AIModel.Tiles.Get(tileModelPosition + currentTransition2)
-                                    .HasDirectTransitionTo(tileModelPosition + currentTransition2 + currentTransition1))
-                            {
-                                IntegerTuple indices = tileModelPosition + currentTransition2 + currentTransition1;
-                                TileNode neighbor = AIModel.Tiles[indices.First, indices.Second];
-                                tileNode.AddNeighbor(neighbor, EdgeType.NORMAL, Mathf.Sqrt(2));
-                            }
-                                
-                        }
+                    IntegerTuple currentTransition1 = transition1 * first;
+                    IntegerTuple currentTransition2 = transition2 * second;
+                    // We have to check 4 things: whether we can perform the first transition and the second afterwards
+                    // and vice versa. E.g. if we check whether we can get to the left-up neighbor we need to be able to
+                    // get to the left neighbor and from it to its up neighbor. Additionaly we need to be able to get to
+                    // the up neighbor and from it to its left neighbor.
+                    if (tileNode.HasDirectTransitionTo(tileModelPosition + currentTransition1) &&
+                        AIModel.Tiles.Get(tileModelPosition + currentTransition1)
+                            .HasDirectTransitionTo(tileModelPosition + currentTransition1 +
+                                                   currentTransition2) &&
+                        tileNode.HasDirectTransitionTo(tileModelPosition + currentTransition2) &&
+                        AIModel.Tiles.Get(tileModelPosition + currentTransition2)
+                            .HasDirectTransitionTo(tileModelPosition + currentTransition2 + currentTransition1))
+                    {
+                        IntegerTuple indices = tileModelPosition + currentTransition2 + currentTransition1;
+                        TileNode neighbor = AIModel.Tiles[indices.First, indices.Second];
+                        tileNode.AddNeighbor(neighbor, EdgeType.NORMAL, Mathf.Sqrt(2));
+                    }
+
                 }
+            }
 
             // Remove edges that cannot be used because of obstacles.
             foreach (GameObject entity in Entities)
@@ -230,7 +236,7 @@ namespace Assets.Scripts.DataStructures
             string toName = toObject.name;
             string fromObstacleDirection = "";
             string toObstacleDirection = "";
-            
+
             // Unreachable tiles.
             if (fromName.Contains(HEDGE) || toName.Contains(HEDGE))
             {
@@ -282,7 +288,7 @@ namespace Assets.Scripts.DataStructures
             {
                 var fromIObstacle = fromObject.GetComponentInGameObjectOrChildren<IObstacle>();
                 var toIObstacle = toObject.GetComponentInGameObjectOrChildren<IObstacle>();
-                
+
                 EdgeType fromType = fromIObstacle == null ? EdgeType.NONE : fromIObstacle.EdgeType;
                 EdgeType toType = toIObstacle == null ? EdgeType.NONE : toIObstacle.EdgeType;
                 EdgeType edgeType = EdgeType.NONE;
@@ -292,12 +298,16 @@ namespace Assets.Scripts.DataStructures
                     edgeType = fromType;
                     obstacle = fromIObstacle;
                 }
+
                 if (toObstacle && !toType.Equals(EdgeType.NONE))
                 {
                     edgeType = toType;
                     obstacle = toIObstacle;
                 }
-                return edgeType.Equals(EdgeType.NONE) ? null : new TileEdge(start, AIModel.Tiles[toX, toY], edgeType, 1, obstacle);
+
+                return edgeType.Equals(EdgeType.NONE)
+                    ? null
+                    : new TileEdge(start, AIModel.Tiles[toX, toY], edgeType, 1, obstacle);
             }
             else
             {
@@ -312,6 +322,7 @@ namespace Assets.Scripts.DataStructures
                 {
                     return null;
                 }
+
                 return new TileEdge(start, AIModel.Tiles[toX, toY], EdgeType.NORMAL, 1, null);
             }
         }
@@ -330,31 +341,26 @@ namespace Assets.Scripts.DataStructures
                     result = tile;
                 }
             }
+
             return result;
         }
 
-        public void GetPlanningModel(BaseCharacter character, IntegerTuple goalCoords, GameObject finalObject, out PlanningNode startNode, out PlanningNode goalNode)
+        public void GetPlanningModel(BaseCharacter character, IntegerTuple goalCoords, GameObject finalObject,
+            out PlanningNode startNode, out PlanningNode goalNode)
         {
+            IEnumerable<GameObject> edgeCreatingEntities =
+                Entities.Where(entity => entity.HasScriptOfType(typeof(IPlanningEdgeCreator)));
+            Dictionary<IPlanningEdgeCreator, List<TileNode>> creatorsDictionary =
+                BuildTileDictionary<IPlanningEdgeCreator>(edgeCreatingEntities);
+
+            TileNode goalTileNode = AIModel.Tiles[goalCoords.First, goalCoords.Second];
+            goalNode = new PlanningNode(goalTileNode, null, null, creatorsDictionary, character, finiteObject:finalObject);
+            
+
             IEnumerable<EdgeType> currentItems =
                 character.Items.Select(gameObject => gameObject.GetComponent<BaseItem>().CorrespondingEdgeType);
             TileNode startTileNode = GetClosestTile(character.transform.position);
-            startNode =
-                new PlanningNode(startTileNode.Position, currentItems.ToList());
-            var itemsDictionary = new Dictionary<BaseItem, TileNode>();
-            foreach (GameObject gameObject in Entities)
-            {
-                if (!gameObject.HasScriptOfType<BaseItem>()) continue;
-                var baseItem = gameObject.GetComponent<BaseItem>();
-                itemsDictionary[baseItem] = GetClosestTile(gameObject.transform.position);
-            }
-
-            goalNode = new PlanningNode(goalCoords, null);
-            TileNode goalTileNode = AIModel.Tiles[goalCoords.First, goalCoords.Second];
-            IEnumerable<GameObject> detectorEntities =
-                Entities.Where(entity => entity.HasScriptOfType(typeof(IPlanningEdgeCreator)));
-            Dictionary<IPlanningEdgeCreator, List<TileNode>> creatorsDictionary =
-                BuildTileDictionary<IPlanningEdgeCreator>(detectorEntities);
-            BuildPlanningGraph(startNode, startTileNode, goalNode, goalTileNode, creatorsDictionary, character, finalObject);
+            startNode = new PlanningNode(startTileNode, goalNode, currentItems.ToList(), creatorsDictionary, character, finiteObject: finalObject);
         }
 
         // Keys are the gameObjects, values the lists of the TileNodes that are close enough. 
@@ -373,68 +379,8 @@ namespace Assets.Scripts.DataStructures
                     }
                 }
             }
-            return result;
-        }
-
-        private void BuildPlanningGraph(PlanningNode currentNode, TileNode startTileNode, PlanningNode goalNode, 
-            TileNode goalTileNode, Dictionary<IPlanningEdgeCreator, List<TileNode>> creatorsDictionary, 
-            BaseCharacter character, GameObject finalObject)
-        {
-            Path<TileNode, TileEdge> pathToGoal = AStarAlgorithm.AStar(startTileNode, goalTileNode,
-                new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
-                Filters.DetectableFilter(currentNode.DestroyedDetectors), Filters.EdgeFilter(currentNode.UnlockedEdges, character.Data.ForbiddenEdgeTypes),
-                edge => ComputeEdgeCost(edge, currentNode.DestroyedObstacles));
-            if (pathToGoal.Cost < float.MaxValue)
-            {
-                PlanningEdge edge = new PlanningEdge(currentNode, goalNode, PlanningEdgeType.MONEY, character, pathToGoal, finalObject);
-                currentNode.AddEdge(edge);
-            }
-
-            foreach (KeyValuePair<IPlanningEdgeCreator, List<TileNode>> keyValuePair in creatorsDictionary)
-            {
-                IPlanningEdgeCreator creator = keyValuePair.Key;
-                if (creator.ShouldExplore(currentNode))
-                {
-                    foreach (TileNode neighborTileNode in keyValuePair.Value)
-                    {
-                        Path<TileNode, TileEdge> path = AStarAlgorithm.AStar(startTileNode, neighborTileNode,
-                            new EuclideanHeuristics<TileNode>(Tiles), Debug.Log,
-                            Filters.DetectableFilter(currentNode.DestroyedDetectors), Filters.EdgeFilter(currentNode.UnlockedEdges, character.Data.ForbiddenEdgeTypes),
-                            edge => ComputeEdgeCost(edge, currentNode.DestroyedObstacles));
-
-                        if (path.Edges != null)
-                        {
-                            PlanningNode neighbor = new PlanningNode(neighborTileNode.Position, currentNode.UnlockedEdges.Copy(),
-                                currentNode.DestroyedObstacles.Copy());
-                            creator.ModifyNextNode(neighbor);
-                            foreach (TileEdge pathEdge in path.Edges)
-                            {
-                                IObstacle destroyedObstacle = pathEdge.Obstacle;
-                                if (destroyedObstacle != null)
-                                {
-                                    neighbor.DestroyedObstacles.Add(destroyedObstacle);
-                                }
-                            }
-                            PlanningEdge planningEdge = new PlanningEdge(currentNode, neighbor, creator.PlanningEdgeType,
-                                character, path, creator.GameObject);
-                            currentNode.AddEdge(planningEdge);
-                            BuildPlanningGraph(neighbor, neighborTileNode, goalNode, goalTileNode, creatorsDictionary, character, finalObject);
-                        }
-                    }
-                }
-            }
-        }
-
-        private float ComputeEdgeCost(TileEdge edge, IEnumerable<IObstacle> destroyedObstacles)
-        {
-            float result = edge.Cost;
-            IObstacle obstacle = edge.Obstacle;
-            if (obstacle != null && !destroyedObstacles.Contains(obstacle))
-            {
-                result += obstacle.DelayTime;
-            }
 
             return result;
         }
-    } 
+    }
 }

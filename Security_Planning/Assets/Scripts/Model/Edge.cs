@@ -5,13 +5,13 @@ using System.Text;
 
 namespace Assets.Scripts.Model
 {
-    public class Edge<TNode, TEdgeType> : IAStarEdge<TNode> where TNode : IAStarNode<TNode>
+    public abstract class Edge<TNode, TEdgeType> : IAStarEdge<TNode> where TNode : IAStarNode<TNode>
     {
         public TEdgeType Type;
-        public float Cost { get; private set; }
+        public abstract float Cost { get; }
 
-        private TNode start;
-        private TNode neighbor;
+        protected TNode start;
+        protected TNode neighbor;
 
         public TNode Neighbor
         {
@@ -23,12 +23,11 @@ namespace Assets.Scripts.Model
             get { return start; }
         }
 
-        public Edge(TNode start, TNode neighbor, TEdgeType type, float cost)
+        public Edge(TNode start, TNode neighbor, TEdgeType type)
         {
             this.start = start;
             this.neighbor = neighbor;
             Type = type;
-            Cost = cost;
         }
 
         public override string ToString()

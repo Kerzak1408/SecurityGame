@@ -180,7 +180,7 @@ namespace Assets.Scripts.MapEditor
             TileNode[,] aiModelTiles = Map.AIModel.Tiles;
             var heuristics = new EuclideanHeuristics<TileNode>(Map.Tiles);
             List<TileEdge> path = AStarAlgorithm.AStar<TileNode, TileEdge>(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics,
-                Debug.Log, node => node.IsDetectable()).Edges;
+                node => node.IsDetectable()).Edges;
             if (path != null)
             {
                 TileNode previousNode = null;

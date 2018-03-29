@@ -74,5 +74,10 @@ namespace Assets.Scripts.Entities
             };
             CastManager.Instance.Cast(character, Constants.Constants.DESTROY_TIME, null, wrapperSuccess);
         }
+
+        public override string ToString()
+        {
+            return GameObject.name;
+        }
     }
 }

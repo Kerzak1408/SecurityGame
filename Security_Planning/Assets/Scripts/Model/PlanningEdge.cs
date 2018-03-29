@@ -15,6 +15,14 @@ namespace Assets.Scripts.Model
         private Path<TileNode, TileEdge> path;
         private BaseCharacter character;
 
+        public override float Cost
+        {
+            get
+            {
+                return path.Cost;
+            }
+        }
+
         public List<BaseAction> ActionsToComplete
         {
             get
@@ -36,7 +44,7 @@ namespace Assets.Scripts.Model
 
         public PlanningEdge(PlanningNode start, PlanningNode neighbor, PlanningEdgeType type, BaseCharacter character,
             Path<TileNode, TileEdge> path, GameObject interactObject = null)
-            : base(start, neighbor, type, path.Cost)
+            : base(start, neighbor, type)
         {
             this.path = path;
             this.interactObject = interactObject;

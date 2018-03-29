@@ -2,7 +2,7 @@
 {
     public static class Constants
     {
-        public static readonly float INTERACTABLE_DISTANCE = 1.5f;
-        public static readonly float DESTROY_TIME = 5;
+        public static readonly float INTERACTABLE_DISTANCE = 1.3f;
+        public static readonly float DESTROY_TIME = 5f;
     }
 }
