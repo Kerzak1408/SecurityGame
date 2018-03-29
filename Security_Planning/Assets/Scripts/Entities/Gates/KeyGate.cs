@@ -25,15 +25,13 @@ namespace Assets.Scripts.Entities.Gates
             get { return IsGateFullyOpen; }
         }
 
-        public float DelayTime
-        {
-            get { return slidingDoorOpen.clip.length; }
-        }
+        public float DelayTime { get; private set; }
 
         protected override void Start()
         {
             base.Start();
             Lock();
+            DelayTime = slidingDoorOpen.clip.length;
         }
 
         public void Interact(BaseCharacter character, Action successAction = null)

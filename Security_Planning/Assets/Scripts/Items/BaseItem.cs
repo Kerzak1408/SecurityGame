@@ -10,11 +10,13 @@ namespace Assets.Scripts.Items
         public abstract EdgeType CorrespondingEdgeType { get; }
 
         public abstract PlanningEdgeType PlanningEdgeType { get; }
-        public GameObject GameObject
-        {
-            get { return gameObject; }
-        }
+        public GameObject GameObject { get; set; }
 
+        protected virtual void Start()
+        {
+            GameObject = gameObject;
+        }
+        
         public bool ShouldExplore(PlanningNode node)
         {
             return !node.UnlockedEdges.Contains(CorrespondingEdgeType);

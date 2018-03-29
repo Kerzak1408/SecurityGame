@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Interfaces;
@@ -20,9 +21,12 @@ namespace Assets.Scripts.Entities
         }
         
         public abstract PlanningEdgeType PlanningEdgeType { get; }
-        public GameObject GameObject
+        public GameObject GameObject { get; private set; }
+
+        protected override void Start()
         {
-            get { return gameObject; }
+            base.Start();
+            GameObject = gameObject;
         }
 
         public bool ShouldExplore(PlanningNode node)

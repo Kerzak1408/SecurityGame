@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Assets.Scripts.Entities.Characters;
@@ -18,6 +19,7 @@ namespace Assets.Scripts.Entities
         private AudioSource glassBreak2;
         private bool destroy;
         private float destroyCounter;
+        private Dictionary<AudioSource, float> delays;
 
         public EdgeType EdgeType
         {
@@ -42,11 +44,14 @@ namespace Assets.Scripts.Entities
             AudioSource[] audioSources = GetComponents<AudioSource>();
             glassBreak1 = audioSources.First(audio => audio.clip.name == "GlassBreak1");
             glassBreak2 = audioSources.First(audio => audio.clip.name == "GlassBreak2");
+            delays = new Dictionary<AudioSource, float>();
+            delays[glassBreak1] = glassBreak1.clip.length;
+            delays[glassBreak2] = glassBreak2.clip.length;
         }
 
         private float ComputeDelayTime(AudioSource audioSource)
         {
-            return audioSource == null ? 0 : audioSource.clip.length;
+            return audioSource == null ? 0 : delays[audioSource];
         }
 
         private void Update()

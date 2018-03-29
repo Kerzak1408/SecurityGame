@@ -28,7 +28,7 @@ namespace Assets.Scripts.Entities
 
         public float DelayTime
         {
-            get { return (audioSource == null || IsOpen ) ? 0 : 10; }
+            get { return  IsOpen ? 0 : 10; }
         }
 
         protected override void Start()

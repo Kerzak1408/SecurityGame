@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Model;
@@ -13,6 +14,7 @@ public class MoneyGoal : BaseGoal
     private BaseAction currentAction;
     private Queue<BaseAction> actions;
     private GameObject moneyObject;
+    private bool isInitialized;
 
     public MoneyGoal(BaseCharacter character, IntegerTuple goalCoordinates, GameObject moneyObject) : base(character, goalCoordinates, PlanningEdgeType.MONEY)
     {
@@ -23,12 +25,15 @@ public class MoneyGoal : BaseGoal
     {
         Map currentMap = Character.CurrentGame.Map;
         PlanningNode startNode, goalNode;
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
         currentMap.GetPlanningModel(Character, GoalCoordinates, moneyObject, out startNode, out goalNode);
-        stopwatch.Stop();
-        Debug.Log("Graph building time = " + stopwatch.ElapsedMilliseconds/1000f + " seconds");
-        stopwatch.Reset();
+        Debug.Log("Starting new planning thread.");
+        Thread planningThread = new Thread(() => PlanPath(startNode, goalNode, currentMap));
+        planningThread.Start();
+    }
+
+    private void PlanPath(PlanningNode startNode, PlanningNode goalNode, Map currentMap)
+    {
+        Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
         Path<PlanningNode, PlanningEdge> plannedPath = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
             startNode,
@@ -36,8 +41,12 @@ public class MoneyGoal : BaseGoal
             new EuclideanHeuristics<PlanningNode>(currentMap.Tiles),
             edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type));
         stopwatch.Stop();
-        Debug.Log("A* planning time = " + stopwatch.ElapsedMilliseconds / 1000f + " seconds");
+        Debug.Log("A* time = " + stopwatch.ElapsedMilliseconds / 1000f + "seconds.");
+        TaskManager.Instance.RunOnMainThread(() => Initialize(plannedPath));
+    }
 
+    private void Initialize(Path<PlanningNode, PlanningEdge> plannedPath)
+    {
         if (plannedPath.Cost == float.MaxValue || plannedPath.Edges == null)
         {
             IsFinished = true;
@@ -54,11 +63,13 @@ public class MoneyGoal : BaseGoal
                 }
             }
         }
+
+        isInitialized = true;
     }
 
     public override void Update()
     {
-        if (IsFinished) return;
+        if (!isInitialized || IsFinished) return;
         if (currentAction == null || currentAction.IsCompleted)
         {
             if (actions.Count > 0)

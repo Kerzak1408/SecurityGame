@@ -8,6 +8,12 @@ namespace Assets.Scripts.Entities.Gates
 {
     public class GateOpen : BaseSlidingGate, IObstacle
     {
+        protected override void Start()
+        {
+            base.Start();
+            DelayTime = slidingDoorOpen.clip.length;
+        }
+
         public CardReaderEntity RelatedCardReader { get; set; }
 
         public EdgeType EdgeType
@@ -25,10 +31,7 @@ namespace Assets.Scripts.Entities.Gates
             get { return IsGateFullyOpen; }
         }
 
-        public float DelayTime
-        {
-            get { return slidingDoorOpen.clip.length; }
-        }
+        public float DelayTime { get; private set; }
 
         public void Open(BaseCharacter character)
         {
