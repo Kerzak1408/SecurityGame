@@ -16,7 +16,12 @@ namespace Entities.Characters.Actions
 
         public override void Activate()
         {
-            character.InteractWith(interacted, () => IsCompleted = true);
+            character.Log("Trying to interact with " + interacted.name + ".");
+            character.InteractWith(interacted, () =>
+            {
+                character.Log("Successfully interacted with " + interacted.name + ".");
+                IsCompleted = true;
+            });
         }
 
         public override void Update()

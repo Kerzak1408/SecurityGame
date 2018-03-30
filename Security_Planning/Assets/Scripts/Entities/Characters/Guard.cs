@@ -181,6 +181,10 @@ namespace Assets.Scripts.Entities.Characters
             CurrentGame.TextMoney.text = money.ToString();
         }
 
+        public override void Log(string line)
+        {
+            CurrentGame.Log("Guard: " + line);
+        }
 
     }
 

@@ -246,7 +246,8 @@ namespace Assets.Scripts.MapEditor
 
             var newParent = new GameObject();
             newParent.transform.parent = Grids.transform;
-            var map = new Map(newGrid, new List<GameObject>(), newParent, new Dictionary<Tuple<int, int>, string>());
+            var map = new Map(newGrid, new List<GameObject>(), newParent, new Dictionary<Tuple<int, int>, string>(),
+                button.GetComponentInChildren<Text>().text);
             MapsDictionary.Add(button, map);
 
             for (int i = 0; i < height; i++)

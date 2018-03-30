@@ -58,5 +58,10 @@ public class Burglar : BaseCharacter
     {
         cardReader.VerifyCard();
     }
+
+    public override void Log(string line)
+    {
+        CurrentGame.Log("Burglar: " + line);
+    }
     
 }

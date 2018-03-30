@@ -89,7 +89,7 @@ namespace Assets.Scripts.MapEditor
                 newObject.transform.parent = emptyParent.transform;
                 entities.Add(newObject);
             }
-            var result = new Map(loadedGrid, entities, emptyParent, passwordDictionary);
+            var result = new Map(loadedGrid, entities, emptyParent, passwordDictionary, mapName);
             return result;
         }
 

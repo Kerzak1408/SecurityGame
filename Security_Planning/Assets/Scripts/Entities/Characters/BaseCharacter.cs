@@ -23,6 +23,7 @@ namespace Assets.Scripts.Entities.Characters
         private int activeItemIndex;
         protected int money;
         protected bool isMoving;
+
         private AudioSource footstepAudio;
         protected float speed = 1f;
         protected CharacterController controller;
@@ -272,7 +273,7 @@ namespace Assets.Scripts.Entities.Characters
         public bool NavigateTo(TileNode tileNode)
         {
             Vector3 target = CurrentGame.Map.Tiles.Get(tileNode.Position).transform.position;
-            bool isCloseEnough = Vector3.Distance(transform.position, target) < 0.4f;
+            bool isCloseEnough = Vector3.Distance(transform.position, target) < 0.05f;
             //if (!isCloseEnough)
             {
                 transform.LookAt(target);
@@ -296,6 +297,8 @@ namespace Assets.Scripts.Entities.Characters
         {
             activeCastAction = null;
         }
+
+        public abstract void Log(string line);
 
         //Animation Events - just to enable Mecanim animations work => Do NOT delete!
         protected void Hit()

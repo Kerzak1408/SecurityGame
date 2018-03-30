@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Assets.Scripts.DataStructures
 {
@@ -19,6 +20,11 @@ namespace Assets.Scripts.DataStructures
         public static IntegerTuple operator *(IntegerTuple tuple1, int multiplier)
         {
             return new IntegerTuple(tuple1.First * multiplier, tuple1.Second * multiplier);
+        }
+
+        public static implicit operator Vector3(IntegerTuple tuple)
+        {
+            return new Vector3(tuple.First, tuple.Second);
         }
     }
 }

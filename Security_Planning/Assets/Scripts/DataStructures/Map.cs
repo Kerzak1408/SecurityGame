@@ -35,6 +35,7 @@ namespace Assets.Scripts.DataStructures
         public Dictionary<Tuple<int, int>, string> PasswordDictionary { get; private set; }
         public GameObject EmptyParent { get; private set; }
         public AIModel AIModel { get; private set; }
+        public string Name { get; private set; }
 
         public Vector3 CenterWorld
         {
@@ -57,12 +58,13 @@ namespace Assets.Scripts.DataStructures
         }
 
         public Map(GameObject[,] tiles, List<GameObject> entities, GameObject emptyParent,
-            Dictionary<Tuple<int, int>, string> passwordDictionary)
+            Dictionary<Tuple<int, int>, string> passwordDictionary, string name)
         {
             Tiles = tiles;
             Entities = entities;
             EmptyParent = emptyParent;
             PasswordDictionary = passwordDictionary;
+            Name = name;
         }
 
         public void SetActive(bool active)

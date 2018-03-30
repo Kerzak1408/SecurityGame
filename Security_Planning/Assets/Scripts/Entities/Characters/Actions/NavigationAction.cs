@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Model;
@@ -15,12 +16,13 @@ namespace Entities.Characters.Actions
 
         public NavigationAction(BaseCharacter character, List<TileEdge> navigationEdges) : base(character)
         {
+            goalCoords = navigationEdges.Last().Neighbor.Position;
             pathQueue = new Queue<TileEdge>(navigationEdges);
         }
 
         public override void Activate()
         {
-
+            character.Log("Navigation to " + goalCoords + " started.");
         }
 
         public override void Update()
@@ -31,6 +33,7 @@ namespace Entities.Characters.Actions
                 if (pathQueue.Count > 0)
                 {
                     currentEdge = pathQueue.Dequeue();
+                    character.Log("Next target: " + currentEdge.Neighbor.Position + " of type " + currentEdge.Type + ".");
                     if (!currentEdge.IsOpen)
                     {
                         currentEdge.Open(character);
@@ -39,6 +42,7 @@ namespace Entities.Characters.Actions
                 else
                 {
                     IsCompleted = true;
+                    character.Log("Navigation to " + goalCoords + " completed.");
                 }
             }
         }

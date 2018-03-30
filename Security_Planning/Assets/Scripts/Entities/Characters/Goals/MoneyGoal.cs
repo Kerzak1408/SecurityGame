@@ -23,10 +23,11 @@ public class MoneyGoal : BaseGoal
 
     public override void Activate()
     {
+        Character.Log("Goal activated: Collect money at " + GoalCoordinates);
         Map currentMap = Character.CurrentGame.Map;
         PlanningNode startNode, goalNode;
         currentMap.GetPlanningModel(Character, GoalCoordinates, moneyObject, out startNode, out goalNode);
-        Debug.Log("Starting new planning thread.");
+        Character.Log("Planning started.");
         Thread planningThread = new Thread(() => PlanPath(startNode, goalNode, currentMap));
         planningThread.Start();
     }
@@ -41,7 +42,7 @@ public class MoneyGoal : BaseGoal
             new EuclideanHeuristics<PlanningNode>(currentMap.Tiles),
             edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type));
         stopwatch.Stop();
-        Debug.Log("A* time = " + stopwatch.ElapsedMilliseconds / 1000f + "seconds.");
+        Character.Log("A* time = " + stopwatch.ElapsedMilliseconds / 1000f + " seconds.");
         TaskManager.Instance.RunOnMainThread(() => Initialize(plannedPath));
     }
 
@@ -49,10 +50,12 @@ public class MoneyGoal : BaseGoal
     {
         if (plannedPath.Cost == float.MaxValue || plannedPath.Edges == null)
         {
+            Character.Log("Planning computation finished. Path NOT found.");
             IsFinished = true;
         }
         else
         {
+            Character.Log("Planning computation finished. Path found.");
             actions = new Queue<BaseAction>();
             foreach (PlanningEdge planningEdge in plannedPath.Edges)
             {

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
@@ -23,6 +25,8 @@ namespace Assets.Scripts.MapEditor
         private Vector3? startPointRight;
         private Vector3 previousMousePosition;
 
+        private StreamWriter logFileWriter;
+
         // Use this for initialization
         protected override void Start ()
         {
@@ -31,6 +35,12 @@ namespace Assets.Scripts.MapEditor
             camerasList.Add(ObserverCamera);
             string mapName = Scenes.GetParam("map");
             Map = LoadMap(mapName, mapVisible:true);
+
+            DirectoryHelper.CreateDirectoryLazy(FileHelper.JoinPath(Application.dataPath, "Logs"));
+            string logFileName = "Log_" + DateTime.Now.ToString("yyyy-M-d") + "_" + DateTime.Now.ToString("hh-mm-ss") + ".txt";
+            logFileWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath, "Logs", logFileName));
+            Log("Simulation of " + Map.Name + " started.");
+
             Map.ExtractAIModel();
 
             GenerateCeiling(Map.Tiles, Map.EmptyParent.transform);
@@ -135,6 +145,8 @@ namespace Assets.Scripts.MapEditor
 
         public void ExitToMenu()
         {
+            Log("Simulation ended.");
+            logFileWriter.Close();
             Scenes.Load(Scenes.MAIN_MENU);
         }
 
@@ -195,7 +207,14 @@ namespace Assets.Scripts.MapEditor
 
         public void Restart()
         {
+            Log("Simulation restarted.");
+            logFileWriter.Close();
             Scenes.Load(Scenes.MAIN_SCENE, Scenes.Parameters);
+        }
+
+        public void Log(string line)
+        {
+            logFileWriter.WriteLine(line);
         }
     }
 }
