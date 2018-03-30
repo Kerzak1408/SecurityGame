@@ -218,6 +218,7 @@
     <Compile Include="Assets\Scripts\UI\ExitApplication.cs" />
     <Compile Include="Assets\Scripts\UI\InputRestrictions.cs" />
     <Compile Include="Assets\Scripts\UI\MyColors.cs" />
+    <Compile Include="Assets\Scripts\UI\UserDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\External\PaintedGround\read me.txt" />

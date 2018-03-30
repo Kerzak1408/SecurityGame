@@ -21,7 +21,6 @@ namespace Assets.Scripts.MapEditor
         protected Button SelectedMapButton;
 
         public float cameraOriginalSize;
-        protected bool eventProcessedByUI;
 
         private Vector3 previousMousePosition;
 
@@ -63,13 +62,6 @@ namespace Assets.Scripts.MapEditor
         // Update is called once per frame
         protected virtual void Update ()
         {
-
-            if (eventProcessedByUI)
-            {
-                eventProcessedByUI = false;
-                return;
-            }
-
             if (Input.GetMouseButtonDown(1))
             {
                 previousMousePosition = Input.mousePosition;
@@ -100,7 +92,6 @@ namespace Assets.Scripts.MapEditor
 
         protected virtual void SelectMap()
         {
-            eventProcessedByUI = true;
             Button clickedButton = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
             SelectMap(clickedButton);
         }
@@ -173,11 +164,6 @@ namespace Assets.Scripts.MapEditor
                 tile.DeactivateAllScripts();
             }
             return map;
-        }
-
-        public void Scrolled()
-        {
-            eventProcessedByUI = true;
         }
     }
 }

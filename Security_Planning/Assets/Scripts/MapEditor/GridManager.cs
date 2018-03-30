@@ -12,6 +12,7 @@ using Assets.Scripts.Reflection;
 using Assets.Scripts.Serialization;
 using CustomSerialization;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.MapEditor
@@ -112,12 +113,6 @@ namespace Assets.Scripts.MapEditor
         // Update is called once per frame
         protected override void Update()
         {
-            if (eventProcessedByUI)
-            {
-                eventProcessedByUI = false;
-                return;
-            }
-
             base.Update();
 
             var pressedKeys = new List<KeyCode>();
@@ -146,8 +141,11 @@ namespace Assets.Scripts.MapEditor
             {
                 currentEditorHandler.PressedKeys(upKeys.ToArray(), downKeys.ToArray(), pressedKeys.ToArray());
             }
-            
 
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
 
             float scroll = Input.GetAxis("Mouse ScrollWheel");
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -294,10 +292,10 @@ namespace Assets.Scripts.MapEditor
                 ShowError("Unable to save a map without Guard. ");
                 return;
             }
-            eventProcessedByUI = true;
-            var selectedButtonText =  SelectedMapButton.GetComponentInChildren<Text>().text;
-            if (selectedButtonText.Contains("*"))
+            
+            if (IsFlagged(SelectedMapButton))
             {
+                var selectedButtonText = SelectedMapButton.GetComponentInChildren<Text>().text;
                 SelectedMapButton.GetComponentInChildren<Text>().text = selectedButtonText.Remove(selectedButtonText.Length - 1);
             }
             else
@@ -334,7 +332,17 @@ namespace Assets.Scripts.MapEditor
 
         public void DeleteMap()
         {
-            eventProcessedByUI = true;
+            UserDialog.Instance.Show(
+                "Delete map",
+                "Are you sure you want to delete the map \"" +
+                SelectedMapButton.GetComponentInChildren<Text>().text +
+                "\"? This action cannot be undone.",
+                DeleteCurrentMap
+                );
+        }
+
+        private void DeleteCurrentMap()
+        {
             var mapPath = FileHelper.JoinPath(MAPS_PATH, CurrentMapSaveName);
             if (Directory.Exists(mapPath))
             {
@@ -360,7 +368,6 @@ namespace Assets.Scripts.MapEditor
 
         public void CreateMap()
         {
-            eventProcessedByUI = true;
             ChangeEditorHandler(previousHandler);
             if (InputWidth.text.Length == 0 || InputHeight.text.Length == 0 || InputName.text.Length == 0)
             {
@@ -409,7 +416,6 @@ namespace Assets.Scripts.MapEditor
 
         public void CancelMapCreation()
         {
-            eventProcessedByUI = true;
             Debug.Log("Cancel button clicked");
             PanelNewMapForm.SetActive(false);
             Grids.SetActive(true);
@@ -419,7 +425,6 @@ namespace Assets.Scripts.MapEditor
 
         public void ChangePassword()
         {
-            eventProcessedByUI = true;
             var dict = MapsDictionary[SelectedMapButton].PasswordDictionary;
             var newPassword = PanelPassword.GetComponentInChildren<InputField>().text;
             var oldPassword = dict[passwordIndices];
@@ -441,13 +446,11 @@ namespace Assets.Scripts.MapEditor
 
         public void HideError()
         {
-            eventProcessedByUI = true;
             PanelError.SetActive(false);
         }
 
         public void RemoveEntity()
         {
-            eventProcessedByUI = true;
             FlagCurrentButton();
             ButtonRemoveEntity.SetActive(false);
             MapsDictionary[SelectedMapButton].RemoveEntity(toBeRemovedEntity);
@@ -519,6 +522,33 @@ namespace Assets.Scripts.MapEditor
                 }
             }
             PanelEditBehaviour.SetActive(false);
+        }
+
+        private bool IsFlagged(Button button)
+        {
+            var buttonText = button.GetComponentInChildren<Text>().text;
+            return buttonText.Contains("*");
+        }
+
+        public void BackToMenu()
+        {
+            if (MapsDictionary.Keys.Any(IsFlagged))
+            {
+                int changedmapsCount = MapsDictionary.Keys.Count(IsFlagged);
+                bool plural = changedmapsCount > 1;
+                string thereIsString = plural ? "There are " : "There is ";
+                string mapMapsString = plural ? "maps" : "map";
+                UserDialog.Instance.Show(
+                    "Unsaved changes",
+                    thereIsString + changedmapsCount + " " + mapMapsString +
+                    " with unsaved changes. Do you want to discard the changes and quit?",
+                    () => Scenes.Load(Scenes.MAIN_MENU));
+            }
+            else
+            {
+                Scenes.Load(Scenes.MAIN_MENU);
+            }
+
         }
     }
 }
