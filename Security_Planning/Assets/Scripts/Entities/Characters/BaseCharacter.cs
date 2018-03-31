@@ -21,14 +21,18 @@ namespace Assets.Scripts.Entities.Characters
         private List<GameObject> itemIcons;
         private Animator animator;
         private int activeItemIndex;
-        protected int money;
-        protected bool isMoving;
+
+        protected float RotationSpeed = 90;
+        protected int Money;
+        protected bool IsMoving;
 
         private AudioSource footstepAudio;
         protected float speed = 1f;
         protected CharacterController controller;
 
         public bool IsActive { get; set; }
+
+        public Camera Camera { get; set; }
 
         public List<GameObject> Items
         {
@@ -65,6 +69,10 @@ namespace Assets.Scripts.Entities.Characters
         protected override void Update()
         {
             base.Update();
+            if (Input.GetMouseButton(0))
+            {
+                OnLeftButtonClick();
+            }
             if (transform.position.y != 0)
             {
                 // Just to ensure avoiding flying.
@@ -72,8 +80,8 @@ namespace Assets.Scripts.Entities.Characters
                 groundPosition.y = 0;
                 transform.position = groundPosition;
             }
-            animator.SetBool("Moving", isMoving);
-            if (isMoving)
+            animator.SetBool("Moving", IsMoving);
+            if (IsMoving)
             {
                 if (!footstepAudio.isPlaying)
                 {
@@ -92,6 +100,30 @@ namespace Assets.Scripts.Entities.Characters
             }
         }
 
+        private void OnLeftButtonClick()
+        {
+            if (IsActive)
+            {
+                Vector3 localEulerAngles = Camera.transform.localEulerAngles;
+                float deltaX = Time.deltaTime * RotationSpeed * (-Input.GetAxis("Mouse Y"));
+                float deltaY = Time.deltaTime * RotationSpeed * (Input.GetAxis("Mouse X"));
+                float potentialRotationX = localEulerAngles.x + deltaX;
+                float potentialRotationY = localEulerAngles.y + deltaY;
+
+                float xRotation = potentialRotationX > 75 && potentialRotationX < 360 - 75
+                    ? localEulerAngles.x
+                    : potentialRotationX;
+                float yRotation = potentialRotationY > 75 && potentialRotationY < 360 - 75
+                    ? localEulerAngles.y
+                    : potentialRotationY;
+
+                //var delta = new Vector3(xRotation, yRotation, 0);
+                //Camera.transform.Rotate(delta);
+                Camera.transform.localEulerAngles = new Vector3(xRotation, yRotation, 0);
+
+            }
+        }
+
         public void AddItem(GameObject itemObject)
         {
             Items.Add(itemObject);
@@ -107,7 +139,7 @@ namespace Assets.Scripts.Entities.Characters
 
         protected void MoveForward()
         {
-            isMoving = true;
+            IsMoving = true;
             var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.forward);
             controller.Move(transformedDir);
         }
@@ -247,7 +279,7 @@ namespace Assets.Scripts.Entities.Characters
 
         public virtual void ObtainMoney()
         {
-            money++;
+            Money++;
         }
         
         public void Attack()
@@ -290,7 +322,7 @@ namespace Assets.Scripts.Entities.Characters
         public void Cast(CastAction action)
         {
             activeCastAction = action;
-            isMoving = false;
+            IsMoving = false;
         }
 
         public void FinishCasting()

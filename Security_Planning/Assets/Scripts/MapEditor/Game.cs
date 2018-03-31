@@ -20,7 +20,7 @@ namespace Assets.Scripts.MapEditor
         public Map Map { get; private set; }
         public Camera ObserverCamera;
 
-        private Camera[] cameras;
+        private Tuple<Camera, BaseCharacter>[] cameras;
         private int activeCameraIndex;
         private Vector3? startPointRight;
         private Vector3 previousMousePosition;
@@ -31,8 +31,8 @@ namespace Assets.Scripts.MapEditor
         protected override void Start ()
         {
             base.Start();
-            var camerasList = new List<Camera>();
-            camerasList.Add(ObserverCamera);
+            var camerasList = new List<Tuple<Camera, BaseCharacter>>();
+            camerasList.Add(new Tuple<Camera, BaseCharacter>(ObserverCamera, null));
             string mapName = Scenes.GetParam("map");
             Map = LoadMap(mapName, mapVisible:true);
 
@@ -76,27 +76,31 @@ namespace Assets.Scripts.MapEditor
                 baseEntity.StartGame();
                 if (entity.HasScriptOfType<BaseCharacter>())
                 {
-                    camerasList.Add(entity.GetComponentInChildren<Camera>());
-                    if (entity.HasScriptOfType<Guard>())
+                    BaseCharacter character = entity.GetComponent<BaseCharacter>();
+                    Camera charactersCamera = entity.GetComponentInChildren<Camera>();
+                    character.Camera = charactersCamera;
+                    camerasList.Add(
+                        new Tuple<Camera, BaseCharacter>(charactersCamera, character));
+                    if (character is Guard)
                     {
                         activeCameraIndex = camerasList.Count - 1;
+                        character.IsActive = true;
                     }
                 }
             }
 
             cameras = camerasList.ToArray();
-            foreach (Camera camera in cameras)
+            foreach (Tuple<Camera, BaseCharacter> tuple in cameras)
             {
-                camera.gameObject.SetActive(false);
+                tuple.First.gameObject.SetActive(false);
             }
-            cameras[activeCameraIndex].gameObject.SetActive(true);
+            cameras[activeCameraIndex].First.gameObject.SetActive(true);
 
             Map.EmptyParent.transform.Rotate(90, 0, 0);
             Map.ExtractAIModel();
             //Map.EmptyParent.transform.eulerAngles = new Vector3(90, Map.EmptyParent.transform.eulerAngles.y, Map.EmptyParent.transform.eulerAngles.z);
         }
 
-        // Update is called once per frame
         private void Update ()
         {
             if (Input.GetKeyUp(KeyCode.Escape))
@@ -105,9 +109,9 @@ namespace Assets.Scripts.MapEditor
             }
             if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
-                cameras[activeCameraIndex].gameObject.SetActive(false);
+                SetCameraActive(false);
                 activeCameraIndex = (activeCameraIndex + 1) % cameras.Length;
-                cameras[activeCameraIndex].gameObject.SetActive(true);
+                SetCameraActive(true);
             }
             if (ObserverCamera != null && ObserverCamera.gameObject.activeInHierarchy)
             {
@@ -133,6 +137,17 @@ namespace Assets.Scripts.MapEditor
                     ObserverCamera.transform.position -= 0.02f * new Vector3(delta.x, 0, delta.y);
                 }
 
+            }
+        }
+
+        private void SetCameraActive(bool active)
+        {
+            Tuple<Camera, BaseCharacter> tuple = cameras[activeCameraIndex];
+            tuple.First.gameObject.SetActive(active);
+            BaseCharacter character = tuple.Second;
+            if (character != null)
+            {
+                character.IsActive = active;
             }
         }
 

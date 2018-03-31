@@ -8,9 +8,6 @@ namespace Assets.Scripts.Entities.Characters
     public class Guard : BaseCharacter
     {
         GameObject Canvas;
-        
-        float rotationSpeed;
-
         GameObject inputPassword;
 
         IPasswordOpenable passwordOpenableObject;
@@ -18,7 +15,6 @@ namespace Assets.Scripts.Entities.Characters
         
         private ResourcesHolder resourcesHolder;
         private Rigidbody rigidBody;
-        private Camera guardCamera;
 
         // Use this for initialization
         protected override void Start()
@@ -26,13 +22,11 @@ namespace Assets.Scripts.Entities.Characters
             base.Start();
             rigidBody = GetComponent<Rigidbody>();
             resourcesHolder = ResourcesHolder.Instance;
-            rotationSpeed = 90;
             Canvas = GameObject.Find("Canvas");
             inputPassword = GameObject.Find("InputField_Password");
             inputPassword.SetActive(false);
             
             gameObject.AddComponent<ConstantForce>().force = Vector3.forward;
-            guardCamera = GetComponentInChildren<Camera>();
 
 
         }
@@ -40,10 +34,9 @@ namespace Assets.Scripts.Entities.Characters
         // Update is called once per frame
         protected override void Update()
         {
+            IsMoving = false;
             
-            isMoving = false;
-            
-            Ray ray = guardCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] raycastHits = Physics.RaycastAll(ray);
 
             UpdateCursor(raycastHits);
@@ -52,10 +45,6 @@ namespace Assets.Scripts.Entities.Characters
             {
                 Interact(raycastHits);
             } 
-            else if (Input.GetMouseButton(0))
-            {
-                OnLeftButtonClick();
-            }
 
             if (Input.GetKeyUp(KeyCode.Tab))
             {
@@ -72,14 +61,14 @@ namespace Assets.Scripts.Entities.Characters
 
             if (Input.GetKey(KeyCode.Q))
             {
-                isMoving = true;
+                IsMoving = true;
 
                 var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.left);
                 controller.Move(transformedDir);
             }
             if (Input.GetKey(KeyCode.E))
             {
-                isMoving = true;
+                IsMoving = true;
                 var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.right);
                 controller.Move(transformedDir);
             }
@@ -90,17 +79,33 @@ namespace Assets.Scripts.Entities.Characters
             }
             if (Input.GetKey(KeyCode.D))
             {
-                controller.transform.Rotate(Time.deltaTime * new Vector3(0, rotationSpeed, 0));
+                controller.transform.Rotate(Time.deltaTime * new Vector3(0, RotationSpeed, 0));
             }
             if (Input.GetKey(KeyCode.A))
             {
-                controller.transform.Rotate(Time.deltaTime * new Vector3(0, -rotationSpeed, 0));
+                controller.transform.Rotate(Time.deltaTime * new Vector3(0, -RotationSpeed, 0));
             } 
             if (Input.GetKey(KeyCode.S))
             {
-                isMoving = true;
+                IsMoving = true;
                 var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.back);
                 controller.Move(transformedDir);
+            }
+
+            if (IsMoving && !Input.GetMouseButton(0))
+            {
+                Vector3 eulerAngles = Camera.transform.localEulerAngles;
+                var eulerAnglesY = eulerAngles.y;
+                float distanceFromZero = eulerAnglesY > 180 ? 360 - eulerAnglesY : eulerAnglesY;
+                if (distanceFromZero > 1)
+                {
+                    int sign = eulerAnglesY > 180 ? 1 : -1;
+                    {
+                        float delta = sign * Time.deltaTime * RotationSpeed;
+                        Camera.transform.localEulerAngles = new Vector3(eulerAngles.x, eulerAnglesY + delta, 0);
+                    }
+
+                }
             }
             base.Update();
 
@@ -126,12 +131,6 @@ namespace Assets.Scripts.Entities.Characters
                 cursorTexture = null;
             }
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
-        }
-
-        private void OnLeftButtonClick()
-        {
-            var delta = new Vector3(Time.deltaTime * rotationSpeed * (-Input.GetAxis("Mouse Y")), 0, 0);
-            guardCamera.transform.Rotate(delta);
         }
 
         public override void RequestPassword(IPasswordOpenable passwordOpenableObject)
@@ -178,7 +177,7 @@ namespace Assets.Scripts.Entities.Characters
         public override void ObtainMoney()
         {
             base.ObtainMoney();
-            CurrentGame.TextMoney.text = money.ToString();
+            CurrentGame.TextMoney.text = Money.ToString();
         }
 
         public override void Log(string line)

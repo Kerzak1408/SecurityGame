@@ -10,7 +10,7 @@ namespace Assets.Scripts.MapEditor
         {
             if (SelectedMapButton != null)
             {
-                Scenes.Load(Scenes.MAIN_SCENE, "map", SelectedMapButton.GetComponentInChildren<Text>().text);
+                Scenes.Load(Scenes.MAIN_SCENE, "map", MapsDictionary[SelectedMapButton].Name);
             }
         }
 

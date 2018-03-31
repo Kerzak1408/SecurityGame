@@ -31,7 +31,7 @@ public class Burglar : BaseCharacter
     {
         base.Update();
         ProcessInputs();
-        isMoving = false;
+        IsMoving = false;
         if (isPaused) return;
         behaviour.Update();
     }
