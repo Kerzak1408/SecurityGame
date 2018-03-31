@@ -287,6 +287,12 @@
     <None Include="Assets\External\RPG Character Animation Pack\Elements\ImageEffects\Shaders\frag_ao.cginc" />
     <None Include="Assets\Logs\Log_2018-3-30_10-53-10.txt" />
     <None Include="Assets\Logs\Log_2018-3-30_11-00-10.txt" />
+    <None Include="Assets\Logs\Log_2018-3-31_11-44-40.txt" />
+    <None Include="Assets\Logs\Log_2018-3-31_11-45-11.txt" />
+    <None Include="Assets\Logs\Log_2018-3-31_11-53-16.txt" />
+    <None Include="Assets\Logs\Log_2018-3-31_11-53-28.txt" />
+    <None Include="Assets\Logs\Log_2018-3-31_11-55-56.txt" />
+    <None Include="Assets\Logs\Log_2018-3-31_11-56-52.txt" />
     <None Include="Assets\Resources\Maps\BuildingGrid.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

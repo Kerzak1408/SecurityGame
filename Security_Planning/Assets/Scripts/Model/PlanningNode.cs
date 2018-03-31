@@ -50,12 +50,22 @@ namespace Assets.Scripts.Model
                         {
                             Func<TileNode, bool> detectableFilter = Filters.DetectableFilter(DestroyedDetectors);
                             List<TileNode> tileNodes = keyValuePair.Value;
-                            //IEnumerable<TileNode> availableTileNodes = tileNodes.Where(node => !detectableFilter(node));
-                            //float closestDistance = availableTileNodes.Min(tileNode => Vector3.Distance(tileNode.Position, Position));
 
-                            //TileNode neighborTileNode = availableTileNodes.FirstOrDefault(tileNode =>
-                            //    Vector3.Distance(tileNode.Position, Position) == closestDistance);
-                            TileNode neighborTileNode = tileNodes.FirstOrDefault(node => !detectableFilter(node));
+                            TileNode neighborTileNode = null;
+                            float minDistanceSquared = float.MaxValue;
+                            foreach (TileNode tileNode in tileNodes)
+                            {
+                                if (detectableFilter(tileNode)) continue;
+                                var currentPosition = tileNode.Position;
+                                float currentDistanceSquared = Mathf.Pow(currentPosition.First - Position.First, 2) +
+                                                               Mathf.Pow(currentPosition.Second - Position.Second, 2);
+                                if (currentDistanceSquared < minDistanceSquared)
+                                {
+                                    minDistanceSquared = currentDistanceSquared;
+                                    neighborTileNode = tileNode;
+                                }
+                            }
+
                             if (null == neighborTileNode)
                             {
                                 continue;
