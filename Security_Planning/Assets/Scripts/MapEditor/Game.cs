@@ -230,6 +230,7 @@ namespace Assets.Scripts.MapEditor
         public void Log(string line)
         {
             logFileWriter.WriteLine(line);
+            Debug.Log(line);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Assets.Scripts.Entities
         private AudioSource glassBreak2;
         private bool destroy;
         private float destroyCounter;
-        private Dictionary<AudioSource, float> delays;
+        private Dictionary<int, float> delays;
 
         public EdgeType EdgeType
         {
@@ -34,7 +34,7 @@ namespace Assets.Scripts.Entities
         public bool IsOpen { get; private set; }
         public float DelayTime
         {
-            get { return ComputeDelayTime(glassBreak1) + ComputeDelayTime(glassBreak2); }
+            get { return ComputeDelayTime(0) + ComputeDelayTime(1); }
         }
 
         private void Start()
@@ -44,14 +44,14 @@ namespace Assets.Scripts.Entities
             AudioSource[] audioSources = GetComponents<AudioSource>();
             glassBreak1 = audioSources.First(audio => audio.clip.name == "GlassBreak1");
             glassBreak2 = audioSources.First(audio => audio.clip.name == "GlassBreak2");
-            delays = new Dictionary<AudioSource, float>();
-            delays[glassBreak1] = glassBreak1.clip.length;
-            delays[glassBreak2] = glassBreak2.clip.length;
+            delays = new Dictionary<int, float>();
+            delays[0] = glassBreak1.clip.length;
+            delays[1] = glassBreak2.clip.length;
         }
 
-        private float ComputeDelayTime(AudioSource audioSource)
+        private float ComputeDelayTime(int index)
         {
-            return audioSource == null ? 0 : delays[audioSource];
+            return delays[index];
         }
 
         private void Update()
@@ -89,11 +89,13 @@ namespace Assets.Scripts.Entities
             if (++crackState > maxCrack)
             {
                 glassBreak2.Play();
+                delays[1] = 0;
                 destroy = true;
             }
             else
             {
                 glassBreak1.Play();
+                delays[0] = 0;
                 Transform findChild = transform.parent.Find("Crack" + crackState);
                 if (!findChild.Equals(default(Transform)))
                 {

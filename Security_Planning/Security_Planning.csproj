@@ -135,6 +135,7 @@
     <Compile Include="Assets\Scripts\Entities\Characters\Burglar.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Goals\BaseGoal.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Goals\MoneyGoal.cs" />
+    <Compile Include="Assets\Scripts\Entities\Characters\Goals\NavigationGoal.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Guard.cs" />
     <Compile Include="Assets\Scripts\Entities\DetectorEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\Fence.cs" />
@@ -336,6 +337,29 @@
     <None Include="Assets\Logs\Log_2018-4-3_01-15-37.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-16-19.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-18-22.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_03-45-13.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_03-49-39.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_03-57-09.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_03-58-45.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_03-59-33.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-03-03.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-08-41.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-10-29.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-11-01.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-13-11.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-16-17.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-16-36.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-19-32.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-22-37.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-27-37.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-30-43.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-37-45.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-43-14.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-57-40.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-57-49.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_04-58-27.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-06-14.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-06-42.txt" />
     <None Include="Assets\Resources\Maps\BuildingGrid.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

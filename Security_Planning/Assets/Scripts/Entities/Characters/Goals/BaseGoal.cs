@@ -8,14 +8,12 @@ namespace Entities.Characters.Goals
     {
         public BaseCharacter Character { get; private set; }
         public IntegerTuple GoalCoordinates { get; private set; }
-        public PlanningEdgeType GoalEdgeType { get; private set; }
         public bool IsFinished { get; protected set; }
 
-        protected BaseGoal(BaseCharacter character, IntegerTuple goalCoordinates, PlanningEdgeType goalEdgeType)
+        protected BaseGoal(BaseCharacter character, IntegerTuple goalCoordinates)
         {
             Character = character;
             GoalCoordinates = goalCoordinates;
-            GoalEdgeType = goalEdgeType;
         }
 
         public abstract void Activate();

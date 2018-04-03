@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Constants;
+using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Items;
@@ -55,6 +56,11 @@ namespace Assets.Scripts.Entities.Characters
                 items = value;
                 Data.ItemNames = items.Select(item => item.name).ToArray();
             }
+        }
+
+        public IntegerTuple Position
+        {
+            get { return CurrentGame.Map.GetClosestTile(transform.position).Position; }
         }
 
         protected override void Start()
@@ -285,7 +291,7 @@ namespace Assets.Scripts.Entities.Characters
         public void Attack()
         {
             animator.SetTrigger("Attack" + 3 + "Trigger");
-            StartCoroutine(_LockMovementAndAttack(0, .6f));
+            //StartCoroutine(_LockMovementAndAttack(0, .6f));
         }
 
         public IEnumerator _LockMovementAndAttack(float delayTime, float lockTime)

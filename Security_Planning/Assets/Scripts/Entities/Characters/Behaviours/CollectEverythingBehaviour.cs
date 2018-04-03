@@ -3,6 +3,7 @@ using Assets.Scripts.Entities.Characters;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Entities;
+using Assets.Scripts.Entities.Characters.Goals;
 using Entities.Characters.Goals;
 using Assets.Scripts.Extensions;
 using UnityEngine;
@@ -30,6 +31,7 @@ namespace Entities.Characters.Behaviours
                 TileNode closestTile = currentMap.GetClosestTile(moneyObject.transform.position);
                 goals.Enqueue(new MoneyGoal(character, closestTile.Position, moneyObject));
             }
+            goals.Enqueue(new NavigationGoal(character, character.Position));
         }
 
         public override void Update()
