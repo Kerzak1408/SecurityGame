@@ -47,7 +47,6 @@ namespace Assets.Scripts.MapEditor
         public GameObject PanelNewMapForm;
         public GameObject Canvas;
         public GameObject PanelPassword;
-        public GameObject PanelError;
         public Dropdown DropdownMode;
 
         public GameObject PanelEditBehaviour;
@@ -290,7 +289,7 @@ namespace Assets.Scripts.MapEditor
             bool containsGuard = currentMap.Entities.Any(x => x.HasScriptOfType<Guard>());
             if (!containsGuard)
             {
-                ShowError("Unable to save a map without Guard. ");
+                UserDialog.Instance.ShowOk("Save failed", "Unable to save a map without Guard.");
                 return;
             }
             
@@ -333,7 +332,7 @@ namespace Assets.Scripts.MapEditor
 
         public void DeleteMap()
         {
-            UserDialog.Instance.Show(
+            UserDialog.Instance.ShowYesNo(
                 "Delete map",
                 "Are you sure you want to delete the map \"" +
                 SelectedMapButton.GetComponentInChildren<Text>().text +
@@ -439,17 +438,6 @@ namespace Assets.Scripts.MapEditor
             Grids.SetActive(true);
         }
 
-        public void ShowError(string message)
-        {
-            PanelError.GetComponentInChildren<Text>().text = message;
-            PanelError.SetActive(true);
-        }
-
-        public void HideError()
-        {
-            PanelError.SetActive(false);
-        }
-
         public void RemoveEntity()
         {
             FlagCurrentButton();
@@ -539,7 +527,7 @@ namespace Assets.Scripts.MapEditor
                 bool plural = changedmapsCount > 1;
                 string thereIsString = plural ? "There are " : "There is ";
                 string mapMapsString = plural ? "maps" : "map";
-                UserDialog.Instance.Show(
+                UserDialog.Instance.ShowYesNo(
                     "Unsaved changes",
                     thereIsString + changedmapsCount + " " + mapMapsString +
                     " with unsaved changes. Do you want to discard the changes and quit?",

@@ -13,17 +13,37 @@ public class UserDialog : MonoBehaviour
     public GameObject DialogPanel;
     public Button YesButton;
     public Button NoButton;
+    public Button OkButton;
     public Text Headline;
     public Text Text;
 
-    public void Show(string headline, string text, Action yesAction=null, Action noAction=null)
+    public void ShowYesNo(string headline, string text, Action yesAction=null, Action noAction=null)
+    {
+        ShowCommon(headline, text, false);
+        YesButton.onClick.AddListener(() => CloseDialog(yesAction));
+        NoButton.onClick.AddListener(() => CloseDialog(noAction));
+    }
+
+    public void ShowOk(string headline, string text, Action okAction=null)
+    {
+        ShowCommon(headline, text, true);
+        OkButton.onClick.AddListener(() => CloseDialog(okAction));
+    }
+
+    private void ShowCommon(string headline, string text, bool okActive)
     {
         EventSystem.current.SetSelectedGameObject(DialogPanel);
         DialogPanel.SetActive(true);
         Headline.text = headline;
         Text.text = text;
-        YesButton.onClick.AddListener(() => CloseDialog(yesAction));
-        NoButton.onClick.AddListener(() => CloseDialog(noAction));
+        ShowButtons(okActive);
+    }
+
+    private void ShowButtons(bool okActive)
+    {
+        YesButton.gameObject.SetActive(!okActive);
+        NoButton.gameObject.SetActive(!okActive);
+        OkButton.gameObject.SetActive(okActive);
     }
 
     private void CloseDialog(Action action)
@@ -35,6 +55,7 @@ public class UserDialog : MonoBehaviour
         }
         YesButton.onClick.RemoveAllListeners();
         NoButton.onClick.RemoveAllListeners();
+        OkButton.onClick.RemoveAllListeners();
     }
 
     private void Awake()
