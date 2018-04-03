@@ -373,6 +373,9 @@
     <None Include="Assets\Logs\Log_2018-4-3_05-41-23.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_05-42-27.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_05-44-42.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-49-17.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-50-43.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-51-36.txt" />
     <None Include="Assets\Resources\Maps\BuildingGrid.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

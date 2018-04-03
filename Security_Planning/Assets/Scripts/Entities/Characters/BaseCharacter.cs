@@ -196,6 +196,8 @@ namespace Assets.Scripts.Entities.Characters
                 {
                     CurrentGame.CurrentItemIcon.sprite = itemIcons[activeItemIndex].GetComponent<SpriteRenderer>().sprite;
                 }
+                CurrentGame.CurrentItemIcon.gameObject.SetActive(IsActive);
+                
                 return Items[activeItemIndex];
             }
                 

@@ -148,6 +148,7 @@ namespace Assets.Scripts.MapEditor
             if (character != null)
             {
                 character.IsActive = active;
+                character.GetActiveItem();
             }
         }
 
