@@ -6,11 +6,14 @@ namespace Assets.Scripts.Entities
 {
     public class ItemEntity : BaseEntityWithBaseData, IInteractable
     {
-        public void Interact(BaseCharacter character, Action sucsess = null)
+        public void Interact(BaseCharacter character, Action success = null)
         {
             character.AddItem(gameObject);
             Destroy(this);
-            sucsess();
+            if (success != null)
+            {
+                success();
+            }
         }
     }
 }

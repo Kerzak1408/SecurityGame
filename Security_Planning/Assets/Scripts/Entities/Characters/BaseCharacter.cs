@@ -134,8 +134,10 @@ namespace Assets.Scripts.Entities.Characters
         {
             Items.Add(itemObject);
             Object[] allItemIcons = ResourcesHolder.Instance.AllItemsIcons;
-            itemIcons.Add(Instantiate(
-                allItemIcons.First(obj => obj.name == itemObject.GetComponent<ItemEntity>().PrefabName) as GameObject));
+            GameObject itemIconObject = Instantiate(
+                allItemIcons.First(obj => obj.name == itemObject.GetComponent<ItemEntity>().PrefabName) as GameObject);
+            itemIconObject.transform.position = new Vector3(0, -10, 0);
+            itemIcons.Add(itemIconObject);
             GameObject activeObject = GetActiveItem();
             if (activeObject != null) activeObject.SetActive(false);
             activeItemIndex = Items.Count - 1;

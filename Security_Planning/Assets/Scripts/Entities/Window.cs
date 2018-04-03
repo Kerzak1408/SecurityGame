@@ -78,7 +78,7 @@ namespace Assets.Scripts.Entities
             }
         }
 
-        public void Interact(BaseCharacter character, Action successAction = null)
+        public void Interact(BaseCharacter character, Action success = null)
         {
             character.Attack();
             

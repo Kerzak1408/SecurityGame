@@ -17,16 +17,16 @@ namespace Assets.Scripts.Entities
             moneyAudio = gameObject.AttachAudioSource("Money", pitch:10);
         }
 
-        public void Interact(BaseCharacter character, Action successAction = null)
+        public void Interact(BaseCharacter character, Action success = null)
         {
             moneyAudio.Play();
             Action wrapperSuccessAction = () =>
             {
                 character.ObtainMoney();
                 CurrentGame.Map.Entities.Remove(gameObject);
-                if (successAction != null)
+                if (success != null)
                 {
-                    successAction();
+                    success();
                 }
 
                 Destroy(gameObject);

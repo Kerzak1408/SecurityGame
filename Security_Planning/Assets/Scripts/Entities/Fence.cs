@@ -43,16 +43,16 @@ namespace Assets.Scripts.Entities
             Interact(character, () => IsOpen = true);
         }
 
-        public void Interact(BaseCharacter character, Action successAction = null)
+        public void Interact(BaseCharacter character, Action success = null)
         {
             if (character.GetActiveItem().HasScriptOfType<WireCutterItem>())
             {
                 audioSource.Play();
                 Action wrapperSuccesAction = () =>
                 {
-                    if (successAction != null)
+                    if (success != null)
                     {
-                        successAction();
+                        success();
                     }
 
                     Destroy(gameObject);

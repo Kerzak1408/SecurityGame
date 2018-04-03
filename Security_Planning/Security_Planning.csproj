@@ -360,6 +360,19 @@
     <None Include="Assets\Logs\Log_2018-4-3_04-58-27.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_05-06-14.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_05-06-42.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-09-16.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-16-10.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-22-48.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-23-19.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-27-19.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-27-51.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-32-03.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-34-40.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-37-23.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-39-54.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-41-23.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-42-27.txt" />
+    <None Include="Assets\Logs\Log_2018-4-3_05-44-42.txt" />
     <None Include="Assets\Resources\Maps\BuildingGrid.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

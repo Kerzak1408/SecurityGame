@@ -51,7 +51,7 @@ namespace Assets.Scripts.Entities
             }
         }
 
-        public void Interact(BaseCharacter character, Action successAction = null)
+        public void Interact(BaseCharacter character, Action success = null)
         {
             GameObject activeItem = character.GetActiveItem();
             if (Vector3.Distance(transform.position, character.transform.position) < 2

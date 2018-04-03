@@ -5,6 +5,6 @@ namespace Assets.Scripts.Entities.Interfaces
 {
     public interface IInteractable
     {
-        void Interact(BaseCharacter character, Action sucsess = null);
+        void Interact(BaseCharacter character, Action success = null);
     }
 }

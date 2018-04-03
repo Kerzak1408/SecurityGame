@@ -34,7 +34,7 @@ namespace Assets.Scripts.Entities.Gates
             DelayTime = slidingDoorOpen.clip.length;
         }
 
-        public void Interact(BaseCharacter character, Action successAction = null)
+        public void Interact(BaseCharacter character, Action success = null)
         {
             GameObject activeItemObject = character.GetActiveItem();
             if (activeItemObject.HasScriptOfType<KeyItem>())
