@@ -3,13 +3,15 @@ using System.IO;
 using System.Linq;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.MapEditor.EditorHandlers;
+using Assets.Scripts.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.MapEditor
 {
-    public abstract class GridsBrowserBase : GridBase
+    public abstract class GridsBrowserBase<TSelectableHandler> : GridBase where TSelectableHandler : BaseHandler
     {
 
         public GameObject Grids;
@@ -17,7 +19,7 @@ namespace Assets.Scripts.MapEditor
         public GameObject ScrollView;
 
         protected Dictionary<Button, Map> MapsDictionary;
-
+        protected Dictionary<int, TSelectableHandler> selectableHandlers;
         protected Button SelectedMapButton;
 
         public float cameraOriginalSize;
@@ -39,6 +41,7 @@ namespace Assets.Scripts.MapEditor
         {
             base.Start();
             MapsDictionary = new Dictionary<Button, Map>();
+            selectableHandlers = new Dictionary<int, TSelectableHandler>();
 
             if (!Directory.Exists(MAPS_PATH))
             {

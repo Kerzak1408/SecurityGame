@@ -15,6 +15,13 @@ public class Scenes : MonoBehaviour
     }
 
     public static Dictionary<string, string> Parameters { get; private set; }
+    public static Dictionary<string, object> ObjectParameters { get; private set; }
+
+    public static void Load(string sceneName, Dictionary<string, object> objectParameters)
+    {
+        ObjectParameters = objectParameters;
+        SceneManager.LoadScene(sceneName);
+    }
 
     public static void Load(string sceneName, Dictionary<string, string> parameters = null)
     {
@@ -33,6 +40,12 @@ public class Scenes : MonoBehaviour
     {
         if (Parameters == null) return "";
         return Parameters[paramKey];
+    }
+
+    public static object GetObjectParam(string paramKey)
+    {
+        if (ObjectParameters == null) return null;
+        return ObjectParameters[paramKey];
     }
 
     private Scenes()

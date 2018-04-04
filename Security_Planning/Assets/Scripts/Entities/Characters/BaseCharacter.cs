@@ -367,5 +367,10 @@ namespace Assets.Scripts.Entities.Characters
         {
 
         }
+
+        public void GoalsCompleted()
+        {
+            CurrentGame.GoalsCompleted(this);
+        }
     }
 }

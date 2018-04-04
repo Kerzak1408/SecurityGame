@@ -6,9 +6,21 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.MapEditor.EditorHandlers
 {
-    public abstract class BaseEditorHandler
+    public abstract class BaseEditorHandler : BaseHandler
     {
         protected GridManager gridManager;
+        private string name;
+
+        public override string Name
+        {
+            get
+            {
+                string className = GetType().Name;
+                className = className.Substring(0, className.Length - 7);
+                className = Regex.Replace(className, "(\\B[A-Z])", " $1");
+                return className;
+            }
+        }
 
         protected BaseEditorHandler(GridManager gridManager)
         {

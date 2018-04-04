@@ -30,18 +30,14 @@ public class Burglar : BaseCharacter
     protected override void Update()
     {
         base.Update();
-        ProcessInputs();
         IsMoving = false;
-        if (isPaused) return;
+        if (isPaused || CurrentGame.IsFinished) return;
         behaviour.Update();
     }
 
-    private void ProcessInputs()
+    public void ChangePausedState()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            isPaused = !isPaused;
-        }
+        isPaused = !isPaused;
     }
 
     public override void RequestPassword(IPasswordOpenable passwordOpenableObject)

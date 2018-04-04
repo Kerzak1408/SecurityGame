@@ -34,6 +34,10 @@ namespace Assets.Scripts.Entities.Characters
         // Update is called once per frame
         protected override void Update()
         {
+            if (CurrentGame.IsFinished)
+            {
+                return;
+            }
             IsMoving = false;
             
             Ray ray = Camera.ScreenPointToRay(Input.mousePosition);

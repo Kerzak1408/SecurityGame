@@ -1,17 +1,39 @@
 ﻿using System;
+using System.Collections.Generic;
+using Assets.Scripts.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.MapEditor
 {
-    public class MapChoiceManager : GridsBrowserBase {
+    public class MapChoiceManager : GridsBrowserBase<BaseGameHandler>
+    {
+        public Dropdown DropdownGameMode;
 
         public void LoadGame()
         {
             if (SelectedMapButton != null)
             {
-                Scenes.Load(Scenes.MAIN_SCENE, "map", MapsDictionary[SelectedMapButton].Name);
+                Dictionary<string, object> parameters = new Dictionary<string, object>();
+                parameters["gameHandler"] = selectableHandlers[DropdownGameMode.value];
+                parameters["map"] = MapsDictionary[SelectedMapButton].Name;
+                Scenes.Load(Scenes.MAIN_SCENE, parameters);
             }
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            IEnumerable<BaseGameHandler> gameHandlers =
+                ReflectiveEnumerator.GetAllImplementationsOfAbstractClass<BaseGameHandler>();
+            var options = new List<Dropdown.OptionData>();
+            foreach (BaseGameHandler handler in gameHandlers)
+            {
+                selectableHandlers[options.Count] = handler;
+                options.Add(new Dropdown.OptionData(handler.Name));
+            }
+
+            DropdownGameMode.options = options;
         }
 
         protected override void Update()

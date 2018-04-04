@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
@@ -16,16 +17,20 @@ namespace Assets.Scripts.MapEditor
         public Text TextMoney;
         public GameObject Menu;
         public Image CurrentItemIcon;
+        public GameObject PanelFinishGame;
 
         public Map Map { get; private set; }
+        public bool IsFinished { get; private set; }
         public Camera ObserverCamera;
 
-        private Tuple<Camera, BaseCharacter>[] cameras;
+        public Tuple<Camera, BaseCharacter>[] Cameras;
         private int activeCameraIndex;
         private Vector3? startPointRight;
         private Vector3 previousMousePosition;
 
         private StreamWriter logFileWriter;
+        private BaseGameHandler gameHandler;
+        
 
         // Use this for initialization
         protected override void Start ()
@@ -33,7 +38,8 @@ namespace Assets.Scripts.MapEditor
             base.Start();
             var camerasList = new List<Tuple<Camera, BaseCharacter>>();
             camerasList.Add(new Tuple<Camera, BaseCharacter>(ObserverCamera, null));
-            string mapName = Scenes.GetParam("map");
+            string mapName = (string) Scenes.GetObjectParam("map");
+            gameHandler = (BaseGameHandler) Scenes.GetObjectParam("gameHandler");
             Map = LoadMap(mapName, mapVisible:true);
 
             DirectoryHelper.CreateDirectoryLazy(FileHelper.JoinPath(Application.dataPath, "Logs"));
@@ -89,29 +95,29 @@ namespace Assets.Scripts.MapEditor
                 }
             }
 
-            cameras = camerasList.ToArray();
-            foreach (Tuple<Camera, BaseCharacter> tuple in cameras)
+            Cameras = camerasList.ToArray();
+            foreach (Tuple<Camera, BaseCharacter> tuple in Cameras)
             {
                 tuple.First.gameObject.SetActive(false);
             }
-            cameras[activeCameraIndex].First.gameObject.SetActive(true);
+            Cameras[activeCameraIndex].First.gameObject.SetActive(true);
 
             Map.EmptyParent.transform.Rotate(90, 0, 0);
             Map.ExtractAIModel();
             //Map.EmptyParent.transform.eulerAngles = new Vector3(90, Map.EmptyParent.transform.eulerAngles.y, Map.EmptyParent.transform.eulerAngles.z);
+
+            gameHandler.Start(this);
         }
 
         private void Update ()
         {
+            if (IsFinished)
+            {
+                return;
+            }
             if (Input.GetKeyUp(KeyCode.Escape))
             {
                 Menu.SetActive(!Menu.activeInHierarchy);
-            }
-            if (Input.GetKeyDown(KeyCode.LeftAlt))
-            {
-                SetCameraActive(false);
-                activeCameraIndex = (activeCameraIndex + 1) % cameras.Length;
-                SetCameraActive(true);
             }
             if (ObserverCamera != null && ObserverCamera.gameObject.activeInHierarchy)
             {
@@ -138,11 +144,19 @@ namespace Assets.Scripts.MapEditor
                 }
 
             }
+            gameHandler.Update();
+        }
+
+        public void SwitchCamera()
+        {
+            SetCameraActive(false);
+            activeCameraIndex = (activeCameraIndex + 1) % Cameras.Length;
+            SetCameraActive(true);
         }
 
         private void SetCameraActive(bool active)
         {
-            Tuple<Camera, BaseCharacter> tuple = cameras[activeCameraIndex];
+            Tuple<Camera, BaseCharacter> tuple = Cameras[activeCameraIndex];
             tuple.First.gameObject.SetActive(active);
             BaseCharacter character = tuple.Second;
             if (character != null)
@@ -168,7 +182,24 @@ namespace Assets.Scripts.MapEditor
 
         private void OnDrawGizmos()
         {
+            var guardCamera = Cameras.First(kvPair => kvPair.Second != null && kvPair.Second is Guard).First;
+            var burglarCollider = Map.Entities.First(entity => entity.HasScriptOfType<Burglar>()).GetComponent<Burglar>().GetComponent<SphereCollider>();
+            var planes = GeometryUtility.CalculateFrustumPlanes(guardCamera);
+            if (GeometryUtility.TestPlanesAABB(planes, burglarCollider.bounds))
+            {
+                Vector3 guardCameraPosition = guardCamera.transform.position;
 
+                Ray ray = new Ray(guardCameraPosition, burglarCollider.transform.position + burglarCollider.center - guardCameraPosition);
+                Gizmos.DrawRay(ray);
+                RaycastHit[] hits = Physics.RaycastAll(ray);
+                float minDistance = hits.Min(hit => hit.distance);
+                RaycastHit closestHit = hits.First(hit => hit.distance == minDistance);
+                Debug.Log("Closest hit: " + closestHit.transform.name);
+                if (closestHit.collider == burglarCollider)
+                {
+                    Debug.Log("Burglar detected.");
+                }
+            }
             if (Map == null) return;
 
             Map.ExtractAIModel();
@@ -232,6 +263,19 @@ namespace Assets.Scripts.MapEditor
         {
             logFileWriter.WriteLine(line);
             Debug.Log(line);
+        }
+
+        public void FinishGame(string message)
+        {
+            IsFinished = true;
+            Log(message);
+            PanelFinishGame.SetActive(true);
+            PanelFinishGame.GetComponentInChildren<Text>().text = message;
+        }
+
+        public void GoalsCompleted(BaseCharacter baseCharacter)
+        {
+            gameHandler.GoalsCompleted(baseCharacter);
         }
     }
 }

@@ -17,7 +17,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.MapEditor
 {
-    public class GridManager : GridsBrowserBase
+    public class GridManager : GridsBrowserBase<BaseUserSelectableHandler>
     {
         public InputField InputWidth;
         public InputField InputHeight;
@@ -65,7 +65,6 @@ namespace Assets.Scripts.MapEditor
 
         private BaseEditorHandler currentEditorHandler;
         private IEnumerable<BaseEditorHandler> editorHandlers;
-        private Dictionary<int, BaseUserSelectableHandler> selectableHandlers;
         private BaseEditorHandler previousHandler;
         private string[] affectedCanvasElements = {"Scroll View", "ButtonMenu", "ButtonSave", "ButtonDelete"};
         internal Vector3 newEntityPosition;
@@ -85,20 +84,17 @@ namespace Assets.Scripts.MapEditor
             currentEditorHandler = editorHandlers.First(x => x is DragHandler);
 
             IEnumerable<BaseUserSelectableHandler> baseUserSelectableHandlers = editorHandlers.OfType<BaseUserSelectableHandler>();
-            selectableHandlers = new Dictionary<int, BaseUserSelectableHandler>();
             var options = new List<Dropdown.OptionData>();
             int indexOfDrag = 0;
             foreach (BaseUserSelectableHandler baseUserSelectableHandler in baseUserSelectableHandlers)
             {
-                string className = baseUserSelectableHandler.GetType().Name;
-                className = className.Substring(0, className.Length - 7);
-                className = Regex.Replace(className, "(\\B[A-Z])", " $1");
+
                 selectableHandlers[options.Count] = baseUserSelectableHandler;
                 if (baseUserSelectableHandler is DragHandler)
                 {
                     indexOfDrag = options.Count;
                 }
-                options.Add(new Dropdown.OptionData(className));
+                options.Add(new Dropdown.OptionData(baseUserSelectableHandler.Name));
             }
             DropdownMode.options = options;
             DropdownMode.value = indexOfDrag;

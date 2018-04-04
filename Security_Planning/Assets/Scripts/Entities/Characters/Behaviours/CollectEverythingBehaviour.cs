@@ -45,49 +45,12 @@ namespace Entities.Characters.Behaviours
                 }
                 else
                 {
+                    character.GoalsCompleted();
                     currentGoal = null;
                     return;
                 }
             }
             currentGoal.Update();
-            //if (followedNode != null)
-            //{
-            //    if (character.NavigateTo(followedNode))
-            //    {
-            //        if (waitingForNextNode)
-            //        {
-            //            followedNode = path.Count == 0 ? null : path.Dequeue();
-            //        }
-            //    }
-            //    else
-            //    {
-            //        waitingForNextNode = true;
-            //    }
-            //}
-            //else
-            //{
-            //    RecomputePath();
-            //}
         }
-
-        //private void RecomputePath()
-        //{
-        //    Map currentMap = character.CurrentGame.Map;
-        //    aiModelTiles = currentMap.AIModel.Tiles;
-        //    TileNode startNode = followedNode == null ? currentMap.GetClosestTile(character.transform.position) : 
-        //        aiModelTiles[followedNode.Position.First, followedNode.Position.Second];
-        //    List<TileNode> fullPath = AStarAlgorithm.AStar(startNode, aiModelTiles[currentGoal.First, currentGoal.Second], heuristics, Debug.Log, node => node.IsDetectable());
-        //    if (fullPath == null || fullPath.Count <= 1)
-        //    {
-        //        currentGoal = goals.Count == 0 ? null : goals.Dequeue();
-        //        followedNode = null;
-        //    }
-        //    else
-        //    {
-        //        path = new Queue<TileNode>(fullPath);
-        //        followedNode = path.Dequeue();
-        //    }
-
-        //}
     }
 }
