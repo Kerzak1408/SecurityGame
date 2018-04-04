@@ -17,6 +17,11 @@ namespace Assets.Scripts.Entities
             get { return PlanningEdgeType.PIR; }
         }
 
+        public override DetectorType DetectorType
+        {
+            get { return DetectorType.PIR; }
+        }
+
         public override Type GetReceiverType()
         {
             return typeof(PIRAlarm);

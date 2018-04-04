@@ -10,6 +10,7 @@ namespace Assets.Scripts.Serialization
         private string[] itemNames;
         private List<EdgeType> forbiddenEdgeTypes;
         private List<PlanningEdgeType> forbiddenPlanningEdgeTypes;
+        private List<DetectorType> ignoredDetectors;
 
         public string[] ItemNames
         {
@@ -27,6 +28,12 @@ namespace Assets.Scripts.Serialization
         {
             get { return forbiddenPlanningEdgeTypes ?? (forbiddenPlanningEdgeTypes = new List<PlanningEdgeType>()); }
             set { forbiddenPlanningEdgeTypes = value; }
+        }
+
+        public List<DetectorType> IgnoredDetectors
+        {
+            get { return ignoredDetectors ?? (ignoredDetectors = new List<DetectorType>()); }
+            set { ignoredDetectors = value; }
         }
     }
 }

@@ -138,6 +138,7 @@
     <Compile Include="Assets\Scripts\Entities\Characters\Goals\NavigationGoal.cs" />
     <Compile Include="Assets\Scripts\Entities\Characters\Guard.cs" />
     <Compile Include="Assets\Scripts\Entities\DetectorEntity.cs" />
+    <Compile Include="Assets\Scripts\Entities\Enums\DetectorType.cs" />
     <Compile Include="Assets\Scripts\Entities\Fence.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\BaseGate.cs" />
     <Compile Include="Assets\Scripts\Entities\Gates\BaseSlidingGate.cs" />
@@ -422,6 +423,17 @@
     <None Include="Assets\Logs\Log_2018-4-4_04-25-17.txt" />
     <None Include="Assets\Logs\Log_2018-4-4_04-25-26.txt" />
     <None Include="Assets\Logs\Log_2018-4-4_04-25-33.txt" />
+    <None Include="Assets\Logs\Log_2018-4-4_04-26-25.txt" />
+    <None Include="Assets\Logs\Log_2018-4-4_04-27-21.txt" />
+    <None Include="Assets\Logs\Log_2018-4-4_04-28-07.txt" />
+    <None Include="Assets\Logs\Log_2018-4-4_04-32-19.txt" />
+    <None Include="Assets\Logs\Log_2018-4-4_07-16-10.txt" />
+    <None Include="Assets\Logs\Log_2018-4-4_11-13-48.txt" />
+    <None Include="Assets\Logs\Log_2018-4-4_11-26-07.txt" />
+    <None Include="Assets\Logs\Log_2018-4-4_11-30-31.txt" />
+    <None Include="Assets\Logs\Log_2018-4-4_11-32-06.txt" />
+    <None Include="Assets\Logs\Log_2018-4-4_11-38-03.txt" />
+    <None Include="Assets\Logs\Log_2018-4-4_11-39-23.txt" />
     <None Include="Assets\Logs\Log_2018-4-4_12-35-22.txt" />
     <None Include="Assets\Logs\Log_2018-4-4_12-45-17.txt" />
     <None Include="Assets\Resources\Maps\BuildingGrid.txt" />

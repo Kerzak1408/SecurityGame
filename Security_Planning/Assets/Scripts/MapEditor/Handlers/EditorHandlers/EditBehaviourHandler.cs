@@ -17,6 +17,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         private Transform togglesParent;
         private Dictionary<EdgeType, Toggle> tileEdgeToggles;
         private Dictionary<PlanningEdgeType, Toggle> planningEdgeToggles;
+        private Dictionary<DetectorType, Toggle> ignoredDetectorsDictionary;
         private Burglar selectedBurglar;
         private bool toggleChangedFromCode;
 
@@ -34,13 +35,18 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             }
             tileEdgeToggles = new Dictionary<EdgeType, Toggle>();
             planningEdgeToggles = new Dictionary<PlanningEdgeType, Toggle>();
-            IntantiateToggles(EdgeTypeUtils.BannableEdgeType, tileEdgeToggles, burglar => burglar.Data.ForbiddenEdgeTypes, GetToggleText);
-            IntantiateToggles(PlanningEdgeTypeUtils.BannableEdgeTypes, planningEdgeToggles, burglar => burglar.Data.ForbiddenPlanningEdgeTypes, GetToggleText);
+            ignoredDetectorsDictionary = new Dictionary<DetectorType, Toggle>();
+            InstantiateToggles(EdgeTypeUtils.BannableEdgeType, tileEdgeToggles,
+                burglar => burglar.Data.ForbiddenEdgeTypes, GetToggleText);
+            InstantiateToggles(PlanningEdgeTypeUtils.BannableEdgeTypes, planningEdgeToggles,
+                burglar => burglar.Data.ForbiddenPlanningEdgeTypes, GetToggleText);
+            InstantiateToggles(Enum.GetValues(typeof(DetectorType)).Cast<DetectorType>(), ignoredDetectorsDictionary, 
+                burglar => burglar.Data.IgnoredDetectors, GetToggleText, true);
             PreviousValues = new Dictionary<Toggle, bool>();
         }
 
-        private void IntantiateToggles<T>(IEnumerable<T> bannableEdgeTypes, Dictionary<T, Toggle> toggleDictionary,
-            Func<BaseCharacter, List<T>> getForbiddenEdges, Func<T, string> toString)
+        private void InstantiateToggles<T>(IEnumerable<T> bannableEdgeTypes, Dictionary<T, Toggle> toggleDictionary,
+            Func<BaseCharacter, List<T>> getForbiddenEdges, Func<T, string> toString, bool isOnIfContains = false)
         {
             foreach (T edgeType in bannableEdgeTypes)
             {
@@ -53,6 +59,10 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 toggle.onValueChanged.AddListener(isOn =>
                 {
                     List<T> forbiddenEdges = getForbiddenEdges(selectedBurglar);
+                    if (isOnIfContains)
+                    {
+                        isOn = !isOn;
+                    }
                     if (isOn)
                     {
                         forbiddenEdges.Remove(edgeType);
@@ -65,6 +75,19 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                         }
                     }
                 });
+            }
+        }
+
+        private string GetToggleText(DetectorType detectorType)
+        {
+            switch (detectorType)
+            {
+                case DetectorType.CAMERA:
+                    return "IGNORE CAMERAS";
+                case DetectorType.PIR:
+                    return "IGNORE PIR DETECTORS";
+                default:
+                    return "UNDEFINED";
             }
         }
 
@@ -106,17 +129,23 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 selectedBurglar = burglarHit.transform.gameObject.GetComponent<Burglar>();
                 InitializeTogglesValues(planningEdgeToggles, selectedBurglar.Data.ForbiddenPlanningEdgeTypes);
                 InitializeTogglesValues(tileEdgeToggles, selectedBurglar.Data.ForbiddenEdgeTypes);
+                InitializeTogglesValues(ignoredDetectorsDictionary, selectedBurglar.Data.IgnoredDetectors, true);
                 panelEditBehaviour.SetActive(true);
             }
         }
 
-        private void InitializeTogglesValues<T>(Dictionary<T, Toggle> dictionary, List<T> forbiddenEdgeTypes)
+        private void InitializeTogglesValues<T>(Dictionary<T, Toggle> dictionary, List<T> forbiddenEdgeTypes, 
+            bool isOnIfContains=false)
         {
             foreach (KeyValuePair<T, Toggle> keyValuePair in dictionary)
             {
                 T edgeType = keyValuePair.Key;
                 Toggle toggle = keyValuePair.Value;
                 bool isOn = !forbiddenEdgeTypes.Contains(edgeType);
+                if (isOnIfContains)
+                {
+                    isOn = !isOn;
+                }
                 toggle.isOn = isOn;
                 PreviousValues[toggle] = isOn;
             }

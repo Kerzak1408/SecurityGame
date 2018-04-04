@@ -45,13 +45,19 @@ public class TileNode : IAStarNode<TileNode>
         return Edges.Any(edge => edge.Type.Equals(EdgeType.NORMAL) && edge.Neighbor.Position.Equals(integerTuple));
     }
 
-    public bool IsDetectable(IEnumerable<DetectorEntity> deactivatedDetectors=null)
+    public bool IsDetectable(IEnumerable<DetectorEntity> deactivatedDetectors=null, IEnumerable<DetectorType> ignoredTypes=null)
     {
+        IEnumerable<DetectorEntity> filteredDetectors = DetectedBy;
+        if (ignoredTypes != null)
+        {
+            filteredDetectors =
+                filteredDetectors.Where(detector => !ignoredTypes.Contains(detector.DetectorType));
+        }
         if (deactivatedDetectors != null)
         {
-            return DetectedBy.Any(detector => !deactivatedDetectors.Contains(detector));
+            return filteredDetectors.Any(detector => !deactivatedDetectors.Contains(detector));
         }
-        return DetectedBy.Count != 0;
+        return filteredDetectors.Count() != 0;
     }
 
     public override string ToString()

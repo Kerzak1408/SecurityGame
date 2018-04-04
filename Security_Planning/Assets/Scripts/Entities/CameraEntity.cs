@@ -13,6 +13,11 @@ namespace Assets.Scripts.Entities
             get { return PlanningEdgeType.CAMERA; }
         }
 
+        public override DetectorType DetectorType
+        {
+            get { return DetectorType.CAMERA; }
+        }
+
         public override void StartGame()
         {
             //Debug.Log("camera related name = " + Data.relatedName);

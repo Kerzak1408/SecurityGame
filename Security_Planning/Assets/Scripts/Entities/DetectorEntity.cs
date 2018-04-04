@@ -21,6 +21,7 @@ namespace Assets.Scripts.Entities
         }
         
         public abstract PlanningEdgeType PlanningEdgeType { get; }
+        public abstract DetectorType DetectorType { get; }
         public GameObject GameObject { get; private set; }
 
         protected override void Start()

@@ -15,7 +15,8 @@ public class MoneyGoal : NavigationGoal
 
     private GameObject moneyObject;
 
-    public MoneyGoal(BaseCharacter character, IntegerTuple goalCoordinates, GameObject moneyObject) : base(character, goalCoordinates)
+    public MoneyGoal(BaseCharacter character, IntegerTuple goalCoordinates, GameObject moneyObject) : 
+        base(character, goalCoordinates)
     {
         this.moneyObject = moneyObject;
     }
