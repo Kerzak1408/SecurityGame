@@ -438,7 +438,7 @@ namespace Assets.Scripts.MapEditor
         {
             FlagCurrentButton();
             ButtonRemoveEntity.SetActive(false);
-            MapsDictionary[SelectedMapButton].RemoveEntity(toBeRemovedEntity);
+            MapsDictionary[SelectedMapButton].Entities.Remove(toBeRemovedEntity);
             Destroy(toBeRemovedEntity);
         }
 

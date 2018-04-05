@@ -211,6 +211,10 @@ namespace Assets.Scripts.MapEditor
                 Gizmos.DrawSphere(mapTile.transform.position, 0.1f);
                 foreach (TileEdge edge in tileModel.Edges)
                 {
+                    if (edge.IsObstructed(new List<BaseEntity>()))
+                    {
+                        continue;
+                    }
                     GameObject neighborTile = Map.Tiles.Get(edge.Neighbor.Position);
                     switch (edge.Type)
                     {

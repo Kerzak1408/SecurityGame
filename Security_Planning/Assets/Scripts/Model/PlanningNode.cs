@@ -35,7 +35,7 @@ namespace Assets.Scripts.Model
                     Path<TileNode, TileEdge> pathToGoal = AStarAlgorithm.AStar(TileNode, goalNode.TileNode,
                             new EuclideanHeuristics<TileNode>(tiles),
                             Filters.DetectableFilter(DestroyedDetectors, character.Data.IgnoredDetectors),
-                            Filters.EdgeFilter(UnlockedEdges, character.Data.ForbiddenEdgeTypes),
+                            Filters.EdgeFilter(UnlockedEdges, character.Data.ForbiddenEdgeTypes, DestroyedDetectors.OfType<BaseEntity>()),
                             edge => ComputeEdgeCost(edge, DestroyedObstacles));
 
                     if (pathToGoal.Cost < float.MaxValue)
@@ -73,7 +73,7 @@ namespace Assets.Scripts.Model
                             Path<TileNode, TileEdge> path = AStarAlgorithm.AStar(TileNode, neighborTileNode,
                                     new EuclideanHeuristics<TileNode>(tiles),
                                     detectableFilter,
-                                    Filters.EdgeFilter(UnlockedEdges, character.Data.ForbiddenEdgeTypes),
+                                    Filters.EdgeFilter(UnlockedEdges, character.Data.ForbiddenEdgeTypes, DestroyedDetectors.OfType<BaseEntity>()),
                                     edge => ComputeEdgeCost(edge, DestroyedObstacles));
 
                             if (path.Edges != null)

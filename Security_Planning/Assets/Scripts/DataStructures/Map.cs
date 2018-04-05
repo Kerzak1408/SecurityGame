@@ -28,7 +28,7 @@ namespace Assets.Scripts.DataStructures
         public static readonly string FENCE = "Fence";
         public static readonly string GATE = "Gate";
         public static readonly string HEDGE = "Hedge";
-        private static readonly float MIN_OBSTACLE_DISTANCE = 0.2f;
+        private static readonly float MIN_OBSTACLE_DISTANCE = 0.5f;
 
         public GameObject[,] Tiles { get; private set; }
         public List<GameObject> Entities { get; private set; }
@@ -72,9 +72,17 @@ namespace Assets.Scripts.DataStructures
             EmptyParent.SetActive(active);
         }
 
-        public void RemoveEntity(GameObject toBeRemovedEntity)
+        public void RemoveDetectorEntity(GameObject toBeRemovedEntity)
         {
             Entities.Remove(toBeRemovedEntity);
+            foreach (TileNode node in AIModel.Tiles)
+            {
+                node.DetectedBy.Remove(toBeRemovedEntity.GetComponent<DetectorEntity>());
+                foreach (TileEdge edge in node.Edges)
+                {
+                    edge.ObstructingEntities.Remove(toBeRemovedEntity.GetComponent<BaseEntity>());
+                }
+            }
         }
 
         /// <summary>
@@ -211,15 +219,29 @@ namespace Assets.Scripts.DataStructures
         private void RemoveObstacleEdges(GameObject entity)
         {
             var entityCollider = entity.GetComponent<Collider>();
+            List<Collider> colliders = entity.GetComponentsInChildren<BoxCollider>().ToList<Collider>();
+            colliders.Add(entityCollider);
             foreach (TileNode node in AIModel.Tiles)
             {
-                Vector3 nodePosition = Tiles.Get(node.Position).transform.position;
-                Vector3 closestPointOnCollider = entityCollider.ClosestPointOnBounds(nodePosition);
-                float distance = Vector3.Distance(nodePosition, closestPointOnCollider);
-                if (distance < MIN_OBSTACLE_DISTANCE)
+                foreach (TileEdge edge in node.Edges)
                 {
-                    //Debug.Log("Removing all edges from node: " + node.Position);
-                    node.RemoveAllEdgesBothDirections();
+                    Vector3 nodePosition = Tiles.Get(node.Position).transform.position;
+                    IntegerTuple neighborIndices = edge.Neighbor.Position;
+                    Vector3 neighborPosition = Tiles.Get(neighborIndices).transform.position;
+                    Vector3 edgeCenter = (nodePosition + neighborPosition) / 2;
+                    Vector3[] edgePoints = {nodePosition, edgeCenter, neighborPosition};
+                    float distance = colliders.Min(collider =>
+                    {
+                        return edgePoints.Min(edgePoint =>
+                        {
+                            Vector3 closestPoint = collider.ClosestPoint(nodePosition);
+                            return Vector3.Distance(edgePoint, closestPoint);
+                        });
+                    });
+                    if (distance < MIN_OBSTACLE_DISTANCE)
+                    {
+                        edge.ObstructingEntities.Add(entity.GetComponent<BaseEntity>());
+                    }
                 }
             }
         }

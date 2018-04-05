@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Scripts.Entities;
+using UnityEngine;
 
 namespace Assets.Scripts.Model
 {
@@ -13,7 +14,8 @@ namespace Assets.Scripts.Model
             return node => node.IsDetectable(deactivatedDetectors, ignoredTypes);
         } 
 
-        public static Func<TileEdge, bool> EdgeFilter(IEnumerable<EdgeType> unlockedEdgeTypes=null, IEnumerable<EdgeType> hardlyForbiddenTypes=null)
+        public static Func<TileEdge, bool> EdgeFilter(IEnumerable<EdgeType> unlockedEdgeTypes, 
+            IEnumerable<EdgeType> hardlyForbiddenTypes, IEnumerable<BaseEntity> destroyedObstacles)
         {
             HashSet<EdgeType> forbiddenTypes = new HashSet<EdgeType> {EdgeType.FENCE, EdgeType.CARD_DOOR, EdgeType.KEY_DOOR};
             if (unlockedEdgeTypes != null)
@@ -31,7 +33,7 @@ namespace Assets.Scripts.Model
                     forbiddenTypes.Add(forbiddenType);
                 }
             }
-            return edge => forbiddenTypes.Contains(edge.Type);
+            return edge => edge.IsObstructed(destroyedObstacles) || forbiddenTypes.Contains(edge.Type);
         }
     }
 }
