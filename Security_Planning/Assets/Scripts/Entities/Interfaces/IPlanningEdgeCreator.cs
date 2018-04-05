@@ -7,7 +7,9 @@ public interface IPlanningEdgeCreator
 {
     PlanningEdgeType PlanningEdgeType { get; }
 
-    GameObject GameObject { get; }
+    GameObject Interactable { get; }
+
+    float InteractTime { get; }
 
     /// <summary>
     /// Used in planning graph building. Tells whether the edge of type corresponding to

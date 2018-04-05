@@ -17,6 +17,11 @@ namespace Assets.Scripts.Entities
             return typeof(GateOpen);
         }
 
+        public float InteractTime
+        {
+            get { return 0; }
+        }
+
         public override void StartGame()
         {
             GameObject relateGateObject = GameObject.Find(Data.relatedName);

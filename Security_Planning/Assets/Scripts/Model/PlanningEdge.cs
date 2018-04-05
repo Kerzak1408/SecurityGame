@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Entities.Interfaces;
 using Entities.Characters.Actions;
 using UnityEngine;
 
@@ -14,13 +15,11 @@ namespace Assets.Scripts.Model
         private GameObject interactObject;
         private Path<TileNode, TileEdge> path;
         private BaseCharacter character;
+        private float interactTime;
 
         public override float Cost
         {
-            get
-            {
-                return path.Cost;
-            }
+            get { return path.Cost + interactTime; }
         }
 
         public List<BaseAction> ActionsToComplete
@@ -43,12 +42,13 @@ namespace Assets.Scripts.Model
         }
 
         public PlanningEdge(PlanningNode start, PlanningNode neighbor, PlanningEdgeType type, BaseCharacter character,
-            Path<TileNode, TileEdge> path, GameObject interactObject = null)
+            Path<TileNode, TileEdge> path, float interactTime, GameObject interactObject = null)
             : base(start, neighbor, type)
         {
             this.path = path;
             this.interactObject = interactObject;
             this.character = character;
+            this.interactTime = interactTime;
         }
     }
 }

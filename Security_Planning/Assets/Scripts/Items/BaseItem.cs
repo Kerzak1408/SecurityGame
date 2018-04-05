@@ -10,11 +10,15 @@ namespace Assets.Scripts.Items
         public abstract EdgeType CorrespondingEdgeType { get; }
 
         public abstract PlanningEdgeType PlanningEdgeType { get; }
-        public GameObject GameObject { get; set; }
+        public GameObject Interactable { get; set; }
+        public float InteractTime
+        {
+            get { return 0; }
+        }
 
         protected virtual void Start()
         {
-            GameObject = gameObject;
+            Interactable = gameObject;
         }
         
         public bool ShouldExplore(PlanningNode node)

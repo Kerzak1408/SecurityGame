@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class CollectionsExtensions
@@ -93,5 +94,21 @@ public static class CollectionsExtensions
             dictionary[key] = new TCollection();
         }
         dictionary[key].Add(value);
+    }
+
+    public static T ArgMin<T>(this IEnumerable<T> enumerable, Func<T, float> value)
+    {
+        T result = default(T);
+        float min = float.MaxValue;
+        foreach (T item in enumerable)
+        {
+            float current = value(item);
+            if (current < min)
+            {
+                min = current;
+                result = item;
+            } 
+        }
+        return result;
     }
 }

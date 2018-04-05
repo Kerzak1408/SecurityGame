@@ -27,6 +27,11 @@ namespace Assets.Scripts.Entities.Gates
 
         public float DelayTime { get; private set; }
 
+        public float InteractTime
+        {
+            get { return DelayTime; }
+        }
+
         protected override void Start()
         {
             base.Start();

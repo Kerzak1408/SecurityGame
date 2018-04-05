@@ -13,6 +13,7 @@ namespace Assets.Scripts.Entities
     public class Fence : BaseObject, IInteractable, IObstacle
     {
         private AudioSource audioSource;
+        private float cuttingLength;
 
         public EdgeType EdgeType
         {
@@ -28,13 +29,19 @@ namespace Assets.Scripts.Entities
 
         public float DelayTime
         {
-            get { return  IsOpen ? 0 : 10; }
+            get { return  IsOpen ? 0 : cuttingLength; }
+        }
+
+        public float InteractTime
+        {
+            get { return DelayTime; }
         }
 
         protected override void Start()
         {
             base.Start();
             audioSource = gameObject.AttachAudioSource("CuttingWire");
+            cuttingLength = audioSource.clip.length;
         }
 
         public void Open(BaseCharacter character)

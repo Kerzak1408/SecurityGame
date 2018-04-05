@@ -40,7 +40,7 @@ namespace Assets.Scripts.Model
 
                     if (pathToGoal.Cost < float.MaxValue)
                     {
-                        PlanningEdge edge = new PlanningEdge(this, goalNode, PlanningEdgeType.MONEY, character, pathToGoal, finiteObject);
+                        PlanningEdge edge = new PlanningEdge(this, goalNode, PlanningEdgeType.MONEY, character, pathToGoal, 0, finiteObject);
                         edges.Add(edge);
                     }
                     foreach (KeyValuePair<IPlanningEdgeCreator, List<TileNode>> keyValuePair in creatorsDictionary)
@@ -107,7 +107,8 @@ namespace Assets.Scripts.Model
                                     creator.PlanningEdgeType,
                                     character, 
                                     path,
-                                    creator.GameObject);
+                                    creator.InteractTime,
+                                    creator.Interactable);
                                 edges.Add(planningEdge);
                             }
                         }

@@ -10,7 +10,7 @@ using Assets.Scripts.Model;
 using UnityEngine;
 
 namespace Assets.Scripts.Entities
-{
+{   
     public abstract class DetectorEntity : TransmitterEntity, IInteractable, IPlanningEdgeCreator
     {
         private new Camera camera;
@@ -22,12 +22,16 @@ namespace Assets.Scripts.Entities
         
         public abstract PlanningEdgeType PlanningEdgeType { get; }
         public abstract DetectorType DetectorType { get; }
-        public GameObject GameObject { get; private set; }
+        public GameObject Interactable { get; private set; }
+        public float InteractTime
+        {
+            get { return Constants.Constants.DESTROY_TIME; }
+        }
 
         protected override void Start()
         {
             base.Start();
-            GameObject = gameObject;
+            Interactable = gameObject;
         }
 
         public bool ShouldExplore(PlanningNode node)
@@ -74,7 +78,7 @@ namespace Assets.Scripts.Entities
                 {
                     success();
                 }
-                CurrentGame.Map.Entities.Remove(gameObject);
+                CurrentGame.Map.RemoveDetectorEntity(gameObject);
                 Destroy(gameObject);
             };
             CastManager.Instance.Cast(character, Constants.Constants.DESTROY_TIME, null, wrapperSuccess);
@@ -82,7 +86,7 @@ namespace Assets.Scripts.Entities
 
         public override string ToString()
         {
-            return GameObject.name;
+            return Interactable.name;
         }
     }
 }

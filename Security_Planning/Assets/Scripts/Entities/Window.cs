@@ -37,6 +37,11 @@ namespace Assets.Scripts.Entities
             get { return ComputeDelayTime(0) + ComputeDelayTime(1); }
         }
 
+        public float InteractTime
+        {
+            get { return DelayTime; }
+        }
+
         private void Start()
         {
             crackState = 0;

@@ -10,11 +10,13 @@ namespace Assets.Scripts.Entities
     public class MoneyEntity : BaseEntityWithBaseData, IInteractable
     {
         private AudioSource moneyAudio;
+        private float castLength;
 
         protected override void Start()
         {
             base.Start();
             moneyAudio = gameObject.AttachAudioSource("Money", pitch:10);
+            castLength = moneyAudio.clip.length;
         }
 
         public void Interact(BaseCharacter character, Action success = null)
@@ -34,6 +36,11 @@ namespace Assets.Scripts.Entities
             Action interruptAction = () => moneyAudio.Stop();
             float castTime = moneyAudio.clip.length / moneyAudio.pitch;
             CastManager.Instance.Cast(character, castTime, interruptAction, wrapperSuccessAction);
+        }
+
+        public float InteractTime
+        {
+            get { return castLength; }
         }
     }
 }
