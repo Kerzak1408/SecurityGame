@@ -16,8 +16,15 @@ namespace Entities.Characters.Actions
 
         public NavigationAction(BaseCharacter character, List<TileEdge> navigationEdges) : base(character)
         {
-            goalCoords = navigationEdges.Last().Neighbor.Position;
-            pathQueue = new Queue<TileEdge>(navigationEdges);
+            if (navigationEdges == null || navigationEdges.Count == 0)
+            {
+                IsCompleted = true;
+            }
+            else
+            {
+                goalCoords = navigationEdges.Last().Neighbor.Position;
+                pathQueue = new Queue<TileEdge>(navigationEdges);
+            }
         }
 
         public override void Activate()
