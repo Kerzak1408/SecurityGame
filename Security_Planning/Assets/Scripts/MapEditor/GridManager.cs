@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Assets.Scripts.DataStructures;
+using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Gates;
 using Assets.Scripts.Extensions;
@@ -408,6 +409,23 @@ namespace Assets.Scripts.MapEditor
             Grids.SetActive(true);
             FlagCurrentButton();
             DropdownMode.transform.gameObject.SetActive(true);
+            InitializeBasicEntities();
+        }
+
+        private void InitializeBasicEntities()
+        {
+            IEnumerable<UnityEngine.Object> basicEntities = ResourcesHolder.Instance.BasicEntities;
+            foreach (UnityEngine.Object basicEntity in basicEntities)
+            {
+                GameObject newObject = InstantiateGameObject(basicEntity);
+                newObject.DeactivateAllScripts();
+                newObject.DeactivateAllCameras();
+                Map currentMap = GetCurrentMap();
+                newObject.transform.position = new Vector3(0,0,0);
+                newObject.transform.parent = currentMap.EmptyParent.transform;
+                currentMap.Entities.Add(newObject);
+                newObject.GetComponent<BaseEntity>().PrefabName = name;
+            }
         }
 
         public void CancelMapCreation()

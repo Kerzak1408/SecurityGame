@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Extensions;
 using Assets.Scripts.MapEditor;
 using Assets.Scripts.MapEditor.EditorHandlers;
 using UnityEngine;
@@ -17,7 +19,7 @@ public class DeleteHandler : BaseUserSelectableHandler
         {
             GameObject hitObject = entityHit.transform.gameObject;
 
-            if (gridManager.GetCurrentMap().Entities.Contains(hitObject))
+            if (gridManager.GetCurrentMap().Entities.Contains(hitObject) && !hitObject.HasScriptOfType<BaseCharacter>())
             {
                 gridManager.ButtonRemoveEntity.SetActive(true);
                 gridManager.ButtonRemoveEntity.transform.position = Input.mousePosition;

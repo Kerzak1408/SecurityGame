@@ -1,7 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class ResourcesHolder {
+public class ResourcesHolder
+{
 
     private static ResourcesHolder instance;
 
@@ -24,6 +27,8 @@ public class ResourcesHolder {
     public static readonly string PATH_PREFABS_ITEMSICONS = PATH_PREFABS + "ItemsIcons/";
     public static readonly string PATH_IMAGES = "Images/";
 
+    private static readonly string[] basicEntitiesNames = {"Burglar", "Guard"};
+
     public static ResourcesHolder Instance
     {
         get
@@ -34,6 +39,11 @@ public class ResourcesHolder {
             }
             return instance;
         }
+    }
+
+    public IEnumerable<Object> BasicEntities
+    {
+        get { return AllEntities.Where(entity => basicEntitiesNames.Contains(entity.name)); }
     }
 
     private ResourcesHolder()
