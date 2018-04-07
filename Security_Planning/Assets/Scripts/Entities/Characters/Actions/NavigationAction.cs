@@ -11,8 +11,9 @@ namespace Entities.Characters.Actions
     public class NavigationAction : BaseAction
     {
         private IntegerTuple goalCoords;
-        private Queue<TileEdge> pathQueue;
         private TileEdge currentEdge;
+
+        public Queue<TileEdge> PathQueue { get; private set; }
 
         public NavigationAction(BaseCharacter character, List<TileEdge> navigationEdges) : base(character)
         {
@@ -23,7 +24,7 @@ namespace Entities.Characters.Actions
             else
             {
                 goalCoords = navigationEdges.Last().Neighbor.Position;
-                pathQueue = new Queue<TileEdge>(navigationEdges);
+                PathQueue = new Queue<TileEdge>(navigationEdges);
             }
         }
 
@@ -37,9 +38,9 @@ namespace Entities.Characters.Actions
             if (IsCompleted) return;
             if (currentEdge == null || (currentEdge.IsOpen && character.NavigateTo(currentEdge.Neighbor)))
             {
-                if (pathQueue.Count > 0)
+                if (PathQueue.Count > 0)
                 {
-                    currentEdge = pathQueue.Dequeue();
+                    currentEdge = PathQueue.Dequeue();
                     character.Log("Next target: " + currentEdge.Neighbor.Position + " of type " + currentEdge.Type + ".");
                     if (!currentEdge.IsOpen)
                     {

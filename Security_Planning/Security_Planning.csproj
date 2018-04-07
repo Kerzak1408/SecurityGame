@@ -118,7 +118,6 @@
     <Compile Include="Assets\Scripts\DataStructures\LazyDictionary.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Map.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Path.cs" />
-    <Compile Include="Assets\Scripts\DataStructures\PlanDrawing.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Tuple.cs" />
     <Compile Include="Assets\Scripts\Entities\BaseEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\BaseEntityWithBaseData.cs" />
