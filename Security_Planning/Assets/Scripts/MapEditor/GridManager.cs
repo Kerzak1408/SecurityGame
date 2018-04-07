@@ -565,6 +565,11 @@ namespace Assets.Scripts.MapEditor
 
         public void BackToMenu()
         {
+            UnsavedChangesDialog(() => Scenes.Load(Scenes.MAIN_MENU), "quit");
+        }
+
+        private void UnsavedChangesDialog(Action action, string additionalText)
+        {
             if (MapsDictionary.Keys.Any(IsFlagged))
             {
                 int changedmapsCount = MapsDictionary.Keys.Count(IsFlagged);
@@ -574,16 +579,22 @@ namespace Assets.Scripts.MapEditor
                 UserDialog.Instance.ShowYesNo(
                     "Unsaved changes",
                     thereIsString + changedmapsCount + " " + mapMapsString +
-                    " with unsaved changes. Do you want to discard the changes and quit?",
-                    () => Scenes.Load(Scenes.MAIN_MENU));
+                    " with unsaved changes. Do you want to discard the changes and " + additionalText + "?",
+                    action);
             }
             else
             {
-                Scenes.Load(Scenes.MAIN_MENU);
+                action();
             }
         }
 
         public void Simulate()
+        {
+            UnsavedChangesDialog(StartSimulation, "simulate");
+
+        }
+
+        private void StartSimulation()
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters[Scenes.GAME_HANDLER] = new SimulationGameHandler();
