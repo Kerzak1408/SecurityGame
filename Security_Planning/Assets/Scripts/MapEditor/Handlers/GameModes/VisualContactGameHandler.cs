@@ -5,7 +5,7 @@ using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.MapEditor;
 using UnityEngine;
 
-public class VisualContactGameHandler : BaseGameHandler
+public class VisualContactGameHandler : BaseGameUserHandler
 {
     private float timeToLaunchBurglar;
     private Camera guardCamera;

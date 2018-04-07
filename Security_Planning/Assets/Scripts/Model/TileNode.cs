@@ -12,19 +12,21 @@ public class TileNode : IAStarNode<TileNode>
     public IntegerTuple Position { get; set; }
     public List<TileEdge> Edges { get; private set; }
     public List<DetectorEntity> DetectedBy { get; private set; }
+    public Vector3 WorldPosition { get; private set; }
 
     List<IAStarEdge<TileNode>> IAStarNode<TileNode>.Edges
     {
         get { return Edges.OfType<IAStarEdge<TileNode>>().ToList(); }
     }
 
-    public TileNode(int i, int j)
+    public TileNode(int i, int j, Vector3 worldPosition)
     {
         Position = new IntegerTuple(i, j);
         Edges = new List<TileEdge>();
         DetectedBy = new List<DetectorEntity>();
+        WorldPosition = worldPosition;
     }
-
+    
     public void AddNeighbor(TileNode node, EdgeType type, float cost)
     {
         Edges.Add(new TileEdge(this, node, type, cost, null));

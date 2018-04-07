@@ -7,6 +7,7 @@ using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
+using Entities.Characters.Actions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,7 @@ namespace Assets.Scripts.MapEditor
         public GameObject Menu;
         public Image CurrentItemIcon;
         public GameObject PanelFinishGame;
+        public GameObject PanelSimulation;
 
         public Map Map { get; private set; }
         public bool IsFinished { get; private set; }
@@ -39,7 +41,7 @@ namespace Assets.Scripts.MapEditor
             var camerasList = new List<Tuple<Camera, BaseCharacter>>();
             camerasList.Add(new Tuple<Camera, BaseCharacter>(ObserverCamera, null));
             string mapName = (string) Scenes.GetObjectParam("map");
-            gameHandler = (BaseGameHandler) Scenes.GetObjectParam("gameHandler");
+            gameHandler = (BaseGameHandler) Scenes.GetObjectParam(Scenes.GAME_HANDLER);
             Map = LoadMap(mapName, mapVisible:true);
 
             DirectoryHelper.CreateDirectoryLazy(FileHelper.JoinPath(Application.dataPath, "Logs"));
@@ -280,6 +282,14 @@ namespace Assets.Scripts.MapEditor
         public void GoalsCompleted(BaseCharacter baseCharacter)
         {
             gameHandler.GoalsCompleted(baseCharacter);
+        }
+
+        public void EndSimulation(List<BaseAction> actionsToDraw)
+        {
+            var parameters = new Dictionary<string, object>();
+            parameters[Scenes.MAP] = Scenes.ObjectParameters[Scenes.MAP];
+            parameters[Scenes.ACTIONS_TO_DRAW] = actionsToDraw;
+            Scenes.Load(Scenes.MAP_EDITOR, parameters);
         }
     }
 }

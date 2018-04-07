@@ -10,8 +10,6 @@ namespace Assets.Scripts
 
         protected virtual void Start() { }
 
-        protected virtual void Update ()
-        {
-        }
+        protected virtual void Update() { }
     }
 }

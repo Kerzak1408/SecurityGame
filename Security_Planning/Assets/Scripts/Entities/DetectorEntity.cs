@@ -78,7 +78,7 @@ namespace Assets.Scripts.Entities
                 {
                     success();
                 }
-                CurrentGame.Map.RemoveDetectorEntity(gameObject);
+                Map.RemoveDetectorEntity(gameObject);
                 Destroy(gameObject);
             };
             CastManager.Instance.Cast(character, Constants.Constants.DESTROY_TIME, null, wrapperSuccess);

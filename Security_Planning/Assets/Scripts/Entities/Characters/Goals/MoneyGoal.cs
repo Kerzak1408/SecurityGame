@@ -21,7 +21,7 @@ public class MoneyGoal : NavigationGoal
         this.moneyObject = moneyObject;
     }
 
-    public override void Activate()
+    public override void Activate(PlanningNode startNode=null)
     {
         Character.Log("Goal activated: Collect money at " + GoalCoordinates);
         StartPlanning(moneyObject);

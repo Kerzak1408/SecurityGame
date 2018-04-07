@@ -16,25 +16,35 @@ namespace Assets.Scripts.Entities.Characters.Goals
     {
         private BaseAction currentAction;
         private Queue<BaseAction> actions;
-        private bool isInitialized;
+        public bool IsInitialized { get; private set; }
+        public PlanningNode GoalNode { get; private set; }
+        public Path<PlanningNode, PlanningEdge> Path { get; private set; }
 
         public NavigationGoal(BaseCharacter character, IntegerTuple goalCoordinates) : base(character, goalCoordinates)
         {
         }
 
-        public override void Activate()
+        public override void Activate(PlanningNode startNode=null)
         {
             Character.Log("Goal activated: Navigate to: " + GoalCoordinates);
-            StartPlanning(null);
+            StartPlanning(null, startNode);
         }
 
-        protected void StartPlanning(GameObject finalObject)
+        protected void StartPlanning(GameObject finalObject, PlanningNode startOverrideNode=null)
         {
-            Map currentMap = Character.CurrentGame.Map;
+            Map currentMap = Character.Map;
             PlanningNode startNode, goalNode;
             currentMap.GetPlanningModel(Character, GoalCoordinates, finalObject, out startNode, out goalNode);
+            if (startOverrideNode != null)
+            {
+                startNode = startOverrideNode;
+                startNode.GoalNode = goalNode;
+            }
             Character.Log("Planning started.");
-            Thread planningThread = new Thread(() => PlanPath(startNode, goalNode, currentMap));
+            Thread planningThread = new Thread(() =>
+            {
+                PlanPath(startNode, goalNode, currentMap);
+            });
             planningThread.Start();
         }
 
@@ -49,12 +59,14 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type));
             stopwatch.Stop();
             Character.Log("A* time = " + stopwatch.ElapsedMilliseconds / 1000f + " seconds.");
-            TaskManager.Instance.RunOnMainThread(() => Initialize(plannedPath));
+            //TaskManager.Instance.RunOnMainThread(() => Initialize(plannedPath));
+            Initialize(plannedPath);
         }
 
         private void Initialize(Path<PlanningNode, PlanningEdge> plannedPath)
         {
-            if (plannedPath.Cost == float.MaxValue || plannedPath.Edges == null)
+            Path = plannedPath;
+            if (plannedPath.Cost == float.MaxValue || plannedPath.Edges == null || plannedPath.Edges.Count == 0)
             {
                 Character.Log("Planning computation finished. Path NOT found.");
                 IsFinished = true;
@@ -62,6 +74,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
             else
             {
                 Character.Log("Planning computation finished. Path found.");
+                GoalNode = plannedPath.Edges.Last().Neighbor;
                 actions = new Queue<BaseAction>();
                 foreach (PlanningEdge planningEdge in plannedPath.Edges)
                 {
@@ -72,13 +85,12 @@ namespace Assets.Scripts.Entities.Characters.Goals
                     }
                 }
             }
-
-            isInitialized = true;
+            IsInitialized = true;
         }
 
         public override void Update()
         {
-            if (!isInitialized || IsFinished) return;
+            if (!IsInitialized || IsFinished) return;
             if (currentAction == null || currentAction.IsCompleted)
             {
                 if (actions.Count > 0)

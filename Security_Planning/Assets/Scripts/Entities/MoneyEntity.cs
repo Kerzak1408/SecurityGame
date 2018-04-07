@@ -25,7 +25,7 @@ namespace Assets.Scripts.Entities
             Action wrapperSuccessAction = () =>
             {
                 character.ObtainMoney();
-                CurrentGame.Map.Entities.Remove(gameObject);
+                Map.Entities.Remove(gameObject);
                 if (success != null)
                 {
                     success();

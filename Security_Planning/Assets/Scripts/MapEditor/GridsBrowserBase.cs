@@ -90,7 +90,7 @@ namespace Assets.Scripts.MapEditor
             SelectedMapButton.GetComponent<Image>().color = MyColors.LIGHT_SKY_BLUE;
             Camera.main.orthographicSize = cameraOriginalSize * Mathf.Max(map.Width, map.Height) / 10f;
             Vector3 center = map.CenterWorld;
-            Camera.main.transform.position = center;
+            Camera.main.transform.position = new Vector3(center.x, center.y, Camera.main.transform.position.z);
         }
 
         protected virtual void SelectMap()

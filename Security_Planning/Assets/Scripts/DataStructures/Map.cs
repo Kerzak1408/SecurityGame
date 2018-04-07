@@ -57,6 +57,26 @@ namespace Assets.Scripts.DataStructures
             get { return Tiles.GetLength(0); }
         }
 
+        private Burglar burglar;
+        public Burglar Burglar
+        {
+            get
+            {
+                return burglar ?? (burglar = Entities.First(entity => entity.HasScriptOfType<Burglar>())
+                           .GetComponent<Burglar>());
+            }
+        }
+
+        private Guard guard;
+        public Guard Guard
+        {
+            get
+            {
+                return guard ?? (guard = Entities.First(entity => entity.HasScriptOfType<Guard>())
+                           .GetComponent<Guard>());
+            }
+        }
+
         public Map(GameObject[,] tiles, List<GameObject> entities, GameObject emptyParent,
             Dictionary<Tuple<int, int>, string> passwordDictionary, string name)
         {
@@ -136,7 +156,7 @@ namespace Assets.Scripts.DataStructures
             for (int i = 0; i < width; i++)
             for (int j = 0; j < height; j++)
             {
-                AIModel.Tiles[i, j] = new TileNode(i, j);
+                AIModel.Tiles[i, j] = new TileNode(i, j, Tiles[i,j].transform.position);
             }
 
             // Horizontal and vertical edges

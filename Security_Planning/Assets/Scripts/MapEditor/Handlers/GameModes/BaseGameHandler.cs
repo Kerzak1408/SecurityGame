@@ -14,10 +14,10 @@ public abstract class BaseGameHandler : BaseHandler
     public virtual void Start(Game game)
     {
         Game = game;
-        Burglar = Game.Map.Entities.First(entity => entity.HasScriptOfType<Burglar>()).GetComponent<Burglar>();
+        Burglar = Game.Map.Burglar;
     }
 
-    public abstract void Update();
+    public virtual void Update() { }
 
     public virtual void GoalsCompleted(BaseCharacter baseCharacter)
     {

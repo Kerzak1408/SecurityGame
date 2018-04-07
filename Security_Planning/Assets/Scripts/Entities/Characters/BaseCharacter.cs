@@ -60,7 +60,7 @@ namespace Assets.Scripts.Entities.Characters
 
         public IntegerTuple Position
         {
-            get { return CurrentGame.Map.GetClosestTile(transform.position).Position; }
+            get { return Map.GetClosestTile(transform.position).Position; }
         }
 
         protected override void Start()
@@ -314,7 +314,7 @@ namespace Assets.Scripts.Entities.Characters
 
         public bool NavigateTo(TileNode tileNode)
         {
-            Vector3 target = CurrentGame.Map.Tiles.Get(tileNode.Position).transform.position;
+            Vector3 target = Map.Tiles.Get(tileNode.Position).transform.position;
             bool isCloseEnough = Vector3.Distance(transform.position, target) < 0.05f;
             //if (!isCloseEnough)
             {

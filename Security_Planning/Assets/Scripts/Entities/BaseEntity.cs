@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.MapEditor;
+﻿using Assets.Scripts.DataStructures;
+using Assets.Scripts.MapEditor;
 using Assets.Scripts.Serialization;
 using UnityEngine;
 
@@ -7,7 +8,19 @@ namespace Assets.Scripts.Entities
     public abstract class BaseEntity : BaseObject
     {
         public abstract string PrefabName { get; set; }
-        public Game CurrentGame { get; set; }
+
+        private Game currentGame;
+        public Game CurrentGame
+        {
+            get { return currentGame; }
+            set
+            {
+                currentGame = value;
+                Map = currentGame.Map;
+            }
+        }
+
+        public Map Map { get; set; }
 
         
         public abstract void Deserialize(BaseEntityData deserializedData);

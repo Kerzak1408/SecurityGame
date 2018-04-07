@@ -9,6 +9,10 @@ public class Scenes : MonoBehaviour
     public const string MAIN_SCENE = "MainScene";
     public const string MAP_CHOICE_SCREEN = "MapChoiceScreen";
 
+    public const string ACTIONS_TO_DRAW = "actionsToDraw";
+    public const string GAME_HANDLER = "gameHandler";
+    public const string MAP = "map";
+
     private void Start()
     {
         Application.targetFrameRate = 120;
@@ -36,6 +40,13 @@ public class Scenes : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
+    public static void Load(string sceneName, string paramKey, object paramValue)
+    {
+        ObjectParameters = new Dictionary<string, object>();
+        ObjectParameters.Add(paramKey, paramValue);
+        SceneManager.LoadScene(sceneName);
+    }
+
     public static string GetParam(string paramKey)
     {
         if (Parameters == null) return "";
@@ -44,7 +55,7 @@ public class Scenes : MonoBehaviour
 
     public static object GetObjectParam(string paramKey)
     {
-        if (ObjectParameters == null) return null;
+        if (ObjectParameters == null || !ObjectParameters.ContainsKey(paramKey)) return null;
         return ObjectParameters[paramKey];
     }
 

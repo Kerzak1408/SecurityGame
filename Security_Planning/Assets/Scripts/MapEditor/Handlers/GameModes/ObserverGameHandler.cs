@@ -5,7 +5,7 @@ using Assets.Scripts.Extensions;
 using Assets.Scripts.MapEditor;
 using UnityEngine;
 
-public class ObserverGameHandler : BaseGameHandler
+public class ObserverGameHandler : BaseGameUserHandler
 {
     private string name;
 

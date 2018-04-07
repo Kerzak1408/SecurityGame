@@ -16,7 +16,7 @@ namespace Entities.Characters.Goals
             GoalCoordinates = goalCoordinates;
         }
 
-        public abstract void Activate();
+        public abstract void Activate(PlanningNode startNode=null);
         public abstract void Update();
     }
 }

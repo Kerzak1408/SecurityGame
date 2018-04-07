@@ -17,8 +17,8 @@ namespace Assets.Scripts.Model
         public List<EdgeType> UnlockedEdges { get; set; }
         public List<IObstacle> DestroyedObstacles { get; set; }
         public List<DetectorEntity> DestroyedDetectors { get; set; }
+        public PlanningNode GoalNode { get; set; }
 
-        private PlanningNode goalNode;
         private Dictionary<IPlanningEdgeCreator, List<TileNode>> creatorsDictionary;
         private BaseCharacter character;
         private List<IAStarEdge<PlanningNode>> edges;
@@ -31,8 +31,8 @@ namespace Assets.Scripts.Model
                 if (edges == null)
                 {
                     edges = new List<IAStarEdge<PlanningNode>>();
-                    GameObject[,] tiles = character.CurrentGame.Map.Tiles;
-                    Path<TileNode, TileEdge> pathToGoal = AStarAlgorithm.AStar(TileNode, goalNode.TileNode,
+                    GameObject[,] tiles = character.Map.Tiles;
+                    Path<TileNode, TileEdge> pathToGoal = AStarAlgorithm.AStar(TileNode, GoalNode.TileNode,
                             new EuclideanHeuristics<TileNode>(tiles),
                             Filters.DetectableFilter(DestroyedDetectors, character.Data.IgnoredDetectors),
                             Filters.EdgeFilter(UnlockedEdges, character.Data.ForbiddenEdgeTypes, DestroyedDetectors.OfType<BaseEntity>()),
@@ -40,7 +40,10 @@ namespace Assets.Scripts.Model
 
                     if (pathToGoal.Cost < float.MaxValue)
                     {
-                        PlanningEdge edge = new PlanningEdge(this, goalNode, PlanningEdgeType.MONEY, character, pathToGoal, 0, finiteObject);
+                        GoalNode.DestroyedDetectors = DestroyedDetectors.Copy();
+                        GoalNode.DestroyedObstacles = DestroyedObstacles.Copy();
+                        GoalNode.UnlockedEdges = UnlockedEdges.Copy();
+                        PlanningEdge edge = new PlanningEdge(this, GoalNode, PlanningEdgeType.MONEY, character, pathToGoal, 0, finiteObject);
                         edges.Add(edge);
                     }
                     foreach (KeyValuePair<IPlanningEdgeCreator, List<TileNode>> keyValuePair in creatorsDictionary)
@@ -84,7 +87,7 @@ namespace Assets.Scripts.Model
 
                                 PlanningNode neighbor = new PlanningNode(
                                     neighborTileNode,
-                                    goalNode,
+                                    GoalNode,
                                     UnlockedEdges.Copy(),
                                     creatorsCopy,
                                     character,
@@ -135,11 +138,11 @@ namespace Assets.Scripts.Model
             GameObject finiteObject = null)
         {
             TileNode = tileNode;
-            this.goalNode = goalNode;
+            this.GoalNode = goalNode;
             this.creatorsDictionary = creatorsDictionary;
             this.character = character;
             Position = tileNode.Position;
-            UnlockedEdges = unlockedEdges;
+            UnlockedEdges = unlockedEdges ?? new List<EdgeType>();
             DestroyedObstacles = destroyedObstacles ?? new List<IObstacle>();
             DestroyedDetectors = destroyedDetectors ?? new List<DetectorEntity>();
             this.finiteObject = finiteObject;

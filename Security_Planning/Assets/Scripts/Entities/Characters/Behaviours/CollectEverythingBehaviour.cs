@@ -21,17 +21,27 @@ namespace Entities.Characters.Behaviours
 
         public override void Start()
         {
-            Map currentMap = character.CurrentGame.Map;
-            goals = new Queue<BaseGoal>();
+            goals = GenerateGoals(character);
+        }
+
+        public static Queue<BaseGoal> GenerateGoals(BaseCharacter character, bool navigateBack=true)
+        {
+            Map currentMap = character.Map;
+            var result = new Queue<BaseGoal>();
             IEnumerable<GameObject> moneyEntities = currentMap.Entities.Where(go => go.HasScriptOfType<MoneyEntity>());
             IOrderedEnumerable<GameObject> orderedEntities = moneyEntities.OrderBy(
                 entity => Vector3.Distance(character.transform.position, entity.transform.position));
             foreach (GameObject moneyObject in orderedEntities)
             {
                 TileNode closestTile = currentMap.GetClosestTile(moneyObject.transform.position);
-                goals.Enqueue(new MoneyGoal(character, closestTile.Position, moneyObject));
+                result.Enqueue(new MoneyGoal(character, closestTile.Position, moneyObject));
             }
-            goals.Enqueue(new NavigationGoal(character, character.Position));
+
+            if (navigateBack)
+            {
+                result.Enqueue(new NavigationGoal(character, character.Position));
+            }
+            return result;
         }
 
         public override void Update()

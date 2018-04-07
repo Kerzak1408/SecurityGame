@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Gates;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.MapEditor.EditorHandlers;
+using Assets.Scripts.Model;
 using Assets.Scripts.Reflection;
 using Assets.Scripts.Serialization;
 using CustomSerialization;
+using Entities.Characters.Actions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -49,6 +50,7 @@ namespace Assets.Scripts.MapEditor
         public GameObject Canvas;
         public GameObject PanelPassword;
         public Dropdown DropdownMode;
+        public LineRenderer LineRenderer;
 
         public GameObject PanelEditBehaviour;
         
@@ -63,6 +65,7 @@ namespace Assets.Scripts.MapEditor
 
         private GameObject draggedObject;
         public GameObject toBeRemovedEntity;
+        private List<GameObject> graphDrawingItems;
 
         private BaseEditorHandler currentEditorHandler;
         private IEnumerable<BaseEditorHandler> editorHandlers;
@@ -74,6 +77,9 @@ namespace Assets.Scripts.MapEditor
         protected override void Start ()
         {
             base.Start();
+            graphDrawingItems = new List<GameObject>();
+            object actionsToDraw = Scenes.GetObjectParam(Scenes.ACTIONS_TO_DRAW);
+            DrawActions(actionsToDraw);
             InputWidth.onValidateInput += NumberValidationFunction;
             InputHeight.onValidateInput += NumberValidationFunction;
 
@@ -103,6 +109,29 @@ namespace Assets.Scripts.MapEditor
             if (MapsDictionary.Count > 0)
             {
                 DropdownMode.gameObject.SetActive(true);
+            }
+        }
+
+        private void DrawActions(object actionsToDraw)
+        {
+            if (actionsToDraw == null)
+            {
+                return;
+            }
+
+            string mapName = (string)Scenes.GetObjectParam(Scenes.MAP);
+            SelectMap(MapsDictionary.First(kvPair => kvPair.Value.Name == mapName).Key);
+            List<BaseAction> actions = (List<BaseAction>) actionsToDraw;
+            foreach (BaseAction action in actions)
+            {
+                if (action.GetType() == typeof(NavigationAction))
+                {
+                    DrawAction((NavigationAction) action);
+                }
+                else if (action.GetType() == typeof(InteractAction))
+                {
+                    DrawAction((InteractAction) action);
+                }
             }
         }
 
@@ -474,6 +503,7 @@ namespace Assets.Scripts.MapEditor
         {
             base.SelectMap();
             DropdownMode.transform.gameObject.SetActive(true);
+            ResetGraphDrawing();
         }
 
         public void SetCanvasActive(bool active)
@@ -551,7 +581,104 @@ namespace Assets.Scripts.MapEditor
             {
                 Scenes.Load(Scenes.MAIN_MENU);
             }
+        }
 
+        public void Simulate()
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters[Scenes.GAME_HANDLER] = new SimulationGameHandler();
+            parameters[Scenes.MAP] = GetCurrentMap().Name;
+            Scenes.Load(Scenes.MAIN_SCENE, parameters);
+        }
+
+        private void ResetGraphDrawing()
+        {
+            LineRenderer.positionCount = 0;
+            foreach (GameObject gameObject in graphDrawingItems.Copy())
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private void DrawAction(InteractAction action)
+        {
+            GameObject vertexObject = InstantiateGameObject(ResourcesHolder.Instance.Vertex);
+            GameObject interacted = GetCurrentMap().EmptyParent.transform.Find(action.InteractedName).gameObject;
+            vertexObject.name = "Vertex_" + interacted.name;
+            Vector3 interactedPosition = interacted.transform.position;
+            vertexObject.transform.position = new Vector3(interactedPosition.x, interactedPosition.y, -5);
+            graphDrawingItems.Add(vertexObject);
+        }
+
+        private void DrawAction(NavigationAction action)
+        {
+            Queue<TileEdge> pathQueue = action.PathQueue;
+            if (pathQueue == null)
+            {
+                return;
+            }
+            while (pathQueue.Count > 0)
+            {
+                TileEdge tileEdge = pathQueue.Dequeue();
+
+                Vector3 startPosition = tileEdge.Start.WorldPosition;
+                Vector3 endPosition = tileEdge.Neighbor.WorldPosition;
+                LineRenderer.positionCount += 2;
+                LineRenderer.SetPosition(LineRenderer.positionCount-2, new Vector3(startPosition.x, startPosition.z, -5));
+                LineRenderer.SetPosition(LineRenderer.positionCount-1, new Vector3(endPosition.x, endPosition.z, -5));
+
+            }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Map map = GetCurrentMap();
+            if (map == null) return;
+
+            map.EmptyParent.transform.Rotate(90, 0, 0);
+            map.ExtractAIModel();
+            map.EmptyParent.transform.Rotate(-90, 0, 0);
+
+            foreach (TileNode tileModel in map.AIModel.Tiles)
+            {
+                Gizmos.color = tileModel.IsDetectable() ? Color.red : Color.green;
+                GameObject mapTile = map.Tiles.Get(tileModel.Position);
+                Gizmos.DrawSphere(mapTile.transform.position, 0.1f);
+                foreach (TileEdge edge in tileModel.Edges)
+                {
+                    if (edge.IsObstructed(new List<BaseEntity>()))
+                    {
+                        continue;
+                    }
+                    GameObject neighborTile = map.Tiles.Get(edge.Neighbor.Position);
+                    switch (edge.Type)
+                    {
+                        case EdgeType.NORMAL:
+                            Gizmos.color = Color.green;
+                            break;
+                        case EdgeType.DOOR:
+                            Gizmos.color = Color.magenta;
+                            break;
+                        case EdgeType.KEY_DOOR:
+                            Gizmos.color = Color.yellow;
+                            break;
+                        case EdgeType.WINDOW:
+                            Gizmos.color = Color.blue;
+                            break;
+                        case EdgeType.FENCE:
+                            Gizmos.color = Color.black;
+                            break;
+                        case EdgeType.CARD_DOOR:
+                            Gizmos.color = Color.red;
+                            break;
+                        default:
+                            Gizmos.color = Color.cyan;
+                            break;
+                    }
+
+                    Gizmos.DrawLine(mapTile.transform.position, neighborTile.transform.position);
+                }
+            }
         }
     }
 }

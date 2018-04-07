@@ -7,19 +7,22 @@ namespace Entities.Characters.Actions
 {
     public class InteractAction : BaseAction
     {
-        private GameObject interacted;
+
+        public GameObject Interacted { get; private set; }
+
+        public string InteractedName { get;  set; }
 
         public InteractAction(BaseCharacter character, GameObject interacted) : base(character)
         {
-            this.interacted = interacted;
+            this.Interacted = interacted;
         }
 
         public override void Activate()
         {
-            character.Log("Trying to interact with " + interacted.name + ".");
-            character.InteractWith(interacted, () =>
+            character.Log("Trying to interact with " + Interacted.name + ".");
+            character.InteractWith(Interacted, () =>
             {
-                character.Log("Successfully interacted with " + interacted.name + ".");
+                character.Log("Successfully interacted with " + Interacted.name + ".");
                 IsCompleted = true;
             });
         }
