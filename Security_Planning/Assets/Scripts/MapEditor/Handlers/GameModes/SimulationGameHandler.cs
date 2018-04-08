@@ -48,6 +48,7 @@ public class SimulationGameHandler : BaseGameHandler
                 startNode = previousGoal.GoalNode;
             }
             goal.Activate(startNode);
+            
             while (!goal.IsInitialized)
             {
                 yield return null;

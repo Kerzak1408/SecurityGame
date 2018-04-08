@@ -37,9 +37,9 @@ namespace Assets.Scripts.Entities
             get { return DelayTime; }
         }
 
-        protected override void Start()
+        public override void StartGame()
         {
-            base.Start();
+            base.StartGame();
             audioSource = gameObject.AttachAudioSource("CuttingWire");
             cuttingLength = audioSource.clip.length;
         }

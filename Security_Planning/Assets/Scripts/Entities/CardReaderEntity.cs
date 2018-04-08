@@ -24,6 +24,7 @@ namespace Assets.Scripts.Entities
 
         public override void StartGame()
         {
+            base.StartGame();
             GameObject relateGateObject = GameObject.Find(Data.relatedName);
             if (relateGateObject != null)
             {

@@ -63,18 +63,30 @@ namespace Assets.Scripts.Entities.Characters
             get { return Map.GetClosestTile(transform.position).Position; }
         }
 
-        protected override void Start()
+        public override void StartGame()
         {
-            base.Start();
+            base.StartGame();
             footstepAudio = gameObject.AttachAudioSource("Footstep");
             controller = GetComponent<CharacterController>();
             animator = GetComponentInChildren<Animator>();
             animator.speed = 2;
+
+            foreach (GameObject item in Items)
+            {
+                InitializeItem(item);
+            }
+            foreach (GameObject itemIcon in itemIcons)
+            {
+                itemIcon.SetActive(false);
+            }
+            GameObject activeItem = GetActiveItem();
+            if (activeItem != null)
+                activeItem.SetActive(true);
         }
 
-        protected override void Update()
+        protected override void UpdateGame()
         {
-            base.Update();
+            base.UpdateGame();
             if (Input.GetMouseButton(0))
             {
                 OnLeftButtonClick();
@@ -150,23 +162,6 @@ namespace Assets.Scripts.Entities.Characters
             IsMoving = true;
             var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.forward);
             controller.Move(transformedDir);
-        }
-
-        public override void StartGame()
-        {
-            animator = GetComponent<Animator>();
-            
-            foreach (GameObject item in Items)
-            {
-                InitializeItem(item);
-            }
-            foreach (GameObject itemIcon in itemIcons)
-            {
-                itemIcon.SetActive(false);
-            }
-            GameObject activeItem = GetActiveItem();
-            if (activeItem != null)
-                activeItem.SetActive(true);
         }
 
         private void InitializeItem(GameObject item)

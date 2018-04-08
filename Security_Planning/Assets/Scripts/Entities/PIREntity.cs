@@ -29,6 +29,7 @@ namespace Assets.Scripts.Entities
 
         public override void StartGame()
         {
+            base.StartGame();
             Vector3 currentPosition = transform.position;
             transform.position = new Vector3(currentPosition.x, currentPosition.y, -1f);
             Camera.enabled = false;

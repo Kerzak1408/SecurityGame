@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Assets.Scripts.DataStructures;
-using Assets.Scripts.Model;
-using Debug = UnityEngine.Debug;
 
 public static class AStarAlgorithm
 {

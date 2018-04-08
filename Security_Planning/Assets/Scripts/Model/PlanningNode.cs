@@ -19,10 +19,10 @@ namespace Assets.Scripts.Model
         public List<DetectorEntity> DestroyedDetectors { get; set; }
         public PlanningNode GoalNode { get; set; }
 
-        private Dictionary<IPlanningEdgeCreator, List<TileNode>> creatorsDictionary;
+        public Dictionary<IPlanningEdgeCreator, List<TileNode>> CreatorsDictionary { get; set; }
         private BaseCharacter character;
         private List<IAStarEdge<PlanningNode>> edges;
-        private GameObject finiteObject;
+        public GameObject FiniteObject { get; set; }
 
         public List<IAStarEdge<PlanningNode>> Edges
         {
@@ -40,13 +40,10 @@ namespace Assets.Scripts.Model
 
                     if (pathToGoal.Cost < float.MaxValue)
                     {
-                        GoalNode.DestroyedDetectors = DestroyedDetectors.Copy();
-                        GoalNode.DestroyedObstacles = DestroyedObstacles.Copy();
-                        GoalNode.UnlockedEdges = UnlockedEdges.Copy();
-                        PlanningEdge edge = new PlanningEdge(this, GoalNode, PlanningEdgeType.MONEY, character, pathToGoal, 0, finiteObject);
+                        PlanningEdge edge = new PlanningEdge(this, GoalNode, PlanningEdgeType.MONEY, character, pathToGoal, 0, FiniteObject);
                         edges.Add(edge);
                     }
-                    foreach (KeyValuePair<IPlanningEdgeCreator, List<TileNode>> keyValuePair in creatorsDictionary)
+                    foreach (KeyValuePair<IPlanningEdgeCreator, List<TileNode>> keyValuePair in CreatorsDictionary)
                     {
                         IPlanningEdgeCreator creator = keyValuePair.Key;
                         if (creator.ShouldExplore(this))
@@ -82,7 +79,7 @@ namespace Assets.Scripts.Model
                             if (path.Edges != null)
                             {
                                 Dictionary<IPlanningEdgeCreator, List<TileNode>> creatorsCopy =
-                                    creatorsDictionary.Copy();
+                                    CreatorsDictionary.Copy();
                                 creatorsCopy.Remove(creator);
 
                                 PlanningNode neighbor = new PlanningNode(
@@ -93,7 +90,7 @@ namespace Assets.Scripts.Model
                                     character,
                                     DestroyedObstacles.Copy(),
                                     DestroyedDetectors.Copy(),
-                                    finiteObject);
+                                    FiniteObject);
                                 creator.ModifyNextNode(neighbor);
                                 foreach (TileEdge pathEdge in path.Edges)
                                 {
@@ -139,13 +136,13 @@ namespace Assets.Scripts.Model
         {
             TileNode = tileNode;
             this.GoalNode = goalNode;
-            this.creatorsDictionary = creatorsDictionary;
+            this.CreatorsDictionary = creatorsDictionary;
             this.character = character;
             Position = tileNode.Position;
             UnlockedEdges = unlockedEdges ?? new List<EdgeType>();
             DestroyedObstacles = destroyedObstacles ?? new List<IObstacle>();
             DestroyedDetectors = destroyedDetectors ?? new List<DetectorEntity>();
-            this.finiteObject = finiteObject;
+            this.FiniteObject = finiteObject;
         }
 
         public override string ToString()
@@ -159,12 +156,12 @@ namespace Assets.Scripts.Model
             foreach (IObstacle obstacle in DestroyedObstacles)
             {
                 result.Append(", ");
-                result.Append(obstacle.InteractableObject.ToString());
+                result.Append(obstacle.InteractableObject);
             }
             foreach (EdgeType edge in UnlockedEdges)
             {
                 result.Append(", ");
-                result.Append(edge.ToString());
+                result.Append(edge);
             }
             return result.ToString();
         }

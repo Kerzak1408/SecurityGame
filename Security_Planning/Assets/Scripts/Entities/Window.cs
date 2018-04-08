@@ -44,6 +44,7 @@ namespace Assets.Scripts.Entities
 
         public override void StartGame()
         {
+            base.StartGame();
             Debug.Log("Window contstructor called");
             crackState = 0;
             maxCrack = 3;

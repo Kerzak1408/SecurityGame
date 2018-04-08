@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Items
 {
-    public abstract class BaseItem : MonoBehaviour, IPlanningEdgeCreator
+    public abstract class BaseItem : BaseObject, IPlanningEdgeCreator
     {
         public Vector3 DefaultLocalPosition { get; set; }
 
@@ -16,8 +16,9 @@ namespace Assets.Scripts.Items
             get { return 0; }
         }
 
-        protected virtual void Start()
+        public override void StartGame()
         {
+            base.StartGame();
             Interactable = gameObject;
         }
         

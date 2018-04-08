@@ -22,14 +22,15 @@ public class Burglar : BaseCharacter
     // Use this for initialization
     public override void StartGame()
     {
+        base.StartGame();
         behaviour = new CollectEverythingBehaviour(this);
         behaviour.Start();
     }
 
 	// Update is called once per frame
-    protected override void Update()
+    protected override void UpdateGame()
     {
-        base.Update();
+        base.UpdateGame();
         IsMoving = false;
         if (isPaused || CurrentGame.IsFinished) return;
         behaviour.Update();

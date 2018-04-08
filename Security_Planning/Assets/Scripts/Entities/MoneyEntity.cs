@@ -12,9 +12,9 @@ namespace Assets.Scripts.Entities
         private AudioSource moneyAudio;
         private float castLength;
 
-        protected override void Start()
+        public override void StartGame()
         {
-            base.Start();
+            base.StartGame();
             moneyAudio = gameObject.AttachAudioSource("Money", pitch:10);
             castLength = moneyAudio.clip.length;
         }

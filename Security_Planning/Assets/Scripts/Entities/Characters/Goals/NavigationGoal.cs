@@ -37,6 +37,8 @@ namespace Assets.Scripts.Entities.Characters.Goals
             currentMap.GetPlanningModel(Character, GoalCoordinates, finalObject, out startNode, out goalNode);
             if (startOverrideNode != null)
             {
+                startOverrideNode.CreatorsDictionary = startNode.CreatorsDictionary;
+                startOverrideNode.FiniteObject = startNode.FiniteObject;
                 startNode = startOverrideNode;
                 startNode.GoalNode = goalNode;
             }
@@ -74,6 +76,14 @@ namespace Assets.Scripts.Entities.Characters.Goals
             else
             {
                 Character.Log("Planning computation finished. Path found.");
+
+                PlanningEdge lastEdge = plannedPath.Edges.Last();
+                PlanningNode lastNode = lastEdge.Neighbor;
+                PlanningNode secondLastNode = lastEdge.Start;
+                lastNode.DestroyedDetectors = secondLastNode.DestroyedDetectors.Copy();
+                lastNode.DestroyedObstacles = secondLastNode.DestroyedObstacles.Copy();
+                lastNode.UnlockedEdges = secondLastNode.UnlockedEdges.Copy();
+                
                 GoalNode = plannedPath.Edges.Last().Neighbor;
                 actions = new Queue<BaseAction>();
                 foreach (PlanningEdge planningEdge in plannedPath.Edges)

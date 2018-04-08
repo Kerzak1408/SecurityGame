@@ -28,9 +28,9 @@ namespace Assets.Scripts.Entities
             get { return Constants.Constants.DESTROY_TIME; }
         }
 
-        protected override void Start()
+        public override void StartGame()
         {
-            base.Start();
+            base.StartGame();
             Interactable = gameObject;
         }
 

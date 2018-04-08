@@ -6,10 +6,23 @@ namespace Assets.Scripts
 {
     public abstract class BaseObject : MonoBehaviour
     {
-        public virtual void StartGame() { }
+        private bool isInitialized;
 
-        protected virtual void Start() { }
+        public virtual void StartGame()
+        {
+            isInitialized = true;
+        }
 
-        protected virtual void Update() { }
+        //protected virtual void Start() { }
+
+        private void Update()
+        {
+            if (isInitialized)
+            {
+                UpdateGame();
+            }
+        }
+
+        protected virtual void UpdateGame() { }
     }
 }

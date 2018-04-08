@@ -80,21 +80,28 @@ namespace Assets.Scripts.MapEditor
 
             foreach (GameObject entity in Map.Entities)
             {
-                BaseEntity baseEntity = entity.GetComponent<BaseEntity>();
-                baseEntity.CurrentGame = this;
-                baseEntity.StartGame();
-                if (entity.HasScriptOfType<BaseCharacter>())
+                BaseObject[] baseObjects = entity.GetComponentsInChildren<BaseObject>();
+                foreach (BaseObject baseObject in baseObjects)
                 {
-                    BaseCharacter character = entity.GetComponent<BaseCharacter>();
-                    Camera charactersCamera = entity.GetComponentInChildren<Camera>();
-                    character.Camera = charactersCamera;
-                    camerasList.Add(
-                        new Tuple<Camera, BaseCharacter>(charactersCamera, character));
-                    if (character is Guard)
+                    if (baseObject is BaseEntity)
                     {
-                        activeCameraIndex = camerasList.Count - 1;
-                        character.IsActive = true;
+                        BaseEntity baseEntity = (BaseEntity) baseObject;
+                        baseEntity.CurrentGame = this;
+                        if (baseEntity is BaseCharacter)
+                        {
+                            BaseCharacter character = (BaseCharacter) baseObject;
+                            Camera charactersCamera = entity.GetComponentInChildren<Camera>();
+                            character.Camera = charactersCamera;
+                            camerasList.Add(
+                                new Tuple<Camera, BaseCharacter>(charactersCamera, character));
+                            if (character is Guard)
+                            {
+                                activeCameraIndex = camerasList.Count - 1;
+                                character.IsActive = true;
+                            }
+                        }
                     }
+                    baseObject.StartGame();
                 }
             }
 

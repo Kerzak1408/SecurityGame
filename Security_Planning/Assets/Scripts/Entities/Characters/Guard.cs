@@ -15,11 +15,10 @@ namespace Assets.Scripts.Entities.Characters
         
         private ResourcesHolder resourcesHolder;
         private Rigidbody rigidBody;
-
-        // Use this for initialization
-        protected override void Start()
+        
+        public override void StartGame()
         {
-            base.Start();
+            base.StartGame();
             rigidBody = GetComponent<Rigidbody>();
             resourcesHolder = ResourcesHolder.Instance;
             Canvas = GameObject.Find("Canvas");
@@ -28,11 +27,23 @@ namespace Assets.Scripts.Entities.Characters
             
             gameObject.AddComponent<ConstantForce>().force = Vector3.forward;
 
+            base.StartGame();
+            //transform.Rotate(-90, 0, 0);
+
+            var guardPosition = transform.position;
+            transform.position = new Vector3(guardPosition.x, guardPosition.y, 0);
+            Camera guardCamera = GetComponentInChildren<Camera>();
+            guardCamera.transform.position = guardPosition;
+            guardCamera.orthographicSize = 1;
+            guardCamera.transform.parent = transform;
+            guardCamera.transform.localPosition = new Vector3(0, 1.3f, 0.22f);
+            guardCamera.transform.localRotation = Quaternion.identity;
+            IsActive = true;
 
         }
 
         // Update is called once per frame
-        protected override void Update()
+        protected override void UpdateGame()
         {
             if (CurrentGame.IsFinished)
             {
@@ -111,7 +122,7 @@ namespace Assets.Scripts.Entities.Characters
 
                 }
             }
-            base.Update();
+            base.UpdateGame();
 
         }
 
@@ -160,22 +171,6 @@ namespace Assets.Scripts.Entities.Characters
         public override void RequestCard(CardReaderEntity cardReader)
         {
             cardReader.VerifyCard();
-        }
-
-        public override void StartGame()
-        {
-            base.StartGame();
-            //transform.Rotate(-90, 0, 0);
-
-            var guardPosition = transform.position;
-            transform.position = new Vector3(guardPosition.x, guardPosition.y, 0);
-            Camera guardCamera = GetComponentInChildren<Camera>();
-            guardCamera.transform.position = guardPosition;
-            guardCamera.orthographicSize = 1;
-            guardCamera.transform.parent = transform;
-            guardCamera.transform.localPosition = new Vector3(0, 1.3f, 0.22f);
-            guardCamera.transform.localRotation = Quaternion.identity;
-            IsActive = true;
         }
 
         public override void ObtainMoney()

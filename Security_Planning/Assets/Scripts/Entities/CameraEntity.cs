@@ -20,6 +20,7 @@ namespace Assets.Scripts.Entities
 
         public override void StartGame()
         {
+            base.StartGame();
             //Debug.Log("camera related name = " + Data.relatedName);
             Vector3 position = transform.position;
             transform.position = new Vector3(position.x, position.y, -3f);
