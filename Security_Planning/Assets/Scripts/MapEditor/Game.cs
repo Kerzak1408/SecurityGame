@@ -71,9 +71,10 @@ namespace Assets.Scripts.MapEditor
 
             foreach (GameObject tile in Map.Tiles)
             {
-                if (tile.HasScriptOfType<BaseObject>())
+                BaseObject[] baseObjects = tile.GetComponentsInChildren<BaseObject>();
+                foreach (BaseObject baseObject in baseObjects)
                 {
-                    tile.GetComponent<BaseObject>().StartGame();
+                    baseObject.StartGame();
                 }
             }
 

@@ -26,7 +26,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                     Object item = ResourcesHolder.Instance.AllEntities.FindByName(hitObject.name);
                     GameObject newObject = gridManager.InstantiateGameObject(item);
                     newObject.DeactivateAllScripts();
-                    newObject.DeactivateAllCameras();
+                    newObject.DeactivateAllCamerasAndAudioListeners();
                     newObject.name = item.name;
                     Map currentMap = gridManager.GetCurrentMap();
                     List<GameObject> entities = currentMap.Entities;

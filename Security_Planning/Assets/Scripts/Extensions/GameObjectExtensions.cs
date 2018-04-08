@@ -38,9 +38,10 @@ namespace Assets.Scripts.Extensions
             gameObject.DeactivateComponentsOfTypeRecursively<MonoBehaviour>();
         }
 
-        public static void DeactivateAllCameras(this GameObject gameObject)
+        public static void DeactivateAllCamerasAndAudioListeners(this GameObject gameObject)
         {
             gameObject.DeactivateComponentsOfTypeRecursively<Camera>();
+            gameObject.DeactivateComponentsOfTypeRecursively<AudioListener>();
         }
 
         public static void DeactivateComponentsOfTypeRecursively<T>(this GameObject gameObject) where T : Behaviour

@@ -58,7 +58,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 new EuclideanHeuristics<PlanningNode>(currentMap.Tiles),
                 edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type));
             stopwatch.Stop();
-            Character.Log("A* time = " + stopwatch.ElapsedMilliseconds / 1000f + " seconds.");
+            //Character.Log("A* time = " + stopwatch.ElapsedMilliseconds / 1000f + " seconds.");
             //TaskManager.Instance.RunOnMainThread(() => Initialize(plannedPath));
             Initialize(plannedPath);
         }

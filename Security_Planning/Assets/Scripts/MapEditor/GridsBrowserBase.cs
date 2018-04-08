@@ -160,7 +160,7 @@ namespace Assets.Scripts.MapEditor
             foreach (var entity in map.Entities)
             {
                 entity.DeactivateAllScripts();
-                entity.DeactivateAllCameras();
+                entity.DeactivateAllCamerasAndAudioListeners();
             }
             foreach (var tile in map.Tiles)
             {

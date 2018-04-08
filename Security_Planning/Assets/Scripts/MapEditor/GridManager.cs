@@ -72,14 +72,16 @@ namespace Assets.Scripts.MapEditor
         private BaseEditorHandler previousHandler;
         private string[] affectedCanvasElements = {"Scroll View", "ButtonMenu", "ButtonSave", "ButtonDelete"};
         internal Vector3 newEntityPosition;
+        private List<BaseAction> drawActions;
+        private bool isInitialized;
 
         // Use this for initialization
         protected override void Start ()
         {
             base.Start();
             graphDrawingItems = new List<GameObject>();
-            object actionsToDraw = Scenes.GetObjectParam(Scenes.ACTIONS_TO_DRAW);
-            DrawActions(actionsToDraw);
+            drawActions = Scenes.GetObjectParam(Scenes.ACTIONS_TO_DRAW) as List<BaseAction>;
+            
             InputWidth.onValidateInput += NumberValidationFunction;
             InputHeight.onValidateInput += NumberValidationFunction;
 
@@ -112,16 +114,20 @@ namespace Assets.Scripts.MapEditor
             }
         }
 
-        private void DrawActions(object actionsToDraw)
+        private void Initialize()
         {
-            if (actionsToDraw == null)
+            DrawActions(drawActions);
+        }
+
+        private void DrawActions(List<BaseAction> actions)
+        {
+            if (actions == null)
             {
                 return;
             }
 
             string mapName = (string)Scenes.GetObjectParam(Scenes.MAP);
             SelectMap(MapsDictionary.First(kvPair => kvPair.Value.Name == mapName).Key);
-            List<BaseAction> actions = (List<BaseAction>) actionsToDraw;
             foreach (BaseAction action in actions)
             {
                 if (action.GetType() == typeof(NavigationAction))
@@ -139,6 +145,12 @@ namespace Assets.Scripts.MapEditor
         protected override void Update()
         {
             base.Update();
+
+            if (!isInitialized)
+            {
+                Initialize();
+                isInitialized = true;
+            }
 
             var pressedKeys = new List<KeyCode>();
             var upKeys = new List<KeyCode>();
@@ -448,7 +460,7 @@ namespace Assets.Scripts.MapEditor
             {
                 GameObject newObject = InstantiateGameObject(basicEntity);
                 newObject.DeactivateAllScripts();
-                newObject.DeactivateAllCameras();
+                newObject.DeactivateAllCamerasAndAudioListeners();
                 Map currentMap = GetCurrentMap();
                 newObject.transform.position = new Vector3(0,0,0);
                 newObject.transform.parent = currentMap.EmptyParent.transform;

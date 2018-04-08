@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Entities
 {
-    public class Window : MonoBehaviour, IInteractable, IObstacle
+    public class Window : BaseObject, IInteractable, IObstacle
     {
         private int crackState;
         private int maxCrack;
@@ -42,8 +42,9 @@ namespace Assets.Scripts.Entities
             get { return DelayTime; }
         }
 
-        private void Start()
+        public override void StartGame()
         {
+            Debug.Log("Window contstructor called");
             crackState = 0;
             maxCrack = 3;
             AudioSource[] audioSources = GetComponents<AudioSource>();

@@ -28,7 +28,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
 
                 GameObject newObject = gridManager.InstantiateGameObject(item);
                 newObject.DeactivateAllScripts();
-                newObject.DeactivateAllCameras();
+                newObject.DeactivateAllCamerasAndAudioListeners();
                 
                 
                 Tuple<int, int> coords = currentGrid.GetIndices(gridManager.ClickedTile);
