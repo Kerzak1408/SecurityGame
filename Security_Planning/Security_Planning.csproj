@@ -814,6 +814,24 @@
     <None Include="Assets\Logs\Log_2018-4-8_06-49-26.txt" />
     <None Include="Assets\Logs\Log_2018-4-8_06-49-27.txt" />
     <None Include="Assets\Logs\Log_2018-4-8_06-49-28.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_06-57-24.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_06-57-26.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_06-57-27.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_06-57-28.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_06-57-29.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_06-57-32.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_06-57-34.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_06-57-39.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_07-01-37.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_07-01-40.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_07-01-46.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_07-01-47.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_07-01-48.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_07-01-49.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_07-01-50.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_07-01-53.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_07-01-54.txt" />
+    <None Include="Assets\Logs\Log_2018-4-8_07-01-58.txt" />
     <None Include="Assets\Resources\Maps\BuildingGrid.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

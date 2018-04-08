@@ -57,7 +57,18 @@ namespace Assets.Scripts.MapEditor
             cameraOriginalSize = Camera.main.orthographicSize;
             if (MapsDictionary.Count > 0)
             {
-                SelectMap(MapsDictionary.Keys.First());
+                string lastMapName = PlayerPrefs.GetString(Constants.Constants.PLAYER_PREFS_LAST_MAP, "");
+                Button initialButton;
+                    KeyValuePair<Button, Map> initialKVPair = MapsDictionary.FirstOrDefault(kvPair => kvPair.Value.Name == lastMapName);
+                if (default(KeyValuePair<Button, Map>).Equals(initialKVPair))
+                {
+                    initialButton = MapsDictionary.Keys.First();
+                }
+                else
+                {
+                    initialButton = initialKVPair.Key;
+                }
+                SelectMap(initialButton);
             }
             
         }
@@ -86,6 +97,7 @@ namespace Assets.Scripts.MapEditor
             }
             SelectedMapButton = selectedMapButton;
             Map map = MapsDictionary[SelectedMapButton];
+            PlayerPrefs.SetString(Constants.Constants.PLAYER_PREFS_LAST_MAP, map.Name);
             map.SetActive(true);
             SelectedMapButton.GetComponent<Image>().color = MyColors.LIGHT_SKY_BLUE;
             Camera.main.orthographicSize = cameraOriginalSize * Mathf.Max(map.Width, map.Height) / 10f;

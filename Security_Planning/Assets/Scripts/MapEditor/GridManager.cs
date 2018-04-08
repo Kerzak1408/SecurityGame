@@ -451,6 +451,7 @@ namespace Assets.Scripts.MapEditor
             FlagCurrentButton();
             DropdownMode.transform.gameObject.SetActive(true);
             InitializeBasicEntities();
+            PlayerPrefs.SetString(Constants.Constants.PLAYER_PREFS_LAST_MAP, GetCurrentMap().Name);
         }
 
         private void InitializeBasicEntities()
@@ -464,8 +465,9 @@ namespace Assets.Scripts.MapEditor
                 Map currentMap = GetCurrentMap();
                 newObject.transform.position = new Vector3(0,0,0);
                 newObject.transform.parent = currentMap.EmptyParent.transform;
+                newObject.transform.name = (basicEntity.name + "_" + currentMap.GetNextEntityId());
                 currentMap.Entities.Add(newObject);
-                newObject.GetComponent<BaseEntity>().PrefabName = name;
+                newObject.GetComponent<BaseEntity>().PrefabName = basicEntity.name;
             }
         }
 
