@@ -11,6 +11,8 @@ using UnityEngine;
 
 public class SimulationGameHandler : BaseGameHandler
 {
+    private bool isStarted;
+
     public override string Name
     {
         get { return "Simulation"; }
@@ -20,7 +22,16 @@ public class SimulationGameHandler : BaseGameHandler
     {
         base.Start(game);
         Game.PanelSimulation.SetActive(true);
+    }
+
+    public override void Update()
+    {
+        if (isStarted)
+        {
+            return;
+        }
         Game.StartCoroutine(WaitForGoalPlanning());
+        isStarted = true;
     }
 
     private IEnumerator WaitForGoalPlanning()
