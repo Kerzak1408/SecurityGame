@@ -16,8 +16,6 @@ namespace Assets.Scripts.DataStructures
 {
     public class Map
     {
-        private int astarsCount;
-
         public static readonly string UP = "Up";
         public static readonly string DOWN = "Down";
         public static readonly string LEFT = "Left";

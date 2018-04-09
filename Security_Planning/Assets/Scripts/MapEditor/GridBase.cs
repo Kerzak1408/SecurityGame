@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.Algorithms.FloodFill.Results;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Gates;
@@ -95,39 +97,36 @@ namespace Assets.Scripts.MapEditor
 
         protected void GenerateCeiling(GameObject[,] grid, Transform parent)
         {
+            var tuples = new List<IntegerTuple>();
             int width = grid.GetLength(0);
             int height = grid.GetLength(1);
-            bool[,] ceilingGrid = new bool[width, height];
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
                 {
-                    bool currentTile = ceilingGrid[i, j];
-                    if (!currentTile)
-                    {
-                        FloodFillResult result = new FloodFillResult();
-                        //Debug.Log("-------------------------------- Flood fill begun --------------------------------");
-                        FloodFillAlgorithm.FloodFill(i, j, grid, result, IsTileCertainlyOutside, CanGetFromTo);
-                        //Debug.Log("-------------------------------- Flood fill ended --------------------------------");
-                        foreach (IntegerTuple coordinate in result.Coordinates)
-                        {
-                            ceilingGrid[coordinate.First, coordinate.Second] = true;
-                        }
-                        if (result.IsRoom)
-                        {
-                            AddCeiling(grid, result.Coordinates, parent);
-                            AddPavementTexture(grid, result.Coordinates, "InnerFloor");
-                        }
-                        else
-                        {
-                            AddPavementTexture(grid, result.Coordinates, "Pavement");
-                        }
-                    }
+                    tuples.Add(new IntegerTuple(i, j));
+                }
+            }
+
+            List<IntegerTupleCluster> clusters =
+                FloodFillAlgorithm.GenerateClusters<IntegerTupleCluster, IntegerTuple>(tuples,
+                    tuple => GenerateNeighbors(grid, tuple.First, tuple.Second));
+
+            foreach (IntegerTupleCluster cluster in clusters)
+            {
+                if (cluster.Members.Any(tuple => IsTileCertainlyOutside(grid, tuple)))
+                {
+                    AddPavementTexture(grid, cluster.Members, "Pavement");
+                }
+                else
+                {
+                    AddCeiling(grid, cluster.Members, parent);
+                    AddPavementTexture(grid, cluster.Members, "InnerFloor");
                 }
             }
         }
 
-        private void AddPavementTexture(GameObject[,] grid, List<IntegerTuple> resultCoordinates, string textureName)
+        private void AddPavementTexture(GameObject[,] grid, IEnumerable<IntegerTuple> resultCoordinates, string textureName)
         {
             Sprite texture = Resources.Load<Sprite>("Textures/" + textureName);
             texture = Resources.Load<Sprite>("Textures/" + textureName);
@@ -144,7 +143,7 @@ namespace Assets.Scripts.MapEditor
             }
         }
 
-        private void AddCeiling(GameObject[,] grid, List<IntegerTuple> coordinates, Transform parent)
+        private void AddCeiling(GameObject[,] grid, IEnumerable<IntegerTuple> coordinates, Transform parent)
         {
             Color color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
             foreach (IntegerTuple coordinate in coordinates)
@@ -159,32 +158,6 @@ namespace Assets.Scripts.MapEditor
                 ceilingTile.GetComponent<SpriteRenderer>().material.shader = Shader.Find("Standard");
             }
         }
-
-        //private void FloodFill(int i, int j, GameObject[,] grid, FloodFillResult result, List<Vector2> visited)
-        //{
-        //    Debug.Log("Flood fill step (" + i + ", " + j + ")");
-        //    visited.Add(new Vector2(i, j));
-        //    if (IsTileCertainlyOutside(grid, i, j))
-        //    {
-        //        result.IsRoom = false;
-        //    }
-        //    result.Coordinates.Add(new Vector2(i, j));
-
-        //    Vector2[] neighbors =
-        //    {
-        //        new Vector2(i - 1, j),
-        //        new Vector2(i + 1, j),
-        //        new Vector2(i, j - 1),
-        //        new Vector2(i, j + 1)
-        //    };
-        //    foreach (Vector2 neighbor in neighbors)
-        //    {
-        //        if (!visited.Contains(neighbor) && CanGetFromTo(grid, i, j, (int) neighbor.x, (int) neighbor.y))
-        //        {
-        //            FloodFill((int) neighbor.x, (int) neighbor.y, grid, result, visited);
-        //        }
-        //    }
-        //}
 
         private bool IsTileCertainlyOutside(GameObject[,] grid, IntegerTuple indices)
         {
@@ -212,6 +185,27 @@ namespace Assets.Scripts.MapEditor
                 if (!tileName.Contains(RIGHT) || tileName.Contains(FENCE)) return true;
             }
             return false;
+        }
+
+        private IEnumerable<IntegerTuple> GenerateNeighbors(GameObject[,] grid, int i, int j)
+        {
+            List<IntegerTuple> result = new List<IntegerTuple>();
+            IntegerTuple[] neighbors =
+            {
+                new IntegerTuple(i - 1, j),
+                new IntegerTuple(i + 1, j),
+                new IntegerTuple(i, j - 1),
+                new IntegerTuple(i, j + 1)
+            };
+            foreach (IntegerTuple neighbor in neighbors)
+            {
+                if (CanGetFromTo(grid, new IntegerTuple(i, j), neighbor))
+                {
+                    result.Add(neighbor);
+                }
+            }
+
+            return result;
         }
 
         private bool CanGetFromTo(GameObject[,] grid, IntegerTuple from, IntegerTuple to)
@@ -257,30 +251,6 @@ namespace Assets.Scripts.MapEditor
                     return !fromName.Contains(DOWN) && !toName.Contains(UP);
                 }
             }
-            //else if (toX > fromX)
-            //{
-            //    // UP-RIGHT or DOWN-RIGHT
-            //    if (toY > fromY)
-            //    {
-            //        // UP-RIGHT
-            //    }
-            //    else
-            //    {
-            //        // DOWN-RIGHT
-            //    }
-            //}
-            //else
-            //{
-            //    // UP-LEFT or DOWN-LEFT
-            //    if (toY > fromY)
-            //    {
-            //        // UP-LEFT
-            //    }
-            //    else
-            //    {
-            //        // DOWN-LEFT
-            //    }
-            //}
             return false;
         }
     }

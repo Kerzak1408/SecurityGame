@@ -2,43 +2,52 @@
 using Assets.Scripts.DataStructures;
 using UnityEngine;
 using System;
+using Assets.Scripts.Algorithms.FloodFill;
 
 public static class FloodFillAlgorithm
 {
-    public static void FloodFill<TCell>(int i, int j, TCell[,] grid, FloodFillResult result,
-        Func<TCell[,], IntegerTuple, bool> isTileCertainlyOutside,
-        Func<TCell[,], IntegerTuple, IntegerTuple, bool> canGetFromTo)
+    public static TCluster FloodFill<TCluster, TNode>(TNode startNode, Func<TNode, IEnumerable<TNode>> getNeighbors) where TCluster : ICluster<TNode>, new()
     {
-        FloodFill(i, j, grid, result, new List<IntegerTuple>(), isTileCertainlyOutside, canGetFromTo);
+        var result = new TCluster();
+        FloodFill(startNode, getNeighbors, new List<TNode>(), result);
+        return result;
     }
 
-    private static void FloodFill<TCell>(int i, int j, TCell[,] grid, FloodFillResult result,
-        List<IntegerTuple> visited,
-        Func<TCell[,], IntegerTuple, bool> isTileCertainlyOutside,
-        Func<TCell[,], IntegerTuple, IntegerTuple, bool> canGetFromTo)
+    public static TCluster FloodFill<TCluster, TNode>(TNode currentNode, Func<TNode, IEnumerable<TNode>> getNeighbors,
+        List<TNode> visited, TCluster result) 
+        where TCluster : ICluster<TNode>, new()
     {
-        //Debug.Log("Flood fill step (" + i + ", " + j + ")");
-        var currentIndices = new IntegerTuple(i, j);
-        visited.Add(currentIndices);
-        if (isTileCertainlyOutside(grid, currentIndices))
+        visited.Add(currentNode);
+        result.Members.Add(currentNode);
+        foreach (TNode neighbor in getNeighbors(currentNode))
         {
-            result.IsRoom = false;
-        }
-        result.Coordinates.Add(new IntegerTuple(i, j));
-
-        IntegerTuple[] neighbors =
-        {
-            new IntegerTuple(i - 1, j),
-            new IntegerTuple(i + 1, j),
-            new IntegerTuple(i, j - 1),
-            new IntegerTuple(i, j + 1)
-        };
-        foreach (IntegerTuple neighbor in neighbors)
-        {
-            if (!visited.Contains(neighbor) && canGetFromTo(grid, currentIndices, neighbor))
+            if (!visited.Contains(neighbor))
             {
-                FloodFill(neighbor.First, neighbor.Second, grid, result, visited, isTileCertainlyOutside, canGetFromTo);
+                FloodFill(neighbor, getNeighbors, visited, result);
             }
         }
+        return result;
+    }
+
+    public static List<TCluster> GenerateClusters<TCluster, TNode>(IEnumerable<TNode> nodes, Func<TNode, IEnumerable<TNode>> getNeighbors) 
+        where TCluster : ICluster<TNode>, new()
+    {
+        var result = new List<TCluster>();
+        var alreadyClustered = new List<TNode>();
+        foreach (TNode node in nodes)
+        {
+            if (alreadyClustered.Contains(node))
+            {
+                continue;
+            }
+
+            TCluster cluster = FloodFill<TCluster, TNode>(node, getNeighbors);
+            result.Add(cluster);
+            foreach (TNode clusterMember in cluster.Members)
+            {
+                alreadyClustered.Add(clusterMember);
+            }
+        }
+        return result;
     }
 }
