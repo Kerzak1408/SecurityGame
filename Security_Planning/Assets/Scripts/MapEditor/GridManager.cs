@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,6 +15,7 @@ using Assets.Scripts.Reflection;
 using Assets.Scripts.Serialization;
 using CustomSerialization;
 using Entities.Characters.Actions;
+using SFB;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -70,7 +72,12 @@ namespace Assets.Scripts.MapEditor
         private BaseEditorHandler currentEditorHandler;
         private IEnumerable<BaseEditorHandler> editorHandlers;
         private BaseEditorHandler previousHandler;
-        private string[] affectedCanvasElements = {"Scroll View", "ButtonMenu", "ButtonSave", "ButtonDelete"};
+
+        private readonly string[] affectedCanvasElements =
+        {
+            "Scroll View", "ButtonMenu", "ButtonSave", "ButtonDelete", "ButtonImport", "ButtonExport",
+            "ButtonExportAll", "ButtonExportPng", "Button_Simulate", "PanelInfo"
+        };
         internal Vector3 newEntityPosition;
         private List<BaseAction>[] drawActions;
         private bool isInitialized;
@@ -563,6 +570,15 @@ namespace Assets.Scripts.MapEditor
             ExportMap.ExportToFolder(mapPaths.ToArray(), mapNames.ToArray());
         }
 
+        public void ExportPng()
+        {
+            string path = StandaloneFileBrowser.SaveFilePanel("Export PNG", "", GetCurrentMap().Name, "png");
+            if (path.Length != 0)
+            {
+                StartCoroutine(ExportPngCoroutine(path));
+            }
+        }
+
         public void Import()
         {
             string[] importedNames = ExportMap.Import(MAPS_PATH);
@@ -726,6 +742,38 @@ namespace Assets.Scripts.MapEditor
                     Gizmos.DrawLine(mapTile.transform.position, neighborTile.transform.position);
                 }
             }
+        }
+
+        IEnumerator ExportPngCoroutine(string path)
+        {
+            SetCanvasActive(false);
+            // We should only read the screen buffer after rendering is complete
+            yield return new WaitForEndOfFrame();
+
+            // Create a texture the size of the screen, RGB24 format
+            Map currentMap = GetCurrentMap();
+            GameObject downLeftTile = currentMap.Tiles[0, 0];
+            Vector3 downLeftCorner = downLeftTile.transform.position - new Vector3(0.5f, 0.5f);
+            GameObject upRightTile = currentMap.Tiles[currentMap.Tiles.GetLength(0) - 1, currentMap.Tiles.GetLength(1) - 1];
+            Vector3 upRightCorner = upRightTile.transform.position + new Vector3(0.5f, 0.5f);
+            Vector3 screenDownLeft = Camera.main.WorldToScreenPoint(downLeftCorner);
+            Vector3 screenUpRight = Camera.main.WorldToScreenPoint(upRightCorner);
+            int width = Screen.width;
+            int height = Screen.height;
+            Texture2D tex = new Texture2D((int) (screenUpRight.x - screenDownLeft.x) , (int) (screenUpRight.y - screenDownLeft.y) , TextureFormat.RGB24, false);
+
+            // Read screen contents into the texture
+            tex.ReadPixels(new Rect(screenDownLeft, screenUpRight - screenDownLeft), 0, 0);
+            tex.Apply();
+
+            // Encode texture into PNG
+            byte[] bytes = tex.EncodeToPNG();
+            Destroy(tex);
+
+            // For testing purposes, also write to a file in the project folder
+            File.WriteAllBytes(path, bytes);
+
+            SetCanvasActive(true);
         }
     }
 }
