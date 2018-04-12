@@ -42,7 +42,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             foreach (RaycastHit validObject in validObjects)
             {
                 if (objectToChoose.Equals(default(RaycastHit)) ||
-                    validObject.transform.position.z < objectToChoose.transform.position.z)
+                    validObject.distance < objectToChoose.distance)
                 {
                     objectToChoose = validObject;
                 }

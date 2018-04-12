@@ -28,6 +28,9 @@ namespace Assets.Scripts.MapEditor
         public InputField InputHeight;
         public InputField InputName;
         public Text TextError;
+        public Text TextMaxVisibilityMeasure;
+        public Slider SliderMaxVisibility;
+        public Image HandleMaxVisibilitySlider;
         public GameObject ButtonRemoveEntity;
     
         public GameObject Panel;
@@ -83,7 +86,8 @@ namespace Assets.Scripts.MapEditor
         private bool isInitialized;
         private LineRenderer[] lineRenderers;
 
-        private static readonly Color[] colors = { Color.green, Color.blue, Color.magenta, Color.yellow, Color.red, Color.black };
+        public static readonly Color[] Colors = { Color.green, Color.blue, Color.magenta, Color.yellow, Color.red, Color.black };
+        
 
         // Use this for initialization
         protected override void Start ()
@@ -93,7 +97,7 @@ namespace Assets.Scripts.MapEditor
             for (int i = 0; i < lineRenderers.Length; i++)
             {
                 GameObject lineRendererObject = InstantiateGameObject(ResourcesHolder.Instance.LineRenderer);
-                lineRendererObject.ChangeMaterialAndColor(colors[i]);
+                lineRendererObject.ChangeMaterialAndColor(Colors[i]);
                 lineRenderers[i] = lineRendererObject.GetComponent<LineRenderer>();
             }
             graphDrawingItems = new List<GameObject>();
@@ -159,7 +163,7 @@ namespace Assets.Scripts.MapEditor
                     }
                     else if (action.GetType() == typeof(InteractAction))
                     {
-                        DrawAction((InteractAction)action, offset, colors[i]);
+                        DrawAction((InteractAction)action, offset, Colors[i]);
                     }
                 }
             }
@@ -601,6 +605,11 @@ namespace Assets.Scripts.MapEditor
                     break;
                 }
             }
+
+            if (SliderMaxVisibility.value != handler.PreviousSliderValue)
+            {
+                FlagCurrentButton();
+            }
             PanelEditBehaviour.SetActive(false);
         }
 
@@ -775,5 +784,12 @@ namespace Assets.Scripts.MapEditor
 
             SetCanvasActive(true);
         }
+
+        public void ChangeMaxVisibilityMeasure(float value)
+        {
+            ((EditBehaviourHandler) currentEditorHandler).ChangeMaxVisibilityMeasure(value);
+            FlagCurrentButton();
+        }
+
     }
 }

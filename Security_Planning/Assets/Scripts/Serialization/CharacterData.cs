@@ -10,7 +10,10 @@ namespace Assets.Scripts.Serialization
         private string[] itemNames;
         private List<EdgeType> forbiddenEdgeTypes;
         private List<PlanningEdgeType> forbiddenPlanningEdgeTypes;
+        [Obsolete("Maintained only because of backward compatibility.")]
         private List<DetectorType> ignoredDetectors;
+
+        private float maxVisibilityMeasure;
 
         public string[] ItemNames
         {
@@ -30,10 +33,10 @@ namespace Assets.Scripts.Serialization
             set { forbiddenPlanningEdgeTypes = value; }
         }
 
-        public List<DetectorType> IgnoredDetectors
+        public float MaxVisibilityMeasure
         {
-            get { return ignoredDetectors ?? (ignoredDetectors = new List<DetectorType>()); }
-            set { ignoredDetectors = value; }
+            get { return maxVisibilityMeasure; }
+            set { maxVisibilityMeasure = value; }
         }
     }
 }

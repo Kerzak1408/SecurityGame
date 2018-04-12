@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Entities.Characters.Goals;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
 using UnityEngine;
@@ -17,11 +18,11 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         private Transform togglesParent;
         private Dictionary<EdgeType, Toggle> tileEdgeToggles;
         private Dictionary<PlanningEdgeType, Toggle> planningEdgeToggles;
-        private Dictionary<DetectorType, Toggle> ignoredDetectorsDictionary;
         private Burglar selectedBurglar;
         private bool toggleChangedFromCode;
 
-        public Dictionary<Toggle, bool> PreviousValues;
+        public Dictionary<Toggle, bool> PreviousValues { get; private set; }
+        public float PreviousSliderValue { get; private set; }
 
         public EditBehaviourHandler(GridManager gridManager) : base(gridManager)
         {
@@ -35,13 +36,10 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             }
             tileEdgeToggles = new Dictionary<EdgeType, Toggle>();
             planningEdgeToggles = new Dictionary<PlanningEdgeType, Toggle>();
-            ignoredDetectorsDictionary = new Dictionary<DetectorType, Toggle>();
             InstantiateToggles(EdgeTypeUtils.BannableEdgeType, tileEdgeToggles,
                 burglar => burglar.Data.ForbiddenEdgeTypes, GetToggleText);
             InstantiateToggles(PlanningEdgeTypeUtils.BannableEdgeTypes, planningEdgeToggles,
                 burglar => burglar.Data.ForbiddenPlanningEdgeTypes, GetToggleText);
-            InstantiateToggles(Enum.GetValues(typeof(DetectorType)).Cast<DetectorType>(), ignoredDetectorsDictionary, 
-                burglar => burglar.Data.IgnoredDetectors, GetToggleText, true);
             PreviousValues = new Dictionary<Toggle, bool>();
         }
 
@@ -75,19 +73,6 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                         }
                     }
                 });
-            }
-        }
-
-        private string GetToggleText(DetectorType detectorType)
-        {
-            switch (detectorType)
-            {
-                case DetectorType.CAMERA:
-                    return "IGNORE CAMERAS";
-                case DetectorType.PIR:
-                    return "IGNORE PIR DETECTORS";
-                default:
-                    return "UNDEFINED";
             }
         }
 
@@ -129,8 +114,10 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 selectedBurglar = burglarHit.transform.gameObject.GetComponent<Burglar>();
                 InitializeTogglesValues(planningEdgeToggles, selectedBurglar.Data.ForbiddenPlanningEdgeTypes);
                 InitializeTogglesValues(tileEdgeToggles, selectedBurglar.Data.ForbiddenEdgeTypes);
-                InitializeTogglesValues(ignoredDetectorsDictionary, selectedBurglar.Data.IgnoredDetectors, true);
                 panelEditBehaviour.SetActive(true);
+                float loadedSliderValue = selectedBurglar.Data.MaxVisibilityMeasure * (NavigationGoal.PATHS_COUNT - 1);
+                ChangeMaxVisibilityMeasure(loadedSliderValue, true);
+                PreviousSliderValue = loadedSliderValue;
             }
         }
 
@@ -152,5 +139,16 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         }
 
 
+        public void ChangeMaxVisibilityMeasure(float value, bool calledFromCode=false)
+        {
+            float newMeasure = value / (NavigationGoal.PATHS_COUNT - 1);
+            gridManager.TextMaxVisibilityMeasure.text = newMeasure.ToString();
+            gridManager.HandleMaxVisibilitySlider.color = GridManager.Colors[(int)value];
+            selectedBurglar.Data.MaxVisibilityMeasure = newMeasure;
+            if (calledFromCode)
+            {
+                gridManager.SliderMaxVisibility.value = value;
+            }
+        }
     }
 }

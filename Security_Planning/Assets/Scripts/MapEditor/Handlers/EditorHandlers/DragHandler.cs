@@ -24,8 +24,6 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                     GameObject hitObject = entityHit.transform.gameObject;
                     draggedObject = hitObject;
                 }
-
-
             }
         }
 

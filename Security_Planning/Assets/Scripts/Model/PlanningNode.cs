@@ -36,7 +36,7 @@ namespace Assets.Scripts.Model
                     GameObject[,] tiles = character.Map.Tiles;
                     Path<TileNode, TileEdge> pathToGoal = AStarAlgorithm.AStar(TileNode, GoalNode.TileNode,
                             new EuclideanHeuristics<TileNode>(tiles),
-                            Filters.DetectableFilter(DestroyedDetectors, character.Data.IgnoredDetectors, UnlockedTileNodes),
+                            Filters.DetectableFilter(DestroyedDetectors, UnlockedTileNodes),
                             Filters.EdgeFilter(UnlockedEdges, character.Data.ForbiddenEdgeTypes, DestroyedDetectors.OfType<BaseEntity>()),
                             edge => ComputeEdgeCost(edge, DestroyedObstacles));
 
@@ -50,7 +50,7 @@ namespace Assets.Scripts.Model
                         IPlanningEdgeCreator creator = keyValuePair.Key;
                         if (creator.ShouldExplore(this))
                         {
-                            Func<TileNode, bool> detectableFilter = Filters.DetectableFilter(DestroyedDetectors, character.Data.IgnoredDetectors, UnlockedTileNodes);
+                            Func<TileNode, bool> detectableFilter = Filters.DetectableFilter(DestroyedDetectors, UnlockedTileNodes);
                             List<TileNode> tileNodes = keyValuePair.Value;
 
                             TileNode neighborTileNode = null;

@@ -47,14 +47,9 @@ public class TileNode : IAStarNode<TileNode>
         return Edges.Any(edge => edge.Type.Equals(EdgeType.NORMAL) && edge.Neighbor.Position.Equals(integerTuple));
     }
 
-    public bool IsDetectable(IEnumerable<DetectorEntity> deactivatedDetectors=null, IEnumerable<DetectorType> ignoredTypes=null)
+    public bool IsDetectable(IEnumerable<DetectorEntity> deactivatedDetectors=null)
     {
         IEnumerable<DetectorEntity> filteredDetectors = DetectedBy;
-        if (ignoredTypes != null)
-        {
-            filteredDetectors =
-                filteredDetectors.Where(detector => !ignoredTypes.Contains(detector.DetectorType));
-        }
         if (deactivatedDetectors != null)
         {
             return filteredDetectors.Any(detector => !deactivatedDetectors.Contains(detector));

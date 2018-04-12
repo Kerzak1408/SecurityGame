@@ -56,9 +56,8 @@ namespace Assets.Scripts.Model
                 {
                     totalTime += tileEdge.Cost;
 
-                    float visibleFraction = tileEdge.Nodes.Count(node =>
-                                                node.IsDetectable(Start.DestroyedDetectors,
-                                                    character.Data.IgnoredDetectors)) / (float) tileEdge.Nodes.Length;
+                    float visibleFraction = tileEdge.Nodes.Count(node => node.IsDetectable(Start.DestroyedDetectors)) /
+                                            (float) tileEdge.Nodes.Length;
                     visibleTime += visibleFraction * tileEdge.Cost;
                 }
 

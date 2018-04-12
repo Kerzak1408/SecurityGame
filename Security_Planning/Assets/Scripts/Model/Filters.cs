@@ -11,7 +11,6 @@ namespace Assets.Scripts.Model
     {
         public static Func<TileNode, bool> DetectableFilter(
             IEnumerable<DetectorEntity> deactivatedDetectors=null,
-            IEnumerable<DetectorType> ignoredTypes = null,
             IEnumerable<TileNode> unlockedNodes = null)
         {
             return node =>
@@ -20,7 +19,7 @@ namespace Assets.Scripts.Model
                 {
                     return false;
                 }
-                return node.IsDetectable(deactivatedDetectors, ignoredTypes);
+                return node.IsDetectable(deactivatedDetectors);
             };
         } 
 
