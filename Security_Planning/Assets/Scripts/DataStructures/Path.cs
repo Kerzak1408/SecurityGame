@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Extensions;
+using Assets.Scripts.Model;
 
 namespace Assets.Scripts.DataStructures
 {
@@ -21,10 +23,29 @@ namespace Assets.Scripts.DataStructures
             Cost = cost;
         }
 
+        public TNode GoalNode
+        {
+            get
+            {
+                return Edges == null ? default(TNode) : Edges.Last().Neighbor;
+            }
+        }
+
         public void AddEdgeToBeginning(TEdge edge)
         {
             Edges.Insert(0, edge);
             Cost += edge.Cost;
+        }
+
+        public override string ToString()
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append("Cost: " + Cost);
+            foreach (TEdge edge in Edges)
+            {
+                stringBuilder.Append(" {").Append(edge).Append("} ");
+            }
+            return stringBuilder.ToString();
         }
     }
 }

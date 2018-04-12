@@ -84,6 +84,14 @@ namespace Assets.Scripts.Extensions
             material.SetColor("_EmissionColor", color);
         }
 
+        public static void ChangeMaterialAndColor(this GameObject gameObject, Color color)
+        {
+            var material = gameObject.GetComponent<Renderer>().material;
+            var materialCopy = new Material(material);
+            materialCopy.color = color;
+            gameObject.GetComponent<Renderer>().material = materialCopy;
+        }
+
         public static bool IsChildOf(this GameObject potentialChild, GameObject potentialParent)
         {
             foreach (Transform transform in potentialParent.transform)

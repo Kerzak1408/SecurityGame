@@ -22,6 +22,11 @@ namespace Assets.Scripts.Model
             get { return path.Cost + interactTime; }
         }
 
+        public int PathLength
+        {
+            get { return path.Edges.Count; }
+        }
+
         public List<BaseAction> ActionsToComplete
         {
             get
@@ -41,6 +46,26 @@ namespace Assets.Scripts.Model
             }
         }
 
+        public float VisibilityMeasure
+        {
+            get
+            {
+                float visibleTime = 0;
+                float totalTime = 0;
+                foreach (TileEdge tileEdge in path.Edges)
+                {
+                    totalTime += tileEdge.Cost;
+
+                    float visibleFraction = tileEdge.Nodes.Count(node =>
+                                                node.IsDetectable(Start.DestroyedDetectors,
+                                                    character.Data.IgnoredDetectors)) / (float) tileEdge.Nodes.Length;
+                    visibleTime += visibleFraction * tileEdge.Cost;
+                }
+
+                return visibleTime / totalTime;
+            }
+        }
+
         public PlanningEdge(PlanningNode start, PlanningNode neighbor, PlanningEdgeType type, BaseCharacter character,
             Path<TileNode, TileEdge> path, float interactTime, GameObject interactObject = null)
             : base(start, neighbor, type)
@@ -49,6 +74,11 @@ namespace Assets.Scripts.Model
             this.interactObject = interactObject;
             this.character = character;
             this.interactTime = interactTime;
+        }
+
+        public override string ToString()
+        {
+            return Start + " -> " + Neighbor + " Cost = " + Cost + " Type = " + Type;
         }
     }
 }

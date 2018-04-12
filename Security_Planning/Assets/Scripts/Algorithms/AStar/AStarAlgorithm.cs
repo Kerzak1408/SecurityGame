@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Assets.Scripts.DataStructures;
 
@@ -40,7 +41,6 @@ public static class AStarAlgorithm
                     minFValue = fValue;
                 }
             }
-            //Debug.Log("AStar current node = " + currentNode);
 
             if (currentNode.Equals(endNode))
             {
@@ -52,7 +52,6 @@ public static class AStarAlgorithm
 
             foreach (TEdge edge in currentNode.Edges)
             {
-                //Debug.Log("AStar current edge = " + edge);
                 TNode neighbor = edge.Neighbor;
                 if (closedSet.Contains(neighbor) || 
                     (nodeFilter != null && nodeFilter(neighbor)) || 

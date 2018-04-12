@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using Assets.Scripts.DataStructures;
+using Assets.Scripts.Model;
 using UnityEngine;
 
 public static class CollectionsExtensions
@@ -117,5 +121,15 @@ public static class CollectionsExtensions
         foreach (var item in target)
             yield return (T)item;
     }
-    
+
+    public static T RandomElement<T>(this IEnumerable<T> enumerable)
+    {
+        return enumerable.RandomElementUsing<T>(new System.Random());
+    }
+
+    public static T RandomElementUsing<T>(this IEnumerable<T> enumerable, System.Random rand)
+    {
+        int index = rand.Next(0, enumerable.Count());
+        return enumerable.ElementAt(index);
+    }
 }

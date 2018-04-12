@@ -18,10 +18,12 @@ namespace Assets.Scripts.Model
         public List<IObstacle> DestroyedObstacles { get; set; }
         public List<DetectorEntity> DestroyedDetectors { get; set; }
         public PlanningNode GoalNode { get; set; }
+        public IEnumerable<TileNode> UnlockedTileNodes { get; set; }
 
         public Dictionary<IPlanningEdgeCreator, List<TileNode>> CreatorsDictionary { get; set; }
         private BaseCharacter character;
         private List<IAStarEdge<PlanningNode>> edges;
+
         public GameObject FiniteObject { get; set; }
 
         public List<IAStarEdge<PlanningNode>> Edges
@@ -34,7 +36,7 @@ namespace Assets.Scripts.Model
                     GameObject[,] tiles = character.Map.Tiles;
                     Path<TileNode, TileEdge> pathToGoal = AStarAlgorithm.AStar(TileNode, GoalNode.TileNode,
                             new EuclideanHeuristics<TileNode>(tiles),
-                            Filters.DetectableFilter(DestroyedDetectors, character.Data.IgnoredDetectors),
+                            Filters.DetectableFilter(DestroyedDetectors, character.Data.IgnoredDetectors, UnlockedTileNodes),
                             Filters.EdgeFilter(UnlockedEdges, character.Data.ForbiddenEdgeTypes, DestroyedDetectors.OfType<BaseEntity>()),
                             edge => ComputeEdgeCost(edge, DestroyedObstacles));
 
@@ -48,14 +50,14 @@ namespace Assets.Scripts.Model
                         IPlanningEdgeCreator creator = keyValuePair.Key;
                         if (creator.ShouldExplore(this))
                         {
-                            Func<TileNode, bool> detectableFilter = Filters.DetectableFilter(DestroyedDetectors, character.Data.IgnoredDetectors);
+                            Func<TileNode, bool> detectableFilter = Filters.DetectableFilter(DestroyedDetectors, character.Data.IgnoredDetectors, UnlockedTileNodes);
                             List<TileNode> tileNodes = keyValuePair.Value;
 
                             TileNode neighborTileNode = null;
                             float minDistanceSquared = float.MaxValue;
                             foreach (TileNode tileNode in tileNodes)
                             {
-                                if (detectableFilter(tileNode)) continue;
+                                if (detectableFilter(tileNode) || tileNode.IsObstructed(DestroyedDetectors.OfType<BaseEntity>())) continue;
                                 var currentPosition = tileNode.Position;
                                 float currentDistanceSquared = Mathf.Pow(currentPosition.First - Position.First, 2) +
                                                                Mathf.Pow(currentPosition.Second - Position.Second, 2);
@@ -90,7 +92,8 @@ namespace Assets.Scripts.Model
                                     character,
                                     DestroyedObstacles.Copy(),
                                     DestroyedDetectors.Copy(),
-                                    FiniteObject);
+                                    FiniteObject,
+                                    UnlockedTileNodes);
                                 creator.ModifyNextNode(neighbor);
                                 foreach (TileEdge pathEdge in path.Edges)
                                 {
@@ -132,7 +135,7 @@ namespace Assets.Scripts.Model
         public PlanningNode(TileNode tileNode, PlanningNode goalNode, List<EdgeType> unlockedEdges,
             Dictionary<IPlanningEdgeCreator, List<TileNode>> creatorsDictionary, BaseCharacter character,
             List<IObstacle> destroyedObstacles = null, List<DetectorEntity> destroyedDetectors = null,
-            GameObject finiteObject = null)
+            GameObject finiteObject = null, IEnumerable<TileNode> unlockedTileNodes = null)
         {
             TileNode = tileNode;
             this.GoalNode = goalNode;
@@ -143,11 +146,13 @@ namespace Assets.Scripts.Model
             DestroyedObstacles = destroyedObstacles ?? new List<IObstacle>();
             DestroyedDetectors = destroyedDetectors ?? new List<DetectorEntity>();
             this.FiniteObject = finiteObject;
+            UnlockedTileNodes = unlockedTileNodes;
         }
 
         public override string ToString()
         {
             var result = new StringBuilder(Position.ToString());
+            result.Append(Position);
             foreach (DetectorEntity detector in DestroyedDetectors)
             {
                 result.Append(", ");
@@ -164,6 +169,11 @@ namespace Assets.Scripts.Model
                 result.Append(edge);
             }
             return result.ToString();
+        }
+
+        public void Reset()
+        {
+            edges = null;
         }
     }
 }

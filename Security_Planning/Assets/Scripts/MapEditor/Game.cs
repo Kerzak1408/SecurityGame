@@ -32,6 +32,8 @@ namespace Assets.Scripts.MapEditor
 
         private StreamWriter logFileWriter;
         private BaseGameHandler gameHandler;
+
+        private float redrawTimer;
         
 
         // Use this for initialization
@@ -192,6 +194,20 @@ namespace Assets.Scripts.MapEditor
 
         private void OnDrawGizmos()
         {
+            List<ClusterNode> contractedNodes = Map.AIModel.ContractedNodes;
+            InitializeGraph(contractedNodes);
+
+            Gizmos.color = Color.black;
+
+            foreach (ClusterNode clusterNode in contractedNodes)
+            {
+                Gizmos.DrawSphere(clusterNode.Center, 0.4f);
+                foreach (IAStarEdge<ClusterNode> edge in clusterNode.Edges)
+                {
+                    Gizmos.DrawLine(clusterNode.Center, edge.Neighbor.Center);
+                }
+            }
+
             var guardCamera = Cameras.First(kvPair => kvPair.Second != null && kvPair.Second is Guard).First;
             var burglarCollider = Map.Entities.First(entity => entity.HasScriptOfType<Burglar>()).GetComponent<Burglar>().GetComponent<SphereCollider>();
             var planes = GeometryUtility.CalculateFrustumPlanes(guardCamera);
@@ -212,13 +228,19 @@ namespace Assets.Scripts.MapEditor
             }
             if (Map == null) return;
 
-            Map.ExtractAIModel();
+            redrawTimer += Time.deltaTime;
+            if (redrawTimer > 1)
+            {
+                //Map.ExtractAIModel();
+                redrawTimer = 0;
+            }
+
 
             foreach (TileNode tileModel in Map.AIModel.Tiles)
             {
                 Gizmos.color = tileModel.IsDetectable() ? Color.red : Color.green;
                 GameObject mapTile = Map.Tiles.Get(tileModel.Position);
-                Gizmos.DrawSphere(mapTile.transform.position, 0.1f);
+                Gizmos.DrawSphere(mapTile.transform.position, 0.2f);
                 foreach (TileEdge edge in tileModel.Edges)
                 {
                     if (edge.IsObstructed(new List<BaseEntity>()))
@@ -292,12 +314,43 @@ namespace Assets.Scripts.MapEditor
             gameHandler.GoalsCompleted(baseCharacter);
         }
 
-        public void EndSimulation(List<BaseAction> actionsToDraw)
+        public void EndSimulation(List<BaseAction>[] actionsToDraw)
         {
             var parameters = new Dictionary<string, object>();
             parameters[Scenes.MAP] = Scenes.ObjectParameters[Scenes.MAP];
             parameters[Scenes.ACTIONS_TO_DRAW] = actionsToDraw;
             Scenes.Load(Scenes.MAP_EDITOR, parameters);
+        }
+
+        private void InitializeGraph(List<ClusterNode> contractedGraph)
+        {
+            // Filter clusters
+            foreach (ClusterNode cluster in contractedGraph.Copy())
+            {
+                if (cluster.Members.Count == 1 && cluster.Members.First().Edges.All(edge => edge.IsObstructed(new List<BaseEntity>())))
+                {
+                    contractedGraph.Remove(cluster);
+                }
+            }
+            // Add edges
+            foreach (ClusterNode start in contractedGraph)
+            {
+                foreach (ClusterNode end in contractedGraph)
+                {
+                    if (start != end)
+                    {
+                        foreach (TileNode endMember in end.Members)
+                        {
+                            if (start.Members.Any(member =>
+                                member.Edges.Select(edge => edge.Neighbor).Contains(endMember)))
+                            {
+                                start.Edges.Add(new ClusterEdge(start, end));
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters.Goals;
 using Assets.Scripts.MapEditor;
 using Assets.Scripts.Model;
@@ -36,38 +38,68 @@ public class SimulationGameHandler : BaseGameHandler
 
     private IEnumerator WaitForGoalPlanning()
     {
-        var actionsToDraw = new List<BaseAction>();
+        var actionsToDraw = new List<BaseAction>[NavigationGoal.PATHS_COUNT];
+        for (int i = 0; i < actionsToDraw.Length; i++)
+        {
+            actionsToDraw[i] = new List<BaseAction>();
+        }
+        
         Queue<BaseGoal> goals = CollectEverythingBehaviour.GenerateGoals(Burglar, false);
         NavigationGoal previousGoal = null;
+
         while (goals.Count > 0)
         {
+            Path<PlanningNode, PlanningEdge>[] nullPaths = null;
             NavigationGoal goal = goals.Dequeue() as NavigationGoal;
-            PlanningNode startNode = null;
+            PlanningNode[] startNodes = new PlanningNode[actionsToDraw.Length];
             if (previousGoal != null)
             {
-                startNode = previousGoal.GoalNode;
-            }
-            goal.Activate(startNode);
-            
-            while (!goal.IsInitialized)
-            {
-                yield return null;
-            }
-            if (goal.Path == null || goal.Path.Edges == null)
-            {
-                continue;
+                for (int i = 0; i < startNodes.Length; i++)
+                {
+                    startNodes[i] = previousGoal.PossiblePaths[i].GoalNode;
+                }
             }
             previousGoal = goal;
-            foreach (PlanningEdge planningEdge in goal.Path.Edges)
+
+            for (int i = 0; i < startNodes.Length; i++)
             {
-                foreach (BaseAction action in planningEdge.ActionsToComplete)
+                PlanningNode startNode = startNodes[i];
+                Path<PlanningNode, PlanningEdge> currentPath;
+                if (startNode != null || nullPaths == null)
                 {
-                    if (action.GetType() == typeof(InteractAction))
+                    goal.Activate(startNode);
+
+                    while (!goal.IsInitialized)
                     {
-                        var interactAction = (InteractAction)action;
-                        interactAction.InteractedName = interactAction.Interacted.name;
+                        yield return null;
                     }
-                    actionsToDraw.Add(action);
+                    currentPath = goal.PossiblePaths[i];
+                    if (startNode == null)
+                    {
+                        nullPaths = goal.PossiblePaths;
+                    }
+                }
+                else
+                {
+                    currentPath = nullPaths[i];
+                }
+                
+                if (currentPath == null || currentPath.Edges == null)
+                {
+                    continue;
+                }
+
+                foreach (PlanningEdge planningEdge in currentPath.Edges)
+                {
+                    foreach (BaseAction action in planningEdge.ActionsToComplete)
+                    {
+                        if (action.GetType() == typeof(InteractAction))
+                        {
+                            var interactAction = (InteractAction)action;
+                            interactAction.InteractedName = interactAction.Interacted.name;
+                        }
+                        actionsToDraw[i].Add(action);
+                    }
                 }
             }
         }

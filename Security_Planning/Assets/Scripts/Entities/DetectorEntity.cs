@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Entities.Gates;
 using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
@@ -63,7 +64,8 @@ namespace Assets.Scripts.Entities
                         RaycastHit[] raycastHits = Physics.RaycastAll(ray);
                         // Change to distance from the closest point of collider
                         float distance = Vector3.Distance(collider.ClosestPointOnBounds(cameraPosition), cameraPosition);
-                        if (!raycastHits.Any(hit => hit.distance < distance))
+                        if (!raycastHits.Any(hit => hit.distance < distance && !hit.transform.gameObject.HasScriptOfType<BaseObject>() &&
+                                                    !hit.transform.gameObject.HasScriptOfType<BaseGate>()))
                         {
                             aiModel.Tiles[i, j].AddDetector(this);
                         }

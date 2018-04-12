@@ -23,6 +23,11 @@ namespace Assets.Scripts.Model
             get { return start; }
         }
 
+        public TNode[] Nodes
+        {
+            get { return new[] {Start, Neighbor}; }
+        }
+
         public Edge(TNode start, TNode neighbor, TEdgeType type)
         {
             this.start = start;
@@ -32,7 +37,7 @@ namespace Assets.Scripts.Model
 
         public override string ToString()
         {
-            return string.Join(", ", new string[] { Type.ToString(), Cost.ToString() });
+            return Start + " -> " + Neighbor + " Cost = " + Cost + " Type = " + Type;
         }
     }
 }

@@ -164,9 +164,9 @@ namespace Assets.Scripts.DataStructures
                 TileNode tileNode = AIModel.Tiles[i, j];
                 Tuple<int, int>[] neighbors =
                 {
-                    Tuple.New(i - 1, j),
+                    //Tuple.New(i - 1, j),
                     Tuple.New(i + 1, j),
-                    Tuple.New(i, j - 1),
+                    //Tuple.New(i, j - 1),
                     Tuple.New(i, j + 1)
                 };
                 foreach (Tuple<int, int> neighbor in neighbors)
@@ -176,6 +176,7 @@ namespace Assets.Scripts.DataStructures
                     {
                         // TODO: cost
                         tileNode.AddNeighbor(edge);
+                        edge.Neighbor.AddNeighbor(new TileEdge(edge.Neighbor, edge.Start, edge.Type, edge.Cost, edge.Obstacle));
                     }
                 }
 
@@ -259,6 +260,18 @@ namespace Assets.Scripts.DataStructures
                     if (distance < MIN_OBSTACLE_DISTANCE)
                     {
                         edge.ObstructingEntities.Add(entity.GetComponent<BaseEntity>());
+                        TileNode edgeNeighbor = edge.Neighbor;
+                        List<TileEdge> edgeNeighborEdges = edgeNeighbor.Edges;
+                        TileEdge reverseEdge = edgeNeighborEdges.FirstOrDefault(neighborEdge => neighborEdge.Neighbor == node);
+                        if (reverseEdge != null)
+                        {
+                            reverseEdge.ObstructingEntities.Add(entity.GetComponent<BaseEntity>());
+                        }
+                        else
+                        {
+                            Debug.Log("WTF");
+                        }
+                       
                     }
                 }
             }

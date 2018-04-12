@@ -5,6 +5,7 @@ using System.Linq;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Entities.Characters.Goals;
 using Assets.Scripts.Entities.Gates;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.MapEditor.EditorHandlers;
@@ -50,7 +51,6 @@ namespace Assets.Scripts.MapEditor
         public GameObject Canvas;
         public GameObject PanelPassword;
         public Dropdown DropdownMode;
-        public LineRenderer LineRenderer;
 
         public GameObject PanelEditBehaviour;
         
@@ -72,15 +72,25 @@ namespace Assets.Scripts.MapEditor
         private BaseEditorHandler previousHandler;
         private string[] affectedCanvasElements = {"Scroll View", "ButtonMenu", "ButtonSave", "ButtonDelete"};
         internal Vector3 newEntityPosition;
-        private List<BaseAction> drawActions;
+        private List<BaseAction>[] drawActions;
         private bool isInitialized;
+        private LineRenderer[] lineRenderers;
+
+        private static readonly Color[] colors = { Color.green, Color.blue, Color.magenta, Color.yellow, Color.red, Color.black };
 
         // Use this for initialization
         protected override void Start ()
         {
             base.Start();
+            lineRenderers = new LineRenderer[NavigationGoal.PATHS_COUNT];
+            for (int i = 0; i < lineRenderers.Length; i++)
+            {
+                GameObject lineRendererObject = InstantiateGameObject(ResourcesHolder.Instance.LineRenderer);
+                lineRendererObject.ChangeMaterialAndColor(colors[i]);
+                lineRenderers[i] = lineRendererObject.GetComponent<LineRenderer>();
+            }
             graphDrawingItems = new List<GameObject>();
-            drawActions = Scenes.GetObjectParam(Scenes.ACTIONS_TO_DRAW) as List<BaseAction>;
+            drawActions = Scenes.GetObjectParam(Scenes.ACTIONS_TO_DRAW) as List<BaseAction>[];
             
             InputWidth.onValidateInput += NumberValidationFunction;
             InputHeight.onValidateInput += NumberValidationFunction;
@@ -119,7 +129,7 @@ namespace Assets.Scripts.MapEditor
             DrawActions(drawActions);
         }
 
-        private void DrawActions(List<BaseAction> actions)
+        private void DrawActions(List<BaseAction>[] actions)
         {
             if (actions == null)
             {
@@ -128,17 +138,25 @@ namespace Assets.Scripts.MapEditor
 
             string mapName = (string)Scenes.GetObjectParam(Scenes.MAP);
             SelectMap(MapsDictionary.First(kvPair => kvPair.Value.Name == mapName).Key);
-            foreach (BaseAction action in actions)
+            for (int i = 0; i < actions.Length; i++)
             {
-                if (action.GetType() == typeof(NavigationAction))
+                List<BaseAction> list = actions[i];
+                float spaceSize = 0.05f;
+                float translation = i * spaceSize - spaceSize * actions.Length / 2;
+                Vector3 offset = new Vector3(translation, translation/2, 0);
+                foreach (BaseAction action in list)
                 {
-                    DrawAction((NavigationAction) action);
-                }
-                else if (action.GetType() == typeof(InteractAction))
-                {
-                    DrawAction((InteractAction) action);
+                    if (action.GetType() == typeof(NavigationAction))
+                    {
+                        DrawAction((NavigationAction)action, offset, lineRenderers[i]);
+                    }
+                    else if (action.GetType() == typeof(InteractAction))
+                    {
+                        DrawAction((InteractAction)action, offset, colors[i]);
+                    }
                 }
             }
+
         }
 
         // Update is called once per frame
@@ -363,7 +381,6 @@ namespace Assets.Scripts.MapEditor
             binaryWriter = new BinaryWriter(new FileStream(passwordsPath, FileMode.Create));
             binaryWriter.Write(serializedPasswords);
             binaryWriter.Close();
-
 
             SelectedMapButton.ChangeColor(MyColors.LIGHT_SKY_BLUE);
         }
@@ -618,24 +635,29 @@ namespace Assets.Scripts.MapEditor
 
         private void ResetGraphDrawing()
         {
-            LineRenderer.positionCount = 0;
+            foreach (LineRenderer lineRenderer in lineRenderers)
+            {
+                lineRenderer.positionCount = 0;
+
+            }
             foreach (GameObject gameObject in graphDrawingItems.Copy())
             {
                 Destroy(gameObject);
             }
         }
 
-        private void DrawAction(InteractAction action)
+        private void DrawAction(InteractAction action, Vector3 offset, Color color)
         {
             GameObject vertexObject = InstantiateGameObject(ResourcesHolder.Instance.Vertex);
+            vertexObject.ChangeMaterialAndColor(color);
             GameObject interacted = GetCurrentMap().EmptyParent.transform.Find(action.InteractedName).gameObject;
             vertexObject.name = "Vertex_" + interacted.name;
             Vector3 interactedPosition = interacted.transform.position;
-            vertexObject.transform.position = new Vector3(interactedPosition.x, interactedPosition.y, -5);
+            vertexObject.transform.position = new Vector3(interactedPosition.x + offset.x, interactedPosition.y + offset.y, -5);
             graphDrawingItems.Add(vertexObject);
         }
 
-        private void DrawAction(NavigationAction action)
+        private void DrawAction(NavigationAction action, Vector3 offset, LineRenderer lineRenderer)
         {
             Queue<TileEdge> pathQueue = action.PathQueue;
             if (pathQueue == null)
@@ -648,9 +670,9 @@ namespace Assets.Scripts.MapEditor
 
                 Vector3 startPosition = tileEdge.Start.WorldPosition;
                 Vector3 endPosition = tileEdge.Neighbor.WorldPosition;
-                LineRenderer.positionCount += 2;
-                LineRenderer.SetPosition(LineRenderer.positionCount-2, new Vector3(startPosition.x, startPosition.z, -5));
-                LineRenderer.SetPosition(LineRenderer.positionCount-1, new Vector3(endPosition.x, endPosition.z, -5));
+                lineRenderer.positionCount += 2;
+                lineRenderer.SetPosition(lineRenderer.positionCount-2, new Vector3(startPosition.x + offset.x, startPosition.z + offset.y, -5));
+                lineRenderer.SetPosition(lineRenderer.positionCount-1, new Vector3(endPosition.x +  offset.x, endPosition.z + offset.y, -5));
 
             }
         }

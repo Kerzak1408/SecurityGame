@@ -9,9 +9,19 @@ namespace Assets.Scripts.Model
 {
     public static class Filters
     {
-        public static Func<TileNode, bool> DetectableFilter(IEnumerable<DetectorEntity> deactivatedDetectors=null, IEnumerable<DetectorType> ignoredTypes = null)
+        public static Func<TileNode, bool> DetectableFilter(
+            IEnumerable<DetectorEntity> deactivatedDetectors=null,
+            IEnumerable<DetectorType> ignoredTypes = null,
+            IEnumerable<TileNode> unlockedNodes = null)
         {
-            return node => node.IsDetectable(deactivatedDetectors, ignoredTypes);
+            return node =>
+            {
+                if (unlockedNodes != null && unlockedNodes.Contains(node))
+                {
+                    return false;
+                }
+                return node.IsDetectable(deactivatedDetectors, ignoredTypes);
+            };
         } 
 
         public static Func<TileEdge, bool> EdgeFilter(IEnumerable<EdgeType> unlockedEdgeTypes, 

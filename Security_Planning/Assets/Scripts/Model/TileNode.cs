@@ -86,4 +86,9 @@ public class TileNode : IAStarNode<TileNode>
         }
         Edges.Clear();
     }
+
+    public bool IsObstructed(IEnumerable<BaseEntity> destroyedObstacles)
+    {
+        return Edges.All(edge => edge.IsObstructed(destroyedObstacles));
+    }
 }

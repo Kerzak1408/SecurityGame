@@ -18,6 +18,7 @@ public class ResourcesHolder
     public Texture2D CogwheelPaleTaxture;
     public GameObject BehaviourToggle { get; private set; }
     public GameObject Vertex { get; private set; }
+    public Object LineRenderer { get; private set; } 
 
     public static readonly string PATH_PREFABS = "Prefabs/";
     public static readonly string PATH_PREFABS_TILES = PATH_PREFABS + "Tiles/";
@@ -28,6 +29,7 @@ public class ResourcesHolder
     public static readonly string PATH_PREFABS_ITEMSICONS = PATH_PREFABS + "ItemsIcons/";
     public static readonly string PATH_IMAGES = "Images/";
     public static readonly string PATH_PREFABS_GRAPH = PATH_PREFABS + "Graph/";
+    public static readonly string PATH_PREFABS_OTHER = PATH_PREFABS + "Other/";
 
     private static readonly string[] basicEntitiesNames = {"Burglar", "Guard"};
 
@@ -60,5 +62,6 @@ public class ResourcesHolder
         CogwheelPaleTaxture = Resources.Load<Texture2D>(PATH_IMAGES + "CogwheelPale");
         BehaviourToggle = Resources.Load<GameObject>(PATH_PREFABS_UI + "BehaviourToggle");
         Vertex = Resources.Load<GameObject>(PATH_PREFABS_GRAPH + "Vertex");
+        LineRenderer = Resources.Load(PATH_PREFABS_OTHER + "LineRenderer");
     }
 }
