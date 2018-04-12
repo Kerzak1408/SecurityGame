@@ -114,32 +114,37 @@ namespace Assets.Scripts.Entities.Characters.Goals
             List<ClusterNode> traversedNodes, List<ClusterEdge> traversedEdges, int depth = 1)
         {
             traversedNodes.Add(currentCluster);
+            var result = new List<List<ClusterNode>>();
             if (currentCluster == goalCluster)
             {
-                return new List<List<ClusterNode>> {traversedNodes};
+                result.Add(traversedNodes);
+                if (currentCluster.Members.First().IsDetectable(new List<DetectorEntity>()))
+                {
+                    return result;
+                }
             }
-            var result = new List<List<ClusterNode>>();
-            //if (depth > 5)
-            //{
-            //    var availableEdges = new List<ClusterEdge>();
-            //    foreach (ClusterEdge edge in currentCluster.Edges)
-            //    {
-            //        if (!traversedEdges.Contains(edge))
-            //        {
-            //            availableEdges.Add(edge);
-            //        }
-            //    }
 
-            //    if (availableEdges.Count > 0)
-            //    {
-            //        ClusterEdge randomEdge = availableEdges.RandomElement();
-            //        traversedEdges.Add(randomEdge);
-            //        List<List<ClusterNode>> partialResult = GenerateClusterPaths(randomEdge.Neighbor, goalCluster,
-            //            traversedNodes.Copy(), traversedEdges.Copy(), depth + 1);
-            //        result.AddRange(partialResult);
-            //    }
-            //}
-            //else
+            if (depth > 3)
+            {
+                var availableEdges = new List<ClusterEdge>();
+                foreach (ClusterEdge edge in currentCluster.Edges)
+                {
+                    if (!traversedEdges.Contains(edge))
+                    {
+                        availableEdges.Add(edge);
+                    }
+                }
+
+                if (availableEdges.Count > 0)
+                {
+                    ClusterEdge randomEdge = availableEdges.RandomElement();
+                    traversedEdges.Add(randomEdge);
+                    List<List<ClusterNode>> partialResult = GenerateClusterPaths(randomEdge.Neighbor, goalCluster,
+                        traversedNodes.Copy(), traversedEdges.Copy(), depth + 1);
+                    result.AddRange(partialResult);
+                }
+            }
+            else
             {
                 foreach (ClusterEdge edge in currentCluster.Edges)
                 {
@@ -222,10 +227,9 @@ namespace Assets.Scripts.Entities.Characters.Goals
         {
             foreach (Path<PlanningNode, PlanningEdge> path in PossiblePaths)
             {
-                if (path != null)
+                if (Path == null || (path != null && path.VisibilityMeasure() <= Character.Data.MaxVisibilityMeasure && path.Cost < Path.Cost))
                 {
                     Path = path;
-                    break;
                 }
             }
             if (Path == null || Path.Cost == float.MaxValue || Path.Edges == null || Path.Edges.Count == 0)
