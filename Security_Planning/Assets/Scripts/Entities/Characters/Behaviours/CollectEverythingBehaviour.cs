@@ -15,6 +15,9 @@ namespace Entities.Characters.Behaviours
         private Queue<BaseGoal> goals;
         private BaseGoal currentGoal;
 
+        public int TotalMoneyGoals { get; private set; }
+        public int SuccessfulMoneyGoals { get; private set; }
+
         public CollectEverythingBehaviour(BaseCharacter character) : base(character)
         {
         }
@@ -22,6 +25,7 @@ namespace Entities.Characters.Behaviours
         public override void Start()
         {
             goals = GenerateGoals(character);
+            TotalMoneyGoals = goals.Count(goal => goal is MoneyGoal);
         }
 
         public static Queue<BaseGoal> GenerateGoals(BaseCharacter character, bool navigateBack=true)
@@ -48,6 +52,10 @@ namespace Entities.Characters.Behaviours
         {
             if (currentGoal == null || currentGoal.IsFinished)
             {
+                if (currentGoal is MoneyGoal && currentGoal.IsSuccessFul)
+                {
+                    SuccessfulMoneyGoals++;
+                }
                 if (goals.Count > 0)
                 {
                     currentGoal = goals.Dequeue();

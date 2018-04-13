@@ -227,7 +227,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
         {
             foreach (Path<PlanningNode, PlanningEdge> path in PossiblePaths)
             {
-                if (Path == null || (path != null && path.VisibilityMeasure() <= Character.Data.MaxVisibilityMeasure && path.Cost < Path.Cost))
+                if (path != null && path.VisibilityMeasure() <= Character.Data.MaxVisibilityMeasure && (Path == null || path.Cost < Path.Cost))
                 {
                     Path = path;
                 }
@@ -236,11 +236,12 @@ namespace Assets.Scripts.Entities.Characters.Goals
             {
                 Character.Log("Planning computation finished. Path NOT found.");
                 IsFinished = true;
+                IsSuccessFul = false;
             }
             else
             {
                 Character.Log("Planning computation finished. Path found.");
-
+                IsSuccessFul = true;
                 PlanningEdge lastEdge = Path.Edges.Last();
                 PlanningNode lastNode = lastEdge.Neighbor;
                 PlanningNode secondLastNode = lastEdge.Start;

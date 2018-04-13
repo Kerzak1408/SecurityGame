@@ -17,14 +17,14 @@ public class Burglar : BaseCharacter
     private CharacterController controller;
 
     private bool isPaused = true;
-    private BaseBehaviour behaviour;
+    public BaseBehaviour Behaviour;
 
     // Use this for initialization
     public override void StartGame()
     {
         base.StartGame();
-        behaviour = new CollectEverythingBehaviour(this);
-        behaviour.Start();
+        Behaviour = new CollectEverythingBehaviour(this);
+        Behaviour.Start();
     }
 
 	// Update is called once per frame
@@ -33,7 +33,7 @@ public class Burglar : BaseCharacter
         base.UpdateGame();
         IsMoving = false;
         if (isPaused || CurrentGame.IsFinished) return;
-        behaviour.Update();
+        Behaviour.Update();
     }
 
     public void ChangePausedState()

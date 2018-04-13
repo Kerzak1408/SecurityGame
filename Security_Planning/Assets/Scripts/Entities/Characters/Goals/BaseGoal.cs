@@ -9,6 +9,7 @@ namespace Entities.Characters.Goals
         public BaseCharacter Character { get; private set; }
         public IntegerTuple GoalCoordinates { get; private set; }
         public bool IsFinished { get; protected set; }
+        public bool IsSuccessFul { get; protected set; }
 
         protected BaseGoal(BaseCharacter character, IntegerTuple goalCoordinates)
         {

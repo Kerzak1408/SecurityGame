@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.MapEditor;
+using Entities.Characters.Behaviours;
 using UnityEngine;
 
 public class VisualContactGameHandler : BaseGameUserHandler
@@ -51,7 +52,7 @@ public class VisualContactGameHandler : BaseGameUserHandler
             Debug.Log("Closest hit: " + closestHit.transform.name);
             if (closestHit.collider == burglarCollider)
             {
-                Debug.Log("Burglar detected.");
+                Game.Map.Burglar.Log("Burglar detected. Simulation ended.");
                 Game.FinishGame("Burglar detected. Simulation ended.");
             }
         }
@@ -61,7 +62,27 @@ public class VisualContactGameHandler : BaseGameUserHandler
     {
         if (baseCharacter is Burglar)
         {
-            Game.FinishGame("Burglar stole all the treasures and escaped.");
+            CollectEverythingBehaviour behaviour = (CollectEverythingBehaviour) ((Burglar)baseCharacter).Behaviour;
+            int successfulMoneyGoals = behaviour.SuccessfulMoneyGoals;
+            Burglar burglar = Game.Map.Burglar;
+            string resultText;
+            switch (successfulMoneyGoals)
+            {
+                case 0:
+                    resultText = "Burglar did not find any path in the with visibility at most " +
+                                 burglar.Data.MaxVisibilityMeasure + ".";
+                    break;
+                case 1:
+                    resultText = "Burglar stole 1 treasure out of " + behaviour.TotalMoneyGoals + " and escaped.";
+                    break;
+                default:
+                    resultText = "Burglar stole " + behaviour.SuccessfulMoneyGoals + " treasures out of " +
+                                 behaviour.TotalMoneyGoals + " and escaped.";
+                    break;
+            }
+            
+            burglar.Log(resultText);
+            Game.FinishGame(resultText);
         }
     }
 }
