@@ -20,17 +20,8 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         {
             if (keyCodesDown.Contains(KeyCode.Tab))
             {
-                int optionsCount = dropdownMode.options.Count;
-                if (keyCodesPressed.Contains(KeyCode.LeftShift))
-                {
-                    int decreasedValue = dropdownMode.value - 1;
-                    dropdownMode.value = decreasedValue < 0 ? optionsCount - 1 : decreasedValue;
-                }
-                else
-                {
-                    dropdownMode.value = (dropdownMode.value + 1) % optionsCount;
-                }
-                dropdownMode.RefreshShownValue();
+                bool down = !keyCodesPressed.Contains(KeyCode.LeftShift);
+                dropdownMode.ChangeDropdownValue(down);
             }
         }
 

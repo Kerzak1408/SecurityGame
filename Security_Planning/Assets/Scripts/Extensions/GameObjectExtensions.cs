@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Extensions
 {
@@ -129,6 +130,21 @@ namespace Assets.Scripts.Extensions
             }
             result = gameObject.GetComponentInChildren<T>();
             return result;
+        }
+
+        public static void ChangeDropdownValue(this Dropdown dropdown, bool down=true)
+        {
+            int optionsCount = dropdown.options.Count;
+            if (down)
+            {
+                dropdown.value = (dropdown.value + 1) % optionsCount;
+            }
+            else
+            {
+                int decreasedValue = dropdown.value - 1;
+                dropdown.value = decreasedValue < 0 ? optionsCount - 1 : decreasedValue;
+            }
+            dropdown.RefreshShownValue();
         }
     }
 }

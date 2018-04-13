@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Assets.Scripts.Extensions;
 using Assets.Scripts.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,6 +35,7 @@ namespace Assets.Scripts.MapEditor
             }
 
             DropdownGameMode.options = options;
+            DropdownGameMode.value = PlayerPrefs.GetInt(Constants.Constants.PLAYER_PREFS_LAST_GAME_MODE);
         }
 
         protected override void Update()
@@ -46,6 +48,16 @@ namespace Assets.Scripts.MapEditor
                 RaycastHit[] raycastHits = Physics.RaycastAll(ray);
                 DefaultScrollLogic(scroll, raycastHits);
             }
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                bool down = Input.GetKey(KeyCode.LeftShift);
+                DropdownGameMode.ChangeDropdownValue(down);
+            }
+        }
+
+        public void OnGameModeChange(int value)
+        {
+            PlayerPrefs.SetInt(Constants.Constants.PLAYER_PREFS_LAST_GAME_MODE, value);
         }
     }
 }
