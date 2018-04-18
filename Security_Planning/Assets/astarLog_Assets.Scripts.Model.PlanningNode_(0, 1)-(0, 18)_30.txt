@@ -1,2 +1,0 @@
- exploiting: (0, 1)(0, 1)
-Filtered: (0, 1)(0, 1) -> (5, 8)(5, 8), ColumnWithCCTV_4 Cost = 14.07107 Type = CAMERA is in closed: False edge filtered : True
