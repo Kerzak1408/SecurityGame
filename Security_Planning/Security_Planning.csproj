@@ -14,9 +14,10 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
     <CompilerResponseFile></CompilerResponseFile>
+    <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
-    <UnityVersion>5.6.3p4</UnityVersion>
+    <UnityVersion>2017.4.1f1</UnityVersion>
     <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
@@ -27,7 +28,7 @@
     <IntermediateOutputPath>Temp\UnityVS_obj\Debug\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_3;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2017_4_1;UNITY_2017_4;UNITY_2017;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;ENABLE_SPRITE_MASKING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_VIDEO;ENABLE_RMGUI;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_STYLE_SHEETS;ENABLE_LOCALIZATION;PLATFORM_STANDALONE_WIN;PLATFORM_STANDALONE;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_AR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -37,7 +38,7 @@
     <IntermediateOutputPath>Temp\UnityVS_obj\Release\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_3;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU</DefineConstants>
+    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2017_4_1;UNITY_2017_4;UNITY_2017;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;ENABLE_SPRITE_MASKING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_VIDEO;ENABLE_RMGUI;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_STYLE_SHEETS;ENABLE_LOCALIZATION;PLATFORM_STANDALONE_WIN;PLATFORM_STANDALONE;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_AR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
@@ -49,8 +50,149 @@
     <Reference Include="UnityScript.Lang" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEditor">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AccessibilityModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AccessibilityModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.VehiclesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClothModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ClothModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainPhysicsModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.TerrainPhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterInputModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ClusterInputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterRendererModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ClusterRendererModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UNETModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UNETModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityAnalyticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PerformanceReportingModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.PerformanceReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConnectModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.WebModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.WebModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ARModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ARModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.StyleSheetsModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.StyleSheetsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.CrashReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GameCenterModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.GameCenterModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GridModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.GridModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.InputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.JSONSerializeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticlesLegacyModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ParticlesLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ScreenCaptureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SharedInternalsModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.SharedInternalsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.SpriteShapeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.TerrainModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TilemapModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.TilemapModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.WindModule">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.WindModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
@@ -64,14 +206,20 @@
     <Reference Include="nunit.framework">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Analytics">
-      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+    <Reference Include="UnityEngine.Timeline">
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Timeline/RuntimeEditor/UnityEngine.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIAutomation">
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UIAutomation/UnityEngine.UIAutomation.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GoogleAudioSpatializer">
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityGoogleAudioSpatializer/RuntimeEditor/UnityEngine.GoogleAudioSpatializer.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.VR">
-      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
+    <Reference Include="UnityEngine.SpatialTracking">
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="Ookii.Dialogs">
       <HintPath>Assets/External/StandaloneFileBrowser/Plugins/Ookii.Dialogs.dll</HintPath>
@@ -79,8 +227,17 @@
     <Reference Include="System.Windows.Forms">
       <HintPath>Assets/External/StandaloneFileBrowser/Plugins/System.Windows.Forms.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor">
-      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Analytics">
+      <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/UnityEngine.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.purchasing@0.0.19/UnityEngine.Purchasing.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.StandardEvents">
+      <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +262,7 @@
     <Compile Include="Assets\Scripts\Algorithms\AStar\AStarAlgorithm.cs" />
     <Compile Include="Assets\Scripts\Algorithms\AStar\Heuristics\EuclideanHeuristics.cs" />
     <Compile Include="Assets\Scripts\Algorithms\AStar\Heuristics\Heuristics.cs" />
+    <Compile Include="Assets\Scripts\Algorithms\AStar\Heuristics\TrivialHeuristics.cs" />
     <Compile Include="Assets\Scripts\Algorithms\AStar\Interfaces\IAStarEdge.cs" />
     <Compile Include="Assets\Scripts\Algorithms\AStar\Interfaces\IAStarNode.cs" />
     <Compile Include="Assets\Scripts\Algorithms\FloodFill\FloodFill.cs" />
@@ -121,6 +279,7 @@
     <Compile Include="Assets\Scripts\DataStructures\LazyDictionary.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Map.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Path.cs" />
+    <Compile Include="Assets\Scripts\DataStructures\PriorityCost.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Tuple.cs" />
     <Compile Include="Assets\Scripts\Entities\BaseEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\BaseEntityWithBaseData.cs" />
@@ -152,8 +311,8 @@
     <Compile Include="Assets\Scripts\Entities\Hedge.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IInteractable.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IObstacle.cs" />
-    <Compile Include="Assets\Scripts\Entities\Interfaces\IPIRDetectable.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPasswordOpenable.cs" />
+    <Compile Include="Assets\Scripts\Entities\Interfaces\IPIRDetectable.cs" />
     <Compile Include="Assets\Scripts\Entities\Interfaces\IPlanningEdgeCreator.cs" />
     <Compile Include="Assets\Scripts\Entities\ItemEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\MoneyEntity.cs" />
@@ -180,8 +339,8 @@
     <Compile Include="Assets\Scripts\Items\CardItem.cs" />
     <Compile Include="Assets\Scripts\Items\KeyItem.cs" />
     <Compile Include="Assets\Scripts\Items\WireCutterItem.cs" />
-    <Compile Include="Assets\Scripts\Logger\MyLogHandler.cs" />
     <Compile Include="Assets\Scripts\Logger\MyLogger.cs" />
+    <Compile Include="Assets\Scripts\Logger\MyLogHandler.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Game.cs" />
     <Compile Include="Assets\Scripts\MapEditor\GridBase.cs" />
@@ -209,9 +368,6 @@
     <Compile Include="Assets\Scripts\MapEditor\Handlers\GameModes\SimulationGameHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Handlers\GameModes\VisualContactGameHandler.cs" />
     <Compile Include="Assets\Scripts\MapEditor\MapChoiceManager.cs" />
-    <Compile Include="Assets\Scripts\Model\ClusterEdge.cs" />
-    <Compile Include="Assets\Scripts\Model\ClusterEdgeType.cs" />
-    <Compile Include="Assets\Scripts\Model\ClusterNode.cs" />
     <Compile Include="Assets\Scripts\Model\Edge.cs" />
     <Compile Include="Assets\Scripts\Model\EdgeType.cs" />
     <Compile Include="Assets\Scripts\Model\Filters.cs" />
@@ -614,6 +770,27 @@
     <None Include="Assets\Logs\Log_2018-4-12_12-58-19.txt" />
     <None Include="Assets\Logs\Log_2018-4-12_12-58-25.txt" />
     <None Include="Assets\Logs\Log_2018-4-13_01-19-41.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_01-28-33.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-06-22.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-07-11.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-08-53.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-09-35.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-13-59.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-14-28.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-14-55.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-15-21.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-17-11.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-17-41.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-36-28.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-37-40.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-40-03.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-51-10.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_02-51-17.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_04-08-23.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_04-23-02.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_08-58-48.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_09-00-31.txt" />
+    <None Include="Assets\Logs\Log_2018-4-13_09-00-42.txt" />
     <None Include="Assets\Logs\Log_2018-4-13_12-35-02.txt" />
     <None Include="Assets\Logs\Log_2018-4-13_12-37-17.txt" />
     <None Include="Assets\Logs\Log_2018-4-13_12-38-56.txt" />
@@ -622,6 +799,279 @@
     <None Include="Assets\Logs\Log_2018-4-13_12-48-56.txt" />
     <None Include="Assets\Logs\Log_2018-4-13_12-51-39.txt" />
     <None Include="Assets\Logs\Log_2018-4-13_12-53-16.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_01-01-07.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_01-01-56.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_01-07-48.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_01-08-50.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_01-57-04.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_01-58-31.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_02-01-39.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_02-02-31.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_02-09-58.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_02-16-27.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_06-53-32.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_06-55-28.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_06-57-05.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_06-59-27.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_07-00-16.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_07-24-44.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_07-25-17.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_07-29-53.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_07-38-34.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_07-39-15.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_07-41-36.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_07-48-37.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_07-49-12.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_08-07-54.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_08-08-45.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_08-19-06.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_08-33-16.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_08-34-15.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_08-35-59.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_08-36-04.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_08-36-10.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_08-36-55.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_08-39-44.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_08-47-20.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_08-47-38.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_09-30-27.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_09-32-50.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_10-28-44.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_10-31-46.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_10-35-19.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_10-41-03.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_10-43-04.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_10-43-44.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_10-44-16.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_10-44-41.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_10-45-39.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_10-46-08.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-01-06.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-05-18.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-09-17.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-12-55.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-17-13.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-18-03.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-18-48.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-19-45.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-23-32.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-23-50.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-33-38.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-35-47.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-41-35.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-47-35.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-49-36.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-50-15.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-50-28.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-51-33.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-54-11.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_11-54-29.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-00-32.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-03-11.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-06-45.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-09-06.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-09-32.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-10-04.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-12-25.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-12-42.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-13-35.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-13-50.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-14-07.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-22-33.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-26-26.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-26-35.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-28-42.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-31-02.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-33-27.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-36-47.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-44-47.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-52-51.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-53-31.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-55-41.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-58-19.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-58-49.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-58-50.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-59-07.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-59-29.txt" />
+    <None Include="Assets\Logs\Log_2018-4-14_12-59-48.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_01-43-47.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_01-45-35.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_01-46-20.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_01-49-32.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_01-49-39.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_02-23-47.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_02-26-55.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_02-41-24.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_02-43-05.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_02-49-47.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_03-39-29.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_03-50-45.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_04-05-44.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_04-20-45.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_04-50-42.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_04-51-49.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_04-56-02.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_04-57-07.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_04-58-36.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_05-01-04.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_05-07-04.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_05-08-29.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-05-42.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-07-08.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-07-20.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-08-36.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-13-23.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-13-45.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-20-50.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-20-57.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-21-09.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-21-54.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-22-50.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-24-05.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-29-35.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-30-23.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-36-46.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-41-06.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-48-33.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_06-49-51.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_07-15-49.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_12-20-06.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_12-36-48.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_12-45-51.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_12-47-20.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_12-48-46.txt" />
+    <None Include="Assets\Logs\Log_2018-4-15_12-49-10.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_02-18-33.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_02-43-28.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_02-44-41.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_02-47-24.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_02-50-07.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_02-50-57.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_02-58-13.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_02-58-34.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_02-59-39.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-00-00.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-01-12.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-01-25.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-07-13.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-09-49.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-14-02.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-14-19.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-15-48.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-20-20.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-27-25.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-33-37.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-38-54.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-48-42.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_03-52-56.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_07-43-04.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_07-44-21.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-01-20.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-04-20.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-04-27.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-04-33.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-10-44.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-12-11.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-14-40.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-19-16.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-21-47.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-43-36.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-44-57.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-46-07.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-47-57.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_08-55-11.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-12-15.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-14-30.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-16-49.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-30-17.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-32-57.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-33-59.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-36-14.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-37-07.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-42-59.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-43-30.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-44-33.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-52-04.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-53-24.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-53-38.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-54-11.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-54-21.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-54-38.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-55-35.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_09-58-13.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-03-42.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-04-50.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-09-43.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-10-41.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-19-04.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-19-10.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-19-17.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-19-49.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-20-40.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-21-24.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-22-29.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-22-36.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-24-56.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-26-12.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-36-46.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-37-08.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-38-10.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-43-23.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-43-40.txt" />
+    <None Include="Assets\Logs\Log_2018-4-16_10-46-37.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-20-33.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-20-46.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-25-27.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-26-02.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-30-42.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-34-17.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-38-42.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-41-08.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-46-42.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-47-44.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-48-33.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-49-42.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-51-05.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-52-33.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_10-57-09.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_11-04-16.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_11-32-45.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_11-33-35.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_11-37-14.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_11-42-21.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_11-43-16.txt" />
+    <None Include="Assets\Logs\Log_2018-4-17_11-45-23.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_01-00-16.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_01-01-01.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_01-02-36.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_01-17-11.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_01-27-32.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_01-37-45.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_01-39-15.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_01-40-18.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_01-40-56.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-07-17.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-08-24.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-10-03.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-13-07.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-14-14.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-15-53.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-16-10.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-28-16.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-28-54.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-29-40.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-31-06.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-33-39.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-35-45.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-36-09.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-36-18.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-41-40.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-49-17.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-54-51.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-55-13.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-55-21.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-57-23.txt" />
+    <None Include="Assets\Logs\Log_2018-4-18_12-57-58.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-15-37.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-16-19.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-18-22.txt" />
@@ -1305,6 +1755,330 @@
     <None Include="Assets\Logs\Log_2018-4-9_12-55-48.txt" />
     <None Include="Assets\Logs\Log_2018-4-9_12-56-01.txt" />
     <None Include="Assets\Resources\Maps\BuildingGrid.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_0.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_10.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_102.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_12.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_14.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_15.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_16.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_18.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_2.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_20.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_21.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_22.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_24.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_26.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_27.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_28.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_30.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_32.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_33.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_34.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_36.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_39.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_4.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_42.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_45.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_48.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_51.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_54.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_57.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_6.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_60.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_66.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_72.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_78.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_8.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_84.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_9.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_90.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 0)-(0, 29)_96.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_0.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_108.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_111.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_114.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_117.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_12.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_120.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_123.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_126.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_129.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_132.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_135.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_138.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_141.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_144.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_147.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_15.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_150.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_153.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_156.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_159.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_18.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_21.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_24.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_27.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_3.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_30.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_33.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_36.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_38.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_39.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_40.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_42.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_44.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_45.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_46.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_48.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_50.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_51.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_52.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_54.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_56.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_58.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_6.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_60.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_62.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_64.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_66.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_68.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_70.txt" />
+    <None Include="Assets\astarLog_Assets.Scripts.Model.PlanningNode_(0, 1)-(0, 18)_9.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_1.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_10.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_103.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_11.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_13.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_15.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_16.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_17.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_19.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_21.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_22.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_23.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_25.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_27.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_28.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_29.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_3.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_31.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_33.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_34.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_35.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_37.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_40.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_43.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_46.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_49.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_5.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_52.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_55.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_58.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_61.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_67.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_7.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_73.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_79.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_85.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_9.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_91.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(0, 29)_97.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_105.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_12.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_15.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_18.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_21.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_24.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_27.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_3.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_30.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_33.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_36.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_39.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_42.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_45.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_48.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_51.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_54.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_57.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_60.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_63.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_69.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_75.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_81.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_87.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_9.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_93.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 12)_99.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_10.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_100.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_106.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_13.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_16.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_19.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_22.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_25.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_28.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_31.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_34.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_37.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_4.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_40.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_43.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_46.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_49.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_52.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_55.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_58.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_61.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_64.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_70.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_76.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_82.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_88.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 20)_94.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_101.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_107.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_11.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_14.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_17.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_20.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_23.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_26.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_29.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_32.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_35.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_38.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_41.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_44.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_47.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_5.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_50.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_53.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_56.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_59.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_62.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_65.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_71.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_77.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_83.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_89.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 26)_95.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_104.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_11.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_14.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_17.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_2.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_20.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_23.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_26.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_29.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_32.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_35.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_38.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_41.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_44.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_47.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_50.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_53.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_56.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_59.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_62.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_68.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_74.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_8.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_80.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_86.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_92.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 0)-(1, 6)_98.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_1.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_10.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_109.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_112.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_115.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_118.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_121.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_124.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_127.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_13.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_130.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_133.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_136.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_139.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_142.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_145.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_148.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_151.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_154.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_157.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_16.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_160.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_19.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_22.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_25.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_28.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_31.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_34.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_37.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_39.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_4.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_40.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_41.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_43.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_45.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_46.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_47.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_49.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_51.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_52.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_53.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_55.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_57.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_59.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_61.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_63.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_65.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_67.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_69.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_7.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(0, 18)_71.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_11.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_110.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_113.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_116.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_119.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_122.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_125.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_128.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_131.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_134.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_137.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_14.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_140.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_143.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_146.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_149.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_152.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_155.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_158.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_161.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_17.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_2.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_20.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_23.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_26.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_29.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_32.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_35.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_38.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_41.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_44.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_47.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_5.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_50.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_53.txt" />
+    <None Include="Assets\astarLog_TileNode_(0, 1)-(5, 8)_8.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

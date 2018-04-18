@@ -8,19 +8,17 @@ namespace Assets.Scripts.Model
     {
         public TileNode[,] Tiles { get; set; }
 
-        public List<ClusterNode> ContractedNodes
-        {
-            get
-            {
-                return FloodFillAlgorithm.GenerateClusters<ClusterNode, TileNode>(Tiles.ToEnumerable<TileNode>(),
-                    node => node.Edges.Where(edge => !edge.IsObstructed(new List<BaseEntity>())).Select(edge => edge.Neighbor)
-                        .Where(neighbor => node.IsDetectable() == neighbor.IsDetectable()));
-            }
-        }
-
         public AIModel(int width, int height)
         {
             Tiles = new TileNode[width, height];
+        }
+
+        public void Reset()
+        {
+            foreach (TileNode tileNode in Tiles)
+            {
+                tileNode.Reset();
+            }
         }
     }
 }

@@ -46,22 +46,35 @@ namespace Assets.Scripts.Model
             }
         }
 
-        public float VisibilityMeasure
+        public float SeenTime
         {
             get
             {
                 float visibleTime = 0;
-                float totalTime = 0;
                 foreach (TileEdge tileEdge in path.Edges)
                 {
-                    totalTime += tileEdge.Cost;
-
                     float visibleFraction = tileEdge.Nodes.Count(node => node.IsDetectable(Start.DestroyedDetectors)) /
                                             (float) tileEdge.Nodes.Length;
                     visibleTime += visibleFraction * tileEdge.Cost;
                 }
 
-                return visibleTime / totalTime;
+                return visibleTime;
+            }
+        }
+
+        public float VisibleTime
+        {
+            get
+            {
+                float visibleTime = 0;
+                foreach (TileEdge tileEdge in path.Edges)
+                {
+                    float visibleFraction = tileEdge.Nodes.Count(node => node.IsDetectable(Start.DestroyedDetectors)) /
+                                            (float)tileEdge.Nodes.Length;
+                    visibleTime += visibleFraction * tileEdge.Cost;
+                }
+
+                return visibleTime;
             }
         }
 

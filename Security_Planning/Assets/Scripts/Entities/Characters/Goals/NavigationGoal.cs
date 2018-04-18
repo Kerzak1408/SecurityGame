@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
+using Assets.Scripts.Algorithms.AStar.Heuristics;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
@@ -21,145 +23,18 @@ namespace Assets.Scripts.Entities.Characters.Goals
         public bool IsInitialized { get; private set; }
         public PlanningNode GoalNode { get; private set; }
         public Path<PlanningNode, PlanningEdge> Path { get; private set; }
-        public Path<PlanningNode, PlanningEdge>[] PossiblePaths { get; private set; }
+        public float MaxVisibility { get; set; }
 
         public static readonly int PATHS_COUNT = 6;
 
         public NavigationGoal(BaseCharacter character, IntegerTuple goalCoordinates) : base(character, goalCoordinates)
         {
-            PossiblePaths = new Path<PlanningNode, PlanningEdge>[PATHS_COUNT];
         }
 
         public override void Activate(PlanningNode startNode=null)
         {
             Character.Log("Goal activated: Navigate to: " + GoalCoordinates);
             StartPlanning(null, startNode);
-        }
-
-        private List<List<ClusterNode>> GenerateAllSubsets(List<ClusterNode> nodes)
-        {
-            var result = new List<List<ClusterNode>>();
-            for (int i = 0; i < Mathf.Pow(2, nodes.Count); i++)
-            {
-                var currentMask = new BitArray(new int[] { i });
-                var subset = new List<ClusterNode>();
-                for (int j = 0; j < currentMask.Length; j++)
-                {
-                    if (currentMask[j])
-                    {
-                        subset.Add(nodes[j]);
-                    }
-                }
-                result.Add(subset);
-            }
-
-            return result;
-        }
-
-        private List<List<ClusterNode>> GenerateClusterPaths(TileNode startNode, TileNode goalNode)
-        {
-            List<ClusterNode> contractedGraph = Character.Map.AIModel.ContractedNodes;
-            ClusterNode startingCluster = contractedGraph.First(cluster => cluster.Members.Contains(startNode));
-            ClusterNode goalCluster = contractedGraph.First(cluster => cluster.Members.Contains(goalNode));
-            InitializeGraph(contractedGraph);
-            //var result = GenerateAllSubsets(contractedGraph);
-            var result = new List<List<ClusterNode>>();
-
-            result.Add(new List<ClusterNode> { startingCluster });
-            foreach (ClusterEdge clusterEdge in startingCluster.Edges)
-            {
-                List<List<ClusterNode>> clusterPaths = GenerateClusterPaths(clusterEdge.Neighbor, goalCluster,
-                    new List<ClusterNode> {startingCluster}, new List<ClusterEdge>());
-                foreach (List<ClusterNode> clusterPath in clusterPaths)
-                {
-                    result.Add(clusterPath);
-                }
-            }
-
-            return result;
-        }
-
-        private void InitializeGraph(List<ClusterNode> contractedGraph)
-        {
-            // Filter clusters
-            foreach (ClusterNode cluster in contractedGraph.Copy())
-            {
-                if (cluster.Members.Count == 1 && cluster.Members.First().Edges.All(edge => edge.IsObstructed(new List<BaseEntity>())))
-                {
-                    contractedGraph.Remove(cluster);
-                }
-            }
-            // Add edges
-            foreach (ClusterNode start in contractedGraph)
-            {
-                foreach (ClusterNode end in contractedGraph)
-                {
-                    if (start != end)
-                    {
-                        foreach (TileNode endMember in end.Members)
-                        {
-                            if (start.Members.Any(member =>
-                                member.Edges.Select(edge => edge.Neighbor).Contains(endMember)))
-                            {
-                                start.Edges.Add(new ClusterEdge(start, end));
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private List<List<ClusterNode>> GenerateClusterPaths(ClusterNode currentCluster, ClusterNode goalCluster,
-            List<ClusterNode> traversedNodes, List<ClusterEdge> traversedEdges, int depth = 1)
-        {
-            traversedNodes.Add(currentCluster);
-            var result = new List<List<ClusterNode>>();
-            if (currentCluster == goalCluster)
-            {
-                result.Add(traversedNodes);
-                if (currentCluster.Members.First().IsDetectable(new List<DetectorEntity>()))
-                {
-                    return result;
-                }
-            }
-
-            if (depth > 3)
-            {
-                var availableEdges = new List<ClusterEdge>();
-                foreach (ClusterEdge edge in currentCluster.Edges)
-                {
-                    if (!traversedEdges.Contains(edge))
-                    {
-                        availableEdges.Add(edge);
-                    }
-                }
-
-                if (availableEdges.Count > 0)
-                {
-                    ClusterEdge randomEdge = availableEdges.RandomElement();
-                    traversedEdges.Add(randomEdge);
-                    List<List<ClusterNode>> partialResult = GenerateClusterPaths(randomEdge.Neighbor, goalCluster,
-                        traversedNodes.Copy(), traversedEdges.Copy(), depth + 1);
-                    result.AddRange(partialResult);
-                }
-            }
-            else
-            {
-                foreach (ClusterEdge edge in currentCluster.Edges)
-                {
-                    if (!traversedEdges.Contains(edge))
-                    {
-                        traversedEdges.Add(edge);
-                        List<List<ClusterNode>> partialResult = GenerateClusterPaths(edge.Neighbor, goalCluster,
-                            traversedNodes.Copy(), traversedEdges.Copy(), depth + 1);
-                        result.AddRange(partialResult);
-                    }
-                }
-            }
-
-
-            return result;
         }
 
         protected void StartPlanning(GameObject finalObject, PlanningNode startOverrideNode=null)
@@ -175,23 +50,12 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 startNode.GoalNode = goalNode;
             }
             Character.Log("Planning started.");
-            Thread planningThread = new Thread(() =>
-            {
-                List<List<ClusterNode>> clusterPaths = GenerateClusterPaths(startNode.TileNode, goalNode.TileNode);
-                foreach (List<ClusterNode> clusterPath in clusterPaths)
-                {
-                    startNode.Reset();
-                    goalNode.Reset();
-                    startNode.UnlockedTileNodes = clusterPath.SelectMany(cluster => cluster.Members);
-
-                    PlanPath(startNode, goalNode, currentMap);
-
-                    // TODO: do not repeat, probably copy node
-                    
-                }
-                TaskManager.Instance.RunOnMainThread(Initialize);
-            });
-            planningThread.Start();
+            //Thread planningThread = new Thread(() =>
+            //{
+                PlanPath(startNode, goalNode, currentMap);
+            TaskManager.Instance.RunOnMainThread(Initialize);
+            //});
+            //planningThread.Start();
 
         }
 
@@ -199,40 +63,59 @@ namespace Assets.Scripts.Entities.Characters.Goals
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+            Character.Map.AIModel.Reset();
+            startNode.UsePriorityCost = true;
+            Path<PlanningNode, PlanningEdge> leastSeenPath = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
+                startNode,
+                goalNode,
+                new TrivialHeuristics<PlanningNode>(),
+                edgeFilter: (edge, _) => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
+                computeCost: edge =>
+                {
+                    var result = new PriorityCost(2);
+                    result.AddCost(0, edge.VisibleTime);
+                    result.AddCost(1, edge.Cost);
+                    return result;
+                });
 
-            Path<PlanningNode, PlanningEdge> plannedPath = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
+            float longestPathLength = leastSeenPath.Cost;
+            float longestPathVisibility = leastSeenPath.VisibleTime();
+            startNode.Reset();
+            Character.Map.AIModel.Reset();
+            startNode.UsePriorityCost = false;
+
+            Path<PlanningNode, PlanningEdge> shortestPath = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
                 startNode,
                 goalNode,
                 new EuclideanHeuristics<PlanningNode>(currentMap.Tiles),
-                edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type));
+                edgeFilter: (edge, _) => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type)
+                );
+
+            float shortestPathVisibility = shortestPath.VisibleTime();
+            startNode.Reset();
+            Character.Map.AIModel.Reset();
+            startNode.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility - longestPathVisibility));
+            Path = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
+                startNode,
+                goalNode,
+                new EuclideanHeuristics<PlanningNode>(currentMap.Tiles),
+                edgeFilter: (edge, _) => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
+                onBeforeAddToOpen: edge =>
+                {
+                    edge.Neighbor.VisibleTime = edge.Start.VisibleTime + edge.VisibleTime;
+                    edge.Neighbor.TotalTime = edge.Start.TotalTime + edge.Cost;
+                    edge.Neighbor.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPath.VisibleTime() - longestPathVisibility));
+                }
+                );
+            UnityEngine.Debug.Log("Path visibility = " + Path.VisibleTime() + " max visibility = " + (leastSeenPath.VisibleTime() + MaxVisibility * (shortestPath.VisibleTime() - leastSeenPath.VisibleTime())) + 
+                " path length = " + Path.Cost);
             stopwatch.Stop();
             Character.Log("A* time = " + stopwatch.ElapsedMilliseconds / 1000f + " seconds.");
-            //TaskManager.Instance.RunOnMainThread(() => Initialize(plannedPath));
-            float potentialMeasure = plannedPath.VisibilityMeasure();
-            if (potentialMeasure == float.MaxValue)
-            {
-                return;
-            }
-            for (int i = 0; i < PossiblePaths.Length; i++)
-            {
-                if (potentialMeasure <= (float)i / (PossiblePaths.Length - 1) &&
-                    (PossiblePaths[i] == null || plannedPath.Cost < PossiblePaths[i].Cost))
-                {
-                    PossiblePaths[i] = plannedPath;
-                }
-            }
         }
 
         private void Initialize()
         {
-            foreach (Path<PlanningNode, PlanningEdge> path in PossiblePaths)
-            {
-                if (path != null && path.VisibilityMeasure() <= Character.Data.MaxVisibilityMeasure && (Path == null || path.Cost < Path.Cost))
-                {
-                    Path = path;
-                }
-            }
-            if (Path == null || Path.Cost == float.MaxValue || Path.Edges == null || Path.Edges.Count == 0)
+            if (Path == null || Path.Edges == null || Path.Edges.Count == 0)
             {
                 Character.Log("Planning computation finished. Path NOT found.");
                 IsFinished = true;

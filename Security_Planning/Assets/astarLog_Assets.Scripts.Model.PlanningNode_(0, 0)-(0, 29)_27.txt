@@ -1,0 +1,5 @@
+ exploiting: (0, 0)(0, 0)
+Filtered: (0, 0)(0, 0) -> (1, 6)(1, 6), ColumnWithCCTV_2 Cost = 13.65685 Type = CAMERA is in closed: False edge filtered : True
+Filtered: (0, 0)(0, 0) -> (1, 12)(1, 12), ColumnWithCCTV_3 Cost = 19.07107 Type = CAMERA is in closed: False edge filtered : True
+Filtered: (0, 0)(0, 0) -> (1, 20)(1, 20), ColumnWithCCTV_4 Cost = 27.07107 Type = CAMERA is in closed: False edge filtered : True
+Filtered: (0, 0)(0, 0) -> (1, 26)(1, 26), ColumnWithCCTV_5 Cost = 33.07107 Type = CAMERA is in closed: False edge filtered : True

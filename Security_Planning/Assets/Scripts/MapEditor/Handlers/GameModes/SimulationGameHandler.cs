@@ -45,46 +45,31 @@ public class SimulationGameHandler : BaseGameHandler
         }
         
         Queue<BaseGoal> goals = CollectEverythingBehaviour.GenerateGoals(Burglar, false);
-        NavigationGoal previousGoal = null;
 
         while (goals.Count > 0)
         {
-            Path<PlanningNode, PlanningEdge>[] nullPaths = null;
+            
             NavigationGoal goal = goals.Dequeue() as NavigationGoal;
             PlanningNode[] startNodes = new PlanningNode[actionsToDraw.Length];
-            if (previousGoal != null)
-            {
-                for (int i = 0; i < startNodes.Length; i++)
-                {
-                    startNodes[i] = previousGoal.PossiblePaths[i].GoalNode;
-                }
-            }
-            previousGoal = goal;
 
             for (int i = 0; i < startNodes.Length; i++)
+                //for (int i = 0; i < 1; i++)
             {
                 PlanningNode startNode = startNodes[i];
                 Path<PlanningNode, PlanningEdge> currentPath;
-                if (startNode != null || nullPaths == null)
-                {
-                    goal.Activate(startNode);
 
-                    while (!goal.IsInitialized)
-                    {
-                        yield return null;
-                    }
-                    currentPath = goal.PossiblePaths[i];
-                    if (startNode == null)
-                    {
-                        nullPaths = goal.PossiblePaths;
-                    }
-                }
-                else
+                goal.MaxVisibility = (float)i / (startNodes.Length - 1);
+                //goal.MaxVisibility = 0.2f;
+                goal.Activate(startNode);
+
+                while (!goal.IsInitialized)
                 {
-                    currentPath = nullPaths[i];
+                    yield return null;
                 }
+                currentPath = goal.Path;
+                startNodes[i] = currentPath.GoalNode;
                 
-                if (currentPath == null || currentPath.Edges == null)
+                if (currentPath.Edges == null)
                 {
                     continue;
                 }

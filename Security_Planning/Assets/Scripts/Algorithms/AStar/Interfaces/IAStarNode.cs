@@ -7,4 +7,5 @@ public interface IAStarNode<T> where T : IAStarNode<T>
 {
     IntegerTuple Position { get; set; }
     List<IAStarEdge<T>> Edges { get; }
+    float TotalTime { get; set; }
 }

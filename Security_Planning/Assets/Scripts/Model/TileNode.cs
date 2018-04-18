@@ -13,6 +13,8 @@ public class TileNode : IAStarNode<TileNode>
     public List<TileEdge> Edges { get; private set; }
     public List<DetectorEntity> DetectedBy { get; private set; }
     public Vector3 WorldPosition { get; private set; }
+    public float VisibleTime { get; set; }
+    public float TotalTime { get; set; }
 
     List<IAStarEdge<TileNode>> IAStarNode<TileNode>.Edges
     {
@@ -59,13 +61,7 @@ public class TileNode : IAStarNode<TileNode>
 
     public override string ToString()
     {
-        string result = Position.ToString() + ", {";
-        foreach (TileEdge edge in Edges)
-        {
-            result += edge.Neighbor.Position + ", ";
-        }
-        result += "}";
-        return result;
+        return "TileNode " + Position.ToString();
     }
 
     public void RemoveAllEdgesBothDirections()
@@ -85,5 +81,11 @@ public class TileNode : IAStarNode<TileNode>
     public bool IsObstructed(IEnumerable<BaseEntity> destroyedObstacles)
     {
         return Edges.All(edge => edge.IsObstructed(destroyedObstacles));
+    }
+
+    public void Reset()
+    {
+        TotalTime = 0;
+        VisibleTime = 0;
     }
 }

@@ -1,0 +1,40 @@
+ exploiting: TileNode (0, 0)
+ exploiting: TileNode (0, 1)
+ exploiting: TileNode (0, 2)
+ exploiting: TileNode (0, 3)
+ exploiting: TileNode (0, 4)
+Filtered: TileNode (0, 4) -> TileNode (1, 5) Cost = 1.414214 Type = NORMAL is in closed: False edge filtered : True
+ exploiting: TileNode (0, 5)
+Filtered: TileNode (0, 5) -> TileNode (1, 5) Cost = 1 Type = NORMAL is in closed: False edge filtered : True
+ exploiting: TileNode (0, 6)
+Filtered: TileNode (0, 6) -> TileNode (1, 5) Cost = 1.414214 Type = NORMAL is in closed: False edge filtered : True
+ exploiting: TileNode (0, 7)
+ exploiting: TileNode (0, 8)
+Filtered: TileNode (0, 8) -> TileNode (0, 7) Cost = 1 Type = NORMAL is in closed: True edge filtered : True
+Filtered: TileNode (0, 8) -> TileNode (1, 8) Cost = 1 Type = NORMAL is in closed: False edge filtered : True
+Filtered: TileNode (0, 8) -> TileNode (0, 9) Cost = 1 Type = NORMAL is in closed: False edge filtered : True
+Filtered: TileNode (0, 8) -> TileNode (1, 7) Cost = 1.414214 Type = NORMAL is in closed: False edge filtered : True
+Filtered: TileNode (0, 8) -> TileNode (1, 9) Cost = 1.414214 Type = NORMAL is in closed: False edge filtered : True
+ exploiting: TileNode (1, 1)
+ exploiting: TileNode (1, 2)
+ exploiting: TileNode (1, 3)
+ exploiting: TileNode (1, 4)
+Filtered: TileNode (1, 4) -> TileNode (1, 5) Cost = 1 Type = NORMAL is in closed: False edge filtered : True
+Filtered: TileNode (1, 4) -> TileNode (2, 5) Cost = 1.414214 Type = NORMAL is in closed: False edge filtered : True
+ exploiting: TileNode (1, 6)
+Filtered: TileNode (1, 6) -> TileNode (1, 5) Cost = 1 Type = NORMAL is in closed: False edge filtered : True
+Filtered: TileNode (1, 6) -> TileNode (2, 5) Cost = 1.414214 Type = NORMAL is in closed: False edge filtered : True
+ exploiting: TileNode (1, 7)
+ exploiting: TileNode (1, 8)
+Filtered: TileNode (1, 8) -> TileNode (0, 8) Cost = 1 Type = NORMAL is in closed: True edge filtered : True
+Filtered: TileNode (1, 8) -> TileNode (0, 7) Cost = 1.414214 Type = NORMAL is in closed: True edge filtered : True
+ exploiting: TileNode (1, 9)
+Filtered: TileNode (1, 9) -> TileNode (0, 8) Cost = 1.414214 Type = NORMAL is in closed: True edge filtered : True
+Filtered: TileNode (1, 9) -> TileNode (0, 10) Cost = 1.414214 Type = NORMAL is in closed: False edge filtered : True
+ exploiting: TileNode (1, 10)
+Filtered: TileNode (1, 10) -> TileNode (0, 10) Cost = 1 Type = NORMAL is in closed: False edge filtered : True
+Filtered: TileNode (1, 10) -> TileNode (0, 11) Cost = 1.414214 Type = NORMAL is in closed: False edge filtered : True
+ exploiting: TileNode (1, 11)
+Filtered: TileNode (1, 11) -> TileNode (0, 11) Cost = 1 Type = NORMAL is in closed: False edge filtered : True
+Filtered: TileNode (1, 11) -> TileNode (0, 10) Cost = 1.414214 Type = NORMAL is in closed: False edge filtered : True
+Filtered: TileNode (1, 11) -> TileNode (0, 12) Cost = 1.414214 Type = NORMAL is in closed: False edge filtered : True
