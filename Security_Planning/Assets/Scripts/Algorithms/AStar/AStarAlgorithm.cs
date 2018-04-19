@@ -13,8 +13,8 @@ public static class AStarAlgorithm
 
     public static Path<TNode, TEdge> AStar<TNode, TEdge>(TNode startNode, TNode endNode,
         Heuristics<TNode> heuristics, Func<TNode, bool> nodeFilter = null,
-        Func<TEdge, Dictionary<TNode, Tuple<TNode, TEdge>>, bool> edgeFilter = null, Func<TEdge, PriorityCost> computeCost = null, int costLenght = 1,
-        Action<TEdge> onBeforeAddToOpen = null, bool secondaryClosedCap = false)
+        Func<TEdge, bool> edgeFilter = null, Func<TEdge, PriorityCost> computeCost = null, int costLenght = 2,
+        Action<TEdge> onBeforeAddToOpen = null)
         where TNode : IAStarNode<TNode>
         where TEdge : IAStarEdge<TNode>
     {
@@ -24,9 +24,6 @@ public static class AStarAlgorithm
         {
             startNode 
         };
-
-        StreamWriter logFileWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath, "astarLog_" + startNode.GetType() + "_" +
-            startNode.Position + "-" + endNode.Position + "_"  + logindex++ + ".txt"));
 
         // Key - where I came, Value-First - from where I came, Value-Second - which edge I used.
         var cameFrom = new Dictionary<TNode, Tuple<TNode, TEdge>>();
@@ -54,17 +51,11 @@ public static class AStarAlgorithm
 
             if (currentNode.Equals(endNode))
             {
-                logFileWriter.Close();
                 return ReconstructPath(cameFrom, endNode);
             }
-
-            logFileWriter.WriteLine(" exploiting: " + currentNode);
+            
             openSet.Remove(currentNode);
             closedSet.Add(currentNode);
-            //if (secondaryClosedCap)
-            //{
-            //    closedDictionary[currentNode] = gScores[currentNode][1];
-            //}
 
 
             foreach (TEdge edge in currentNode.Edges)
@@ -73,27 +64,17 @@ public static class AStarAlgorithm
 
                 if (
                     (nodeFilter != null && nodeFilter(neighbor)) || 
-                    (edgeFilter != null && edgeFilter(edge, cameFrom)))
+                    (edgeFilter != null && edgeFilter(edge)))
                 {
-                    logFileWriter.WriteLine("Filtered: " + edge + " is in closed: " +
-                        closedSet.Contains(neighbor) + " edge filtered : " + (edgeFilter != null && edgeFilter(edge, cameFrom)));
                     continue;
                 }
 
                 PriorityCost cost = computeCost == null ? edge.Cost : computeCost(edge);
                 PriorityCost potentialGScore = gScores[currentNode] + cost;
 
-                //if (secondaryClosedCap)
-                //{
-                //    if (closedDictionary.ContainsKey(neighbor) && potentialGScore[1] >= closedDictionary[neighbor])
-                //    {
-                //        continue;
-                //    }
-                //}
-                //else
-                {
-                    if (closedSet.Contains(neighbor)) continue;
-                }
+
+                if (closedSet.Contains(neighbor)) continue;
+                
 
 
                 if (!openSet.Contains(neighbor))
@@ -117,7 +98,6 @@ public static class AStarAlgorithm
                 }
             }
         }
-        logFileWriter.Close();
         return new Path<TNode, TEdge>(null, float.MaxValue);
     }
 
@@ -132,9 +112,6 @@ public static class AStarAlgorithm
         var openSet = new List<Tuple<TNode, float>>();
         var startTuple = new Tuple<TNode, float>(startNode, 0);
         openSet.Add(startTuple);
-
-        StreamWriter logFileWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath, "astarLog_" + startNode.GetType() + "_" +
-            startNode.Position + "-" + endNode.Position + "_" + logindex++ + ".txt"));
 
         // Key - where I came, Value-First - from where I came, Value-Second - which edge I used.
         var cameFrom = new Dictionary<Tuple<TNode, float>, Tuple<Tuple<TNode, float>, TEdge>>();
@@ -162,11 +139,9 @@ public static class AStarAlgorithm
 
             if (currentTuple.First.Equals(endNode))
             {
-                logFileWriter.Close();
                 return ReconstructPath(cameFrom, currentTuple);
             }
-
-            logFileWriter.WriteLine(" exploiting: " + currentTuple);
+            
             openSet.Remove(currentTuple);
             closedSet.Add(currentTuple);
             //if (secondaryClosedCap)
@@ -216,7 +191,6 @@ public static class AStarAlgorithm
                 }
             }
         }
-        logFileWriter.Close();
         return new Path<TNode, TEdge>(null, float.MaxValue);
     }
 

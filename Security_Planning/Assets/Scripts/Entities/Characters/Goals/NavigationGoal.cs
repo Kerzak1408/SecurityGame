@@ -64,31 +64,26 @@ namespace Assets.Scripts.Entities.Characters.Goals
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             Character.Map.AIModel.Reset();
-            startNode.UsePriorityCost = true;
+            startNode.IsVisibilityPriority = true;
             Path<PlanningNode, PlanningEdge> leastSeenPath = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
                 startNode,
                 goalNode,
                 new TrivialHeuristics<PlanningNode>(),
-                edgeFilter: (edge, _) => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
-                computeCost: edge =>
-                {
-                    var result = new PriorityCost(2);
-                    result.AddCost(0, edge.VisibleTime);
-                    result.AddCost(1, edge.Cost);
-                    return result;
-                });
+                edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
+                computeCost: GetCostFunction(true));
 
             float longestPathLength = leastSeenPath.Cost;
             float longestPathVisibility = leastSeenPath.VisibleTime();
             startNode.Reset();
             Character.Map.AIModel.Reset();
-            startNode.UsePriorityCost = false;
+            startNode.IsVisibilityPriority = false;
 
             Path<PlanningNode, PlanningEdge> shortestPath = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
                 startNode,
                 goalNode,
                 new EuclideanHeuristics<PlanningNode>(currentMap.Tiles),
-                edgeFilter: (edge, _) => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type)
+                edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
+                computeCost: GetCostFunction(false)
                 );
 
             float shortestPathVisibility = shortestPath.VisibleTime();
@@ -99,18 +94,30 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 startNode,
                 goalNode,
                 new EuclideanHeuristics<PlanningNode>(currentMap.Tiles),
-                edgeFilter: (edge, _) => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
+                edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
                 onBeforeAddToOpen: edge =>
                 {
                     edge.Neighbor.VisibleTime = edge.Start.VisibleTime + edge.VisibleTime;
                     edge.Neighbor.TotalTime = edge.Start.TotalTime + edge.Cost;
                     edge.Neighbor.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPath.VisibleTime() - longestPathVisibility));
-                }
+                },
+                computeCost: GetCostFunction(false)
                 );
             UnityEngine.Debug.Log("Path visibility = " + Path.VisibleTime() + " max visibility = " + (leastSeenPath.VisibleTime() + MaxVisibility * (shortestPath.VisibleTime() - leastSeenPath.VisibleTime())) + 
                 " path length = " + Path.Cost);
             stopwatch.Stop();
             Character.Log("A* time = " + stopwatch.ElapsedMilliseconds / 1000f + " seconds.");
+        }
+
+        private Func<PlanningEdge, PriorityCost> GetCostFunction(bool isVisibilityPriority)
+        {
+            return edge =>
+            {
+                var result = new PriorityCost(2);
+                result.AddCost(isVisibilityPriority ? 0 : 1, edge.VisibleTime);
+                result.AddCost(isVisibilityPriority ? 1 : 0, edge.Cost);
+                return result;
+            };
         }
 
         private void Initialize()
