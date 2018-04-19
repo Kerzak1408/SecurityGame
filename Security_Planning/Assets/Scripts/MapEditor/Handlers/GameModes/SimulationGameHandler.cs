@@ -53,13 +53,13 @@ public class SimulationGameHandler : BaseGameHandler
             PlanningNode[] startNodes = new PlanningNode[actionsToDraw.Length];
 
             for (int i = 0; i < startNodes.Length; i++)
-             //for (int i = 0; i < 1; i++)
+                //for (int i = 0; i < 1; i++)
             {
                 PlanningNode startNode = startNodes[i];
                 Path<PlanningNode, PlanningEdge> currentPath;
 
                 goal.MaxVisibility = (float)i / (startNodes.Length - 1);
-                //goal.MaxVisibility = 0.2f;
+                //goal.MaxVisibility = 0.4f;
                 goal.Activate(startNode);
 
                 while (!goal.IsInitialized)

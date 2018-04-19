@@ -149,14 +149,8 @@ namespace Assets.Scripts.Model
                         DestroyedDetectors.OfType<BaseEntity>());
 
             Heuristics<TileNode> heuristics;
-            if (IsVisibilityPriority)
-            {
-                heuristics = new TrivialHeuristics<TileNode>();
-            }
-            else
-            {
-                heuristics = new EuclideanHeuristics<TileNode>(character.Map.Tiles);
-            }
+
+            heuristics = new EuclideanHeuristics<TileNode>(character.Map.Tiles, IsVisibilityPriority ? 1 : 0);
             if (useVisibilityLimit)
             {
                 return AStarAlgorithm.AStarMultipleVisit(

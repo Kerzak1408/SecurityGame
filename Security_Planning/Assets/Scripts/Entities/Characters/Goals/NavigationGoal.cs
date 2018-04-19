@@ -68,7 +68,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
             Path<PlanningNode, PlanningEdge> leastSeenPath = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
                 startNode,
                 goalNode,
-                new TrivialHeuristics<PlanningNode>(),
+                new EuclideanHeuristics<PlanningNode>(currentMap.Tiles, 1),
                 edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
                 computeCost: GetCostFunction(true));
 
@@ -81,7 +81,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
             Path<PlanningNode, PlanningEdge> shortestPath = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
                 startNode,
                 goalNode,
-                new EuclideanHeuristics<PlanningNode>(currentMap.Tiles),
+                new EuclideanHeuristics<PlanningNode>(currentMap.Tiles, 0),
                 edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
                 computeCost: GetCostFunction(false)
                 );
@@ -93,7 +93,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
             Path = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
                 startNode,
                 goalNode,
-                new EuclideanHeuristics<PlanningNode>(currentMap.Tiles),
+                new EuclideanHeuristics<PlanningNode>(currentMap.Tiles, 0),
                 edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
                 onBeforeAddToOpen: edge =>
                 {

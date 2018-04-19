@@ -259,7 +259,7 @@ namespace Assets.Scripts.MapEditor
             Gizmos.color = Color.red;
             
             TileNode[,] aiModelTiles = Map.AIModel.Tiles;
-            var heuristics = new EuclideanHeuristics<TileNode>(Map.Tiles);
+            var heuristics = new EuclideanHeuristics<TileNode>(Map.Tiles, 0);
             List<TileEdge> path = AStarAlgorithm.AStar<TileNode, TileEdge>(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics,
                 node => node.IsDetectable()).Edges;
             if (path != null)
