@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Assets.Scripts.DataStructures
 {
@@ -88,6 +89,15 @@ namespace Assets.Scripts.DataStructures
                 stringBuilder.Append(costs[i]).Append(",");
             }
             return stringBuilder.ToString();
+        }
+
+        public void Round(int decimalPlaces)
+        {
+            float pow = Mathf.Pow(10, decimalPlaces);
+            for (int i = 0; i < costs.Length; i++)
+            {
+                costs[i] = Mathf.Round(costs[i] * pow) / pow;
+            }
         }
     }
 }

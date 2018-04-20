@@ -11,6 +11,7 @@ namespace Assets.Scripts.DataStructures
     {
         public List<TEdge> Edges;
         public float Cost;
+        public float VisibilityTime { get; set; }
 
         public Path()
         {

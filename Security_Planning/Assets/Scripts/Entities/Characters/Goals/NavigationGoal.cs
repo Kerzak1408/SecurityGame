@@ -78,6 +78,8 @@ namespace Assets.Scripts.Entities.Characters.Goals
             Character.Map.AIModel.Reset();
             startNode.IsVisibilityPriority = false;
 
+            UnityEngine.Debug.Log(
+                "------------------------------------SHORTEST PATH--------------------------------------------------");
             Path<PlanningNode, PlanningEdge> shortestPath = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
                 startNode,
                 goalNode,
@@ -87,22 +89,35 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 );
 
             float shortestPathVisibility = shortestPath.VisibleTime();
-            startNode.Reset();
-            Character.Map.AIModel.Reset();
-            startNode.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility - longestPathVisibility));
-            Path = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
-                startNode,
-                goalNode,
-                new EuclideanHeuristics<PlanningNode>(currentMap.Tiles, 0),
-                edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
-                onBeforeAddToOpen: edge =>
-                {
-                    edge.Neighbor.VisibleTime = edge.Start.VisibleTime + edge.VisibleTime;
-                    edge.Neighbor.TotalTime = edge.Start.TotalTime + edge.Cost;
-                    edge.Neighbor.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPath.VisibleTime() - longestPathVisibility));
-                },
-                computeCost: GetCostFunction(false)
+            //if (MaxVisibility == 0)
+            //{
+            //    Path = leastSeenPath;
+            //}
+            //else if (MaxVisibility == 1)
+            //{
+            //    Path = shortestPath;
+            //}
+            //else
+            {
+                startNode.Reset();
+                Character.Map.AIModel.Reset();
+                startNode.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility - longestPathVisibility));
+                //Path = shortestPath;
+                Path = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
+                    startNode,
+                    goalNode,
+                    new EuclideanHeuristics<PlanningNode>(currentMap.Tiles, 0),
+                    edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
+                    onBeforeAddToOpen: edge =>
+                    {
+                        edge.Neighbor.VisibleTime = edge.Start.VisibleTime + edge.VisibleTime;
+                        edge.Neighbor.TotalTime = edge.Start.TotalTime + edge.Cost;
+                        edge.Neighbor.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPath.VisibleTime() - longestPathVisibility));
+                    },
+                    computeCost: GetCostFunction(false)
                 );
+            }
+            
             UnityEngine.Debug.Log("Path visibility = " + Path.VisibleTime() + " max visibility = " + (leastSeenPath.VisibleTime() + MaxVisibility * (shortestPath.VisibleTime() - leastSeenPath.VisibleTime())) + 
                 " path length = " + Path.Cost);
             stopwatch.Stop();

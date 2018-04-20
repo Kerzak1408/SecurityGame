@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Assets.Scripts.DataStructures;
@@ -13,8 +12,8 @@ public static class AStarAlgorithm
 
     public static Path<TNode, TEdge> AStar<TNode, TEdge>(TNode startNode, TNode endNode,
         Heuristics<TNode> heuristics, Func<TNode, bool> nodeFilter = null,
-        Func<TEdge, bool> edgeFilter = null, Func<TEdge, PriorityCost> computeCost = null, int costLenght = 2,
-        Action<TEdge> onBeforeAddToOpen = null)
+        Func<TEdge, bool> edgeFilter = null, Func<TEdge, PriorityCost> computeCost = null,
+        Action<TEdge> onBeforeAddToOpen = null, int visibilityIndex = 1)
         where TNode : IAStarNode<TNode>
         where TEdge : IAStarEdge<TNode>
     {
@@ -25,33 +24,40 @@ public static class AStarAlgorithm
             startNode 
         };
 
+        StreamWriter logFileWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath, "astarLog_" + startNode.GetType() + "_" +
+            startNode.Position + "-" + endNode.Position + "_"  + logindex++ + ".txt"));
+
         // Key - where I came, Value-First - from where I came, Value-Second - which edge I used.
         var cameFrom = new Dictionary<TNode, Tuple<TNode, TEdge>>();
         
-        var gScores = new LazyDictionary<TNode, PriorityCost>(new PriorityCost(costLenght, float.MaxValue));
-        gScores[startNode] = new PriorityCost(costLenght, 0);
+        var gScores = new LazyDictionary<TNode, PriorityCost>(new PriorityCost(2, float.MaxValue));
+        gScores[startNode] = new PriorityCost(2, 0);
 
-        var fScores = new LazyDictionary<TNode, PriorityCost>(new PriorityCost(costLenght, float.MaxValue));
-        fScores[startNode] = heuristics.ComputeHeuristics(startNode, endNode, costLenght);
+        var fScores = new LazyDictionary<TNode, PriorityCost>(new PriorityCost(2, float.MaxValue));
+        fScores[startNode] = heuristics.ComputeHeuristics(startNode, endNode, 2);
 
         while (openSet.Count != 0)
         {
             TNode currentNode = openSet.First();
-            //log("AStar, exploiting node: " + currentNode);
+            
             PriorityCost minFValue = fScores[currentNode];
             foreach (TNode node in openSet)
             {
                 var fValue = fScores[node];
-                if (fValue < minFValue)
+                if (fValue < minFValue || (fValue == minFValue && gScores[node] < gScores[currentNode]))
                 {
                     currentNode = node;
                     minFValue = fValue;
                 }
-            }            
+            }
 
+            //Debug.Log("AStar, exploiting node: " + currentNode);
+            logFileWriter.WriteLine("AStar, exploiting node: " + currentNode + " fscore = " + fScores[currentNode] + " gScore = " + gScores[currentNode]);
             if (currentNode.Equals(endNode))
             {
-                return ReconstructPath(cameFrom, endNode);
+                logFileWriter.Close();
+
+                return ReconstructPath(cameFrom, endNode, gScores[endNode][visibilityIndex]);
             }
             
             openSet.Remove(currentNode);
@@ -83,10 +89,7 @@ public static class AStarAlgorithm
                 }
 
 
-                if (potentialGScore < gScores[neighbor]
-                    //||
-                    //(secondaryClosedCap && closedDictionary.ContainsKey(neighbor) && potentialGScore[1] < closedDictionary[neighbor])
-                    )
+                if (potentialGScore < gScores[neighbor])
                 {
                     if (onBeforeAddToOpen != null)
                     {
@@ -94,10 +97,11 @@ public static class AStarAlgorithm
                     }
                     cameFrom[neighbor] = new Tuple<TNode, TEdge>(currentNode, edge); ;
                     gScores[neighbor] = potentialGScore;
-                    fScores[neighbor] = potentialGScore + heuristics.ComputeHeuristics(neighbor, endNode, costLenght);
+                    fScores[neighbor] = potentialGScore + heuristics.ComputeHeuristics(neighbor, endNode, 2);
                 }
             }
         }
+        logFileWriter.Close();
         return new Path<TNode, TEdge>(null, float.MaxValue);
     }
 
@@ -107,6 +111,9 @@ public static class AStarAlgorithm
         where TNode : IAStarNode<TNode>
         where TEdge : IAStarEdge<TNode>
     {
+        StreamWriter logFileWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath,
+            "astarMultipleLog_" + startNode.GetType() + "_" +
+            startNode.Position + "-" + endNode.Position + "_" + logindex++ + ".txt"));
         var closedSet = new List<Tuple<TNode, float>>();
         //var closedDictionary = new Dictionary<TNode, float>();
         var openSet = new List<Tuple<TNode, float>>();
@@ -137,9 +144,12 @@ public static class AStarAlgorithm
                 }
             }
 
+            logFileWriter.WriteLine("AStarMultiple, exploiting node: " + currentTuple + " fscore = " + fScores[currentTuple] + " gScore = " + gScores[currentTuple]);
+            logFileWriter.Flush();
             if (currentTuple.First.Equals(endNode))
             {
-                return ReconstructPath(cameFrom, currentTuple);
+                logFileWriter.Close();
+                return ReconstructPath(cameFrom, currentTuple, currentTuple.Second);
             }
             
             openSet.Remove(currentTuple);
@@ -165,21 +175,69 @@ public static class AStarAlgorithm
 
                 PriorityCost cost = computeCost == null ? edge.Cost : computeCost(edge);
                 PriorityCost potentialGScore = gScores[currentTuple] + cost;
+                //potentialGScore.Round(2);
+
                 var neighborTuple = new Tuple<TNode, float>(neighbor, potentialGScore[1]);
 
                 if (potentialGScore[1] > maxVisibility) continue;
                 if (closedSet.Contains(neighborTuple)) continue;
 
+
                 if (!openSet.Contains(neighborTuple))
                 {
-                    openSet.Add(neighborTuple);
+                    IEnumerable<Tuple<TNode, float>> neighborOpenSetOccurences = openSet.Where(tuple => tuple.First.Equals(neighbor)).ToList().Copy();
+                    
+                    bool shoudAddToOpen = true;
+                    foreach (Tuple<TNode, float> neighborOccurence in neighborOpenSetOccurences)
+                    {
+                        PriorityCost neighborGScore = gScores[neighborOccurence];
+                        float neighborLength = neighborGScore[0];
+                        float neighborVisibility = neighborGScore[1];
+                        float potentialLength = potentialGScore[0];
+                        float potentialVisibility = potentialGScore[1];
+                        float lengthDiff = potentialLength - neighborLength;
+                        float visibilityDiff = potentialVisibility - neighborVisibility;
+                        // greater or equal both
+                        if (lengthDiff < -1e-4 || visibilityDiff < -1e-4)
+                        {
+                            if ((lengthDiff < -1e-4 && visibilityDiff < 1e-4) ||
+                                (lengthDiff < 1e-4 && visibilityDiff < -1e-4))
+                            {
+                                openSet.Remove(neighborOccurence);
+                                fScores.Remove(neighborOccurence);
+                                gScores.Remove(neighborOccurence);
+                            }
+                        }
+                        else
+                        {
+                            shoudAddToOpen = false;
+                        }
+                    }
+
+                    IEnumerable<Tuple<TNode, float>> neighborClosedSetOccurences = closedSet.Where(tuple => tuple.First.Equals(neighbor)).ToList().Copy();
+                    foreach (Tuple<TNode, float> neighborOccurence in neighborClosedSetOccurences)
+                    {
+                        PriorityCost neighborGScore = gScores[neighborOccurence];
+                        float neighborLength = neighborGScore[0];
+                        float neighborVisibility = neighborGScore[1];
+                        float potentialLength = potentialGScore[0];
+                        float potentialVisibility = potentialGScore[1];
+                        float lengthDiff = potentialLength - neighborLength;
+                        float visibilityDiff = potentialVisibility - neighborVisibility;
+                        if (lengthDiff > -1e-4 && visibilityDiff > -1e-4)
+                        {
+                            shoudAddToOpen = false;
+                        }
+                    }
+
+                    if (shoudAddToOpen)
+                    {
+                        openSet.Add(neighborTuple);
+                    }
                 }
 
 
-                if (potentialGScore < gScores[neighborTuple]
-                    //||
-                    //(secondaryClosedCap && closedDictionary.ContainsKey(neighbor) && potentialGScore[1] < closedDictionary[neighbor])
-                    )
+                if (openSet.Contains(neighborTuple) && potentialGScore < gScores[neighborTuple])
                 {
                     //if (onBeforeAddToOpen != null)
                     //{
@@ -187,18 +245,22 @@ public static class AStarAlgorithm
                     //}
                     cameFrom[neighborTuple] = new Tuple<Tuple<TNode, float>, TEdge>(currentTuple, edge);
                     gScores[neighborTuple] = potentialGScore;
-                    fScores[neighborTuple] = potentialGScore + heuristics.ComputeHeuristics(neighbor, endNode, 2);
+                    PriorityCost fScore = potentialGScore + heuristics.ComputeHeuristics(neighbor, endNode, 2);
+                    //fScore.Round(2);
+                    fScores[neighborTuple] = fScore;
                 }
             }
         }
+        logFileWriter.Close();
         return new Path<TNode, TEdge>(null, float.MaxValue);
     }
 
-    private static Path<TNode, TEdge> ReconstructPath<TNode, TEdge>(Dictionary<TNode, Tuple<TNode, TEdge>> pathDictionary, TNode endNode)
+    private static Path<TNode, TEdge> ReconstructPath<TNode, TEdge>(Dictionary<TNode, Tuple<TNode, TEdge>> pathDictionary, TNode endNode, float visibility)
         where TNode : IAStarNode<TNode>
         where TEdge : IAStarEdge<TNode>
     {
         var result = new Path<TNode, TEdge>();
+        result.VisibilityTime = visibility;
         TNode current = endNode;
         while (pathDictionary.Keys.Contains(current))
         {
@@ -210,11 +272,12 @@ public static class AStarAlgorithm
     }
 
     private static Path<TNode, TEdge> ReconstructPath<TNode, TEdge>(Dictionary<Tuple<TNode, float>, Tuple<Tuple<TNode, float>, TEdge>> pathDictionary, 
-        Tuple<TNode, float> endNode)
+        Tuple<TNode, float> endNode, float visibility)
     where TNode : IAStarNode<TNode>
     where TEdge : IAStarEdge<TNode>
     {
         var result = new Path<TNode, TEdge>();
+        result.VisibilityTime = visibility;
         Tuple<TNode, float> current = endNode;
         while (pathDictionary.Keys.Contains(current))
         {

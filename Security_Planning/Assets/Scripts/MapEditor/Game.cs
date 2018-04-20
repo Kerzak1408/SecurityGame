@@ -260,18 +260,18 @@ namespace Assets.Scripts.MapEditor
             
             TileNode[,] aiModelTiles = Map.AIModel.Tiles;
             var heuristics = new EuclideanHeuristics<TileNode>(Map.Tiles, 0);
-            List<TileEdge> path = AStarAlgorithm.AStar<TileNode, TileEdge>(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics,
-                node => node.IsDetectable()).Edges;
-            if (path != null)
-            {
-                TileNode previousNode = null;
-                foreach (TileEdge edge in path)
-                {
-                    GameObject start = Map.Tiles.Get(edge.Start.Position);
-                    GameObject end = Map.Tiles.Get(edge.Neighbor.Position);
-                    Gizmos.DrawLine(start.transform.position, end.transform.position);
-                }
-            }
+            //List<TileEdge> path = AStarAlgorithm.AStar<TileNode, TileEdge>(aiModelTiles[0, 0], aiModelTiles[5, 5], heuristics,
+            //    node => node.IsDetectable()).Edges;
+            //if (path != null)
+            //{
+            //    TileNode previousNode = null;
+            //    foreach (TileEdge edge in path)
+            //    {
+            //        GameObject start = Map.Tiles.Get(edge.Start.Position);
+            //        GameObject end = Map.Tiles.Get(edge.Neighbor.Position);
+            //        Gizmos.DrawLine(start.transform.position, end.transform.position);
+            //    }
+            //}
         }
 
         public void Restart()

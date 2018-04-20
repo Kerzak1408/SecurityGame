@@ -52,14 +52,14 @@ public class SimulationGameHandler : BaseGameHandler
             NavigationGoal goal = goals.Dequeue() as NavigationGoal;
             PlanningNode[] startNodes = new PlanningNode[actionsToDraw.Length];
 
-            for (int i = 0; i < startNodes.Length; i++)
-                //for (int i = 0; i < 1; i++)
-            {
+            //for (int i = 0; i < startNodes.Length; i++)
+                for (int i = 0; i < 1; i++)
+                {
                 PlanningNode startNode = startNodes[i];
                 Path<PlanningNode, PlanningEdge> currentPath;
 
-                goal.MaxVisibility = (float)i / (startNodes.Length - 1);
-                //goal.MaxVisibility = 0.4f;
+                //goal.MaxVisibility = (float)i / (startNodes.Length - 1);
+                goal.MaxVisibility = 1.0f;
                 goal.Activate(startNode);
 
                 while (!goal.IsInitialized)

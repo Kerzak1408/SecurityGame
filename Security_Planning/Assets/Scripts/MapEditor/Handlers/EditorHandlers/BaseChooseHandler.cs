@@ -19,6 +19,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             base.Start();
             gridManager.SetCanvasActive(false);
             gridManager.Grids.SetActive(false);
+            gridManager.PanelInfo.SetActive(true);
         }
 
         public override void Scroll(float scroll, RaycastHit[] raycastHits)
