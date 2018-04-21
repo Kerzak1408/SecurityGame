@@ -58,7 +58,7 @@ namespace Assets.Scripts.Model
                     edges = new List<IAStarEdge<PlanningNode>>();
                     //TileNode.VisibleTime = VisibleTime;
                     //TileNode.TotalTime = TotalTime;
-
+                    character.Map.AIModel.Reset();
                     Path<TileNode, TileEdge> pathToGoal = ComputePath(GoalNode.TileNode, maxAbsoluteVisibility);
 
                     if (pathToGoal.Cost < float.MaxValue)
@@ -72,27 +72,12 @@ namespace Assets.Scripts.Model
                         IPlanningEdgeCreator creator = keyValuePair.Key;
                         if (creator.ShouldExplore(this))
                         {
-                            //Func<TileNode, bool> detectableFilter = Filters.DetectableFilter(DestroyedDetectors, UnlockedTileNodes);
-                            //IEnumerable<TileNode> tileNodes = keyValuePair.Value.Where(tileNode => !tileNode.IsObstructed(DestroyedDetectors.OfType<BaseEntity>()));
-                            //if (!tileNodes.Any())
-                            //{
-                            //    continue;
-                            //}
-                            //IOrderedEnumerable<TileNode> orderedTileNodes = tileNodes.OrderBy(tileNode =>
-                            //{
-                            //    var currentPosition = tileNode.Position;
-                            //    return Mathf.Pow(currentPosition.First - Position.First, 2) +
-                            //           Mathf.Pow(currentPosition.Second - Position.Second, 2);
-
-                            //});
                             IEnumerable<TileNode> tileNodes = keyValuePair.Value;
                             TileNode neighborTileNode = null;
                             float minDistanceSquared = float.MaxValue;
                             foreach (TileNode tileNode in tileNodes)
                             {
-                                if (
-                                    //detectableFilter(tileNode) ||
-                                    tileNode.IsObstructed(DestroyedDetectors.OfType<BaseEntity>())) continue;
+                                if (tileNode.IsObstructed(DestroyedDetectors.OfType<BaseEntity>())) continue;
                                 var currentPosition = tileNode.Position;
                                 float currentDistanceSquared = Mathf.Pow(currentPosition.First - Position.First, 2) +
                                                                Mathf.Pow(currentPosition.Second - Position.Second, 2);
@@ -107,28 +92,16 @@ namespace Assets.Scripts.Model
                             {
                                 continue;
                             }
-
-
-                            //TileNode.VisibleTime = VisibleTime;
-                            //TileNode.TotalTime = TotalTime;
                             
-                            int branchingMultiplier = 10;
+                            int branchingMultiplier = 0;
                             for (int i = 0; i <= branchingMultiplier; i++)
                             {
-                                float currentVisibilityLimit =
+                                float currentVisibilityLimit = branchingMultiplier == 0 ?
+                                    0
+                                    :
                                     lowVisibilityLimit + (float) i / branchingMultiplier *
                                     (highVisibilityLimit - lowVisibilityLimit);
-                                //TileNode neighborTileNode = null;
-                                //Path<TileNode, TileEdge> path = null;
-                                //foreach (TileNode node in orderedTileNodes)
-                                //{
-                                //    neighborTileNode = node;
-                                //    path = ComputePath(node, currentVisibilityLimit);
-                                //    if (path.Edges != null)
-                                //    {
-                                //        break;
-                                //    }
-                                //}
+                                character.Map.AIModel.Reset();
                                 Path<TileNode, TileEdge> path = ComputePath(neighborTileNode, currentVisibilityLimit);
                                 float potentialvisibility = VisibleTime + path.VisibilityTime;
                                 if (path.Edges != null && (!useVisibilityLimit || potentialvisibility <= maxAbsoluteVisibility))
