@@ -27,6 +27,7 @@ namespace Assets.Scripts.MapEditor
         public InputField InputWidth;
         public InputField InputHeight;
         public InputField InputName;
+        public InputField InputSimulationSensitivity;
         public Text TextError;
         public Text TextMaxVisibilityMeasure;
         public Slider SliderMaxVisibility;
@@ -79,7 +80,7 @@ namespace Assets.Scripts.MapEditor
         private readonly string[] affectedCanvasElements =
         {
             "Scroll View", "ButtonMenu", "ButtonSave", "ButtonDelete", "ButtonImport", "ButtonExport",
-            "ButtonExportAll", "ButtonExportPng", "Button_Simulate", "PanelInfo"
+            "ButtonExportAll", "ButtonExportPng", "PanelSimulation", "PanelInfo"
         };
         internal Vector3 newEntityPosition;
         private List<BaseAction>[] drawActions;
@@ -154,7 +155,7 @@ namespace Assets.Scripts.MapEditor
                 List<BaseAction> list = actions[i];
                 float spaceSize = 0.05f;
                 float translation = i * spaceSize - spaceSize * actions.Length / 2;
-                Vector3 offset = new Vector3(translation, translation/2, 0);
+                Vector3 offset = new Vector3(2 * translation, translation/2, 0);
                 foreach (BaseAction action in list)
                 {
                     if (action.GetType() == typeof(NavigationAction))
@@ -655,6 +656,9 @@ namespace Assets.Scripts.MapEditor
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters[Scenes.GAME_HANDLER] = new SimulationGameHandler();
             parameters[Scenes.MAP] = GetCurrentMap().Name;
+            parameters[Scenes.SIMULATION_SENSITIVITY] = InputSimulationSensitivity.text.Length == 0
+                ? 0
+                : int.Parse(InputSimulationSensitivity.text) - 1;
             Scenes.Load(Scenes.MAIN_SCENE, parameters);
         }
 
@@ -695,8 +699,12 @@ namespace Assets.Scripts.MapEditor
 
                 Vector3 startPosition = tileEdge.Start.WorldPosition;
                 Vector3 endPosition = tileEdge.Neighbor.WorldPosition;
-                lineRenderer.positionCount += 2;
-                lineRenderer.SetPosition(lineRenderer.positionCount-2, new Vector3(startPosition.x + offset.x, startPosition.z + offset.y, -5));
+                if (lineRenderer.positionCount == 0)
+                {
+                    lineRenderer.positionCount++;
+                    lineRenderer.SetPosition(lineRenderer.positionCount - 1, new Vector3(startPosition.x + offset.x, startPosition.z + offset.y, -5));
+                }
+                lineRenderer.positionCount++;
                 lineRenderer.SetPosition(lineRenderer.positionCount-1, new Vector3(endPosition.x +  offset.x, endPosition.z + offset.y, -5));
 
             }

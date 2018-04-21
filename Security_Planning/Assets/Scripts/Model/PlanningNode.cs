@@ -32,6 +32,7 @@ namespace Assets.Scripts.Model
         public bool IsVisibilityPriority { get; set; }
         public float VisibleTime { get; set; }
         public float TotalTime { get; set; }
+        public int SimulationSensitivity { get; set; }
 
         private Func<TileEdge, PriorityCost> CurrentPriorityCost
         {
@@ -56,9 +57,9 @@ namespace Assets.Scripts.Model
                 if (edges == null)
                 {
                     edges = new List<IAStarEdge<PlanningNode>>();
-                    //TileNode.VisibleTime = VisibleTime;
-                    //TileNode.TotalTime = TotalTime;
                     character.Map.AIModel.Reset();
+                    TileNode.VisibleTime = VisibleTime;
+                    TileNode.TotalTime = TotalTime;
                     Path<TileNode, TileEdge> pathToGoal = ComputePath(GoalNode.TileNode, maxAbsoluteVisibility);
 
                     if (pathToGoal.Cost < float.MaxValue)
@@ -93,13 +94,12 @@ namespace Assets.Scripts.Model
                                 continue;
                             }
                             
-                            int branchingMultiplier = 0;
-                            for (int i = 0; i <= branchingMultiplier; i++)
+                            for (int i = 0; i <= SimulationSensitivity; i++)
                             {
-                                float currentVisibilityLimit = branchingMultiplier == 0 ?
+                                float currentVisibilityLimit = SimulationSensitivity == 0 ?
                                     0
                                     :
-                                    lowVisibilityLimit + (float) i / branchingMultiplier *
+                                    lowVisibilityLimit + (float) i / SimulationSensitivity *
                                     (highVisibilityLimit - lowVisibilityLimit);
                                 character.Map.AIModel.Reset();
                                 Path<TileNode, TileEdge> path = ComputePath(neighborTileNode, currentVisibilityLimit);
@@ -120,6 +120,7 @@ namespace Assets.Scripts.Model
                                         DestroyedDetectors.Copy(),
                                         FiniteObject,
                                         isVisibilityPriority: IsVisibilityPriority);
+                                    neighbor.SimulationSensitivity = SimulationSensitivity;
                                     creator.ModifyNextNode(neighbor);
                                     foreach (TileEdge pathEdge in path.Edges)
                                     {

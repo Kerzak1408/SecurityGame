@@ -25,6 +25,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
         public PlanningNode GoalNode { get; private set; }
         public Path<PlanningNode, PlanningEdge> Path { get; private set; }
         public float MaxVisibility { get; set; }
+        public int SimulationSensitivity { get; set; }
 
         public static readonly int PATHS_COUNT = 6;
 
@@ -106,6 +107,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
             else
             {
                 startNode.Reset();
+                startNode.SimulationSensitivity = SimulationSensitivity;
                 Character.Map.AIModel.Reset();
                 startNode.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility - longestPathVisibility), longestPathVisibility, shortestPathVisibility);
                 //Path = shortestPath;
@@ -122,6 +124,10 @@ namespace Assets.Scripts.Entities.Characters.Goals
                     },
                     computeCost: GetCostFunction(false)
                 );
+                if (Path.Edges == null)
+                {
+                    Path = leastSeenPath;
+                }
             }
 
             //UnityEngine.Debug.Log("Path visibility = " + Path.VisibleTime() + " max visibility = " + (leastSeenPath.VisibleTime() + MaxVisibility * (shortestPath.VisibleTime() - leastSeenPath.VisibleTime())) + 
