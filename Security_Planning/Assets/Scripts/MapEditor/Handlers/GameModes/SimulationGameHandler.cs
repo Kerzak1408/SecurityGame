@@ -72,7 +72,10 @@ public class SimulationGameHandler : BaseGameHandler
                     yield return null;
                 }
                 currentPath = goal.Path;
-                startNodes[i] = currentPath.GoalNode.Copy();
+                if (currentPath.GoalNode != null)
+                {
+                    startNodes[i] = currentPath.GoalNode.Copy();
+                }
                 
                 if (currentPath.Edges == null)
                 {

@@ -25,6 +25,8 @@ namespace Assets.Scripts.Model
         private List<IAStarEdge<PlanningNode>> edges;
         private bool useVisibilityLimit;
         private float maxAbsoluteVisibility;
+        private float lowVisibilityLimit;
+        private float highVisibilityLimit;
 
         public GameObject FiniteObject { get; set; }
         public bool IsVisibilityPriority { get; set; }
@@ -54,10 +56,10 @@ namespace Assets.Scripts.Model
                 if (edges == null)
                 {
                     edges = new List<IAStarEdge<PlanningNode>>();
-                    TileNode.VisibleTime = VisibleTime;
-                    TileNode.TotalTime = TotalTime;
+                    //TileNode.VisibleTime = VisibleTime;
+                    //TileNode.TotalTime = TotalTime;
 
-                    Path<TileNode, TileEdge> pathToGoal = ComputePath(GoalNode.TileNode);
+                    Path<TileNode, TileEdge> pathToGoal = ComputePath(GoalNode.TileNode, maxAbsoluteVisibility);
 
                     if (pathToGoal.Cost < float.MaxValue)
                     {
@@ -71,8 +73,19 @@ namespace Assets.Scripts.Model
                         if (creator.ShouldExplore(this))
                         {
                             //Func<TileNode, bool> detectableFilter = Filters.DetectableFilter(DestroyedDetectors, UnlockedTileNodes);
-                            List<TileNode> tileNodes = keyValuePair.Value;
+                            //IEnumerable<TileNode> tileNodes = keyValuePair.Value.Where(tileNode => !tileNode.IsObstructed(DestroyedDetectors.OfType<BaseEntity>()));
+                            //if (!tileNodes.Any())
+                            //{
+                            //    continue;
+                            //}
+                            //IOrderedEnumerable<TileNode> orderedTileNodes = tileNodes.OrderBy(tileNode =>
+                            //{
+                            //    var currentPosition = tileNode.Position;
+                            //    return Mathf.Pow(currentPosition.First - Position.First, 2) +
+                            //           Mathf.Pow(currentPosition.Second - Position.Second, 2);
 
+                            //});
+                            IEnumerable<TileNode> tileNodes = keyValuePair.Value;
                             TileNode neighborTileNode = null;
                             float minDistanceSquared = float.MaxValue;
                             foreach (TileNode tileNode in tileNodes)
@@ -95,46 +108,72 @@ namespace Assets.Scripts.Model
                                 continue;
                             }
 
-                            TileNode.VisibleTime = VisibleTime;
-                            TileNode.TotalTime = TotalTime;
-                            Path<TileNode, TileEdge> path = ComputePath(neighborTileNode);
 
-                            if (path.Edges != null)
+                            //TileNode.VisibleTime = VisibleTime;
+                            //TileNode.TotalTime = TotalTime;
+                            
+                            int branchingMultiplier = 10;
+                            for (int i = 0; i <= branchingMultiplier; i++)
                             {
-                                Dictionary<IPlanningEdgeCreator, List<TileNode>> creatorsCopy =
-                                    CreatorsDictionary.Copy();
-                                creatorsCopy.Remove(creator);
-
-                                PlanningNode neighbor = new PlanningNode(
-                                    neighborTileNode,
-                                    GoalNode,
-                                    UnlockedEdges.Copy(),
-                                    creatorsCopy,
-                                    character,
-                                    DestroyedObstacles.Copy(),
-                                    DestroyedDetectors.Copy(),
-                                    FiniteObject,
-                                    isVisibilityPriority: IsVisibilityPriority);
-                                creator.ModifyNextNode(neighbor);
-                                foreach (TileEdge pathEdge in path.Edges)
+                                float currentVisibilityLimit =
+                                    lowVisibilityLimit + (float) i / branchingMultiplier *
+                                    (highVisibilityLimit - lowVisibilityLimit);
+                                //TileNode neighborTileNode = null;
+                                //Path<TileNode, TileEdge> path = null;
+                                //foreach (TileNode node in orderedTileNodes)
+                                //{
+                                //    neighborTileNode = node;
+                                //    path = ComputePath(node, currentVisibilityLimit);
+                                //    if (path.Edges != null)
+                                //    {
+                                //        break;
+                                //    }
+                                //}
+                                Path<TileNode, TileEdge> path = ComputePath(neighborTileNode, currentVisibilityLimit);
+                                float potentialvisibility = VisibleTime + path.VisibilityTime;
+                                if (path.Edges != null && (!useVisibilityLimit || potentialvisibility <= maxAbsoluteVisibility))
                                 {
-                                    IObstacle destroyedObstacle = pathEdge.Obstacle;
-                                    if (destroyedObstacle != null)
+                                    Dictionary<IPlanningEdgeCreator, List<TileNode>> creatorsCopy =
+                                        CreatorsDictionary.Copy();
+                                    creatorsCopy.Remove(creator);
+
+                                    PlanningNode neighbor = new PlanningNode(
+                                        neighborTileNode,
+                                        GoalNode,
+                                        UnlockedEdges.Copy(),
+                                        creatorsCopy,
+                                        character,
+                                        DestroyedObstacles.Copy(),
+                                        DestroyedDetectors.Copy(),
+                                        FiniteObject,
+                                        isVisibilityPriority: IsVisibilityPriority);
+                                    creator.ModifyNextNode(neighbor);
+                                    foreach (TileEdge pathEdge in path.Edges)
                                     {
-                                        neighbor.DestroyedObstacles.Add(destroyedObstacle);
+                                        IObstacle destroyedObstacle = pathEdge.Obstacle;
+                                        if (destroyedObstacle != null)
+                                        {
+                                            neighbor.DestroyedObstacles.Add(destroyedObstacle);
+                                        }
+                                    }
+
+                                    PlanningEdge planningEdge = new PlanningEdge(
+                                        this,
+                                        neighbor,
+                                        creator.PlanningEdgeType,
+                                        character,
+                                        path,
+                                        creator.InteractTime,
+                                        creator.Interactable);
+                                    edges.Add(planningEdge);
+                                    if (!useVisibilityLimit)
+                                    {
+                                        break;
                                     }
                                 }
-
-                                PlanningEdge planningEdge = new PlanningEdge(
-                                    this,
-                                    neighbor,
-                                    creator.PlanningEdgeType,
-                                    character,
-                                    path,
-                                    creator.InteractTime,
-                                    creator.Interactable);
-                                edges.Add(planningEdge);
                             }
+
+                            
                         }
                     }
                 }
@@ -142,7 +181,7 @@ namespace Assets.Scripts.Model
             }
         }
 
-        private Path<TileNode, TileEdge> ComputePath(TileNode target)
+        private Path<TileNode, TileEdge> ComputePath(TileNode target, float maxVisibility)
         {
 
             Func<TileEdge, bool> basicEdgeFilter = Filters.EdgeFilter(UnlockedEdges, character.Data.ForbiddenEdgeTypes,
@@ -157,7 +196,7 @@ namespace Assets.Scripts.Model
                     TileNode,
                     target,
                     heuristics,
-                    maxAbsoluteVisibility,
+                    maxVisibility,
                     edgeFilter: basicEdgeFilter,
                     computeCost: CurrentPriorityCost);
             }
@@ -240,10 +279,12 @@ namespace Assets.Scripts.Model
             edges = null;
         }
 
-        public void UseVisibilityLimit(float maxVisibility)
+        public void UseVisibilityLimit(float maxVisibility, float lowVisibilityLimit, float highVisibilityLimit)
         {
             useVisibilityLimit = true;
             maxAbsoluteVisibility = maxVisibility;
+            this.lowVisibilityLimit = lowVisibilityLimit;
+            this.highVisibilityLimit = highVisibilityLimit;
         }
 
         public PlanningNode Copy()

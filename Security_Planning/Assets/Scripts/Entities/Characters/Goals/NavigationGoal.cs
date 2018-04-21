@@ -90,19 +90,24 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 );
 
             float shortestPathVisibility = shortestPath.VisibleTime();
-            //if (MaxVisibility == 0)
-            //{
-            //    Path = leastSeenPath;
-            //}
-            //else if (MaxVisibility == 1)
-            //{
-            //    Path = shortestPath;
-            //}
-            //else
+            if (MaxVisibility == 0)
+            {
+                Path = leastSeenPath;
+            }
+            else if (MaxVisibility == 1)
+            {
+                Path = shortestPath;
+            }
+            else if (Math.Abs(shortestPathVisibility - longestPathVisibility) < 1e-4 &&
+                     Math.Abs(shortestPath.Cost - leastSeenPath.Cost) < 1e-4)
+            {
+                Path = shortestPath;
+            }
+            else
             {
                 startNode.Reset();
                 Character.Map.AIModel.Reset();
-                startNode.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility - longestPathVisibility));
+                startNode.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility - longestPathVisibility), longestPathVisibility, shortestPathVisibility);
                 //Path = shortestPath;
                 Path = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
                     startNode,
@@ -113,7 +118,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
                     {
                         edge.Neighbor.VisibleTime = edge.Start.VisibleTime + edge.VisibleTime;
                         edge.Neighbor.TotalTime = edge.Start.TotalTime + edge.Cost;
-                        edge.Neighbor.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPath.VisibleTime() - longestPathVisibility));
+                        edge.Neighbor.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility- longestPathVisibility), longestPathLength, shortestPathVisibility);
                     },
                     computeCost: GetCostFunction(false)
                 );

@@ -430,7 +430,17 @@ namespace Assets.Scripts.DataStructures
                     GameObject tileObject = Tiles[tileNode.Position.First, tileNode.Position.Second];
                     if (InteractHelper.AreCloseToInteract(tileObject, gameObject))
                     {
-                        result.LazyAdd(component, tileNode);
+                        Vector3 creatorPosition = gameObject.transform.position;
+                        Vector3 tilePosition = tileObject.transform.position;
+                        creatorPosition.y = 0.5f;
+                        tilePosition.y = 0.5f;
+                        Ray fromToRay = new Ray(creatorPosition, tilePosition - creatorPosition);
+                        RaycastHit[] hits = Physics.RaycastAll(fromToRay);
+                        if (hits.All(hit => hit.distance > Vector3.Distance(creatorPosition, tilePosition)))
+                        {
+                            result.LazyAdd(component, tileNode);
+                        }
+                        
                     }
                 }
             }
