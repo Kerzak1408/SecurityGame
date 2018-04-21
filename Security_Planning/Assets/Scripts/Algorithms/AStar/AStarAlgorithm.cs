@@ -24,8 +24,8 @@ public static class AStarAlgorithm
             startNode 
         };
 
-        StreamWriter logFileWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath, "astarLog_" + startNode.GetType() + "_" +
-            startNode.Position + "-" + endNode.Position + "_"  + logindex++ + ".txt"));
+        //StreamWriter logFileWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath, "astarLog_" + startNode.GetType() + "_" +
+        //    startNode.Position + "-" + endNode.Position + "_"  + logindex++ + ".txt"));
 
         // Key - where I came, Value-First - from where I came, Value-Second - which edge I used.
         var cameFrom = new Dictionary<TNode, Tuple<TNode, TEdge>>();
@@ -44,7 +44,7 @@ public static class AStarAlgorithm
             foreach (TNode node in openSet)
             {
                 var fValue = fScores[node];
-                if (fValue < minFValue || (fValue == minFValue && gScores[node] < gScores[currentNode]))
+                if (fValue < minFValue)
                 {
                     currentNode = node;
                     minFValue = fValue;
@@ -52,10 +52,10 @@ public static class AStarAlgorithm
             }
 
             //Debug.Log("AStar, exploiting node: " + currentNode);
-            logFileWriter.WriteLine("AStar, exploiting node: " + currentNode + " fscore = " + fScores[currentNode] + " gScore = " + gScores[currentNode]);
+            //logFileWriter.WriteLine("AStar, exploiting node: " + currentNode + " fscore = " + fScores[currentNode] + " gScore = " + gScores[currentNode]);
             if (currentNode.Equals(endNode))
             {
-                logFileWriter.Close();
+                //logFileWriter.Close();
 
                 return ReconstructPath(cameFrom, endNode, gScores[endNode][visibilityIndex]);
             }
@@ -101,7 +101,7 @@ public static class AStarAlgorithm
                 }
             }
         }
-        logFileWriter.Close();
+        //logFileWriter.Close();
         return new Path<TNode, TEdge>(null, float.MaxValue);
     }
 
@@ -111,9 +111,9 @@ public static class AStarAlgorithm
         where TNode : IAStarNode<TNode>
         where TEdge : IAStarEdge<TNode>
     {
-        StreamWriter logFileWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath,
-            "astarMultipleLog_" + startNode.GetType() + "_" +
-            startNode.Position + "-" + endNode.Position + "_" + logindex++ + ".txt"));
+        //StreamWriter logFileWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath,
+        //    "astarMultipleLog_" + startNode.GetType() + "_" +
+        //    startNode.Position + "-" + endNode.Position + "_" + logindex++ + ".txt"));
         var closedSet = new List<Tuple<TNode, float>>();
         //var closedDictionary = new Dictionary<TNode, float>();
         var openSet = new List<Tuple<TNode, float>>();
@@ -144,11 +144,11 @@ public static class AStarAlgorithm
                 }
             }
 
-            logFileWriter.WriteLine("AStarMultiple, exploiting node: " + currentTuple + " fscore = " + fScores[currentTuple] + " gScore = " + gScores[currentTuple]);
-            logFileWriter.Flush();
+            //logFileWriter.WriteLine("AStarMultiple, exploiting node: " + currentTuple + " fscore = " + fScores[currentTuple] + " gScore = " + gScores[currentTuple]);
+            //logFileWriter.Flush();
             if (currentTuple.First.Equals(endNode))
             {
-                logFileWriter.Close();
+                //logFileWriter.Close();
                 return ReconstructPath(cameFrom, currentTuple, currentTuple.Second);
             }
             
@@ -251,7 +251,7 @@ public static class AStarAlgorithm
                 }
             }
         }
-        logFileWriter.Close();
+        //logFileWriter.Close();
         return new Path<TNode, TEdge>(null, float.MaxValue);
     }
 

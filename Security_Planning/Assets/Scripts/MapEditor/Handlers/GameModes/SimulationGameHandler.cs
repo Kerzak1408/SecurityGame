@@ -45,21 +45,26 @@ public class SimulationGameHandler : BaseGameHandler
         }
         
         Queue<BaseGoal> goals = CollectEverythingBehaviour.GenerateGoals(Burglar, false);
+        PlanningNode[] startNodes = new PlanningNode[actionsToDraw.Length];
 
         while (goals.Count > 0)
         {
             
             NavigationGoal goal = goals.Dequeue() as NavigationGoal;
-            PlanningNode[] startNodes = new PlanningNode[actionsToDraw.Length];
 
-            //for (int i = 0; i < startNodes.Length; i++)
-                for (int i = 0; i < 1; i++)
-                {
+            for (int i = 0; i < startNodes.Length; i++)
+            //for (int i = 0; i < 1; i++)
+            {
+                goal.Reset();
                 PlanningNode startNode = startNodes[i];
+                if (startNode != null)
+                {
+                    startNode.Reset();
+                }
                 Path<PlanningNode, PlanningEdge> currentPath;
 
-                //goal.MaxVisibility = (float)i / (startNodes.Length - 1);
-                goal.MaxVisibility = 1.0f;
+                goal.MaxVisibility = (float)i / (startNodes.Length - 1);
+                //goal.MaxVisibility = 1.0f;
                 goal.Activate(startNode);
 
                 while (!goal.IsInitialized)
@@ -67,7 +72,7 @@ public class SimulationGameHandler : BaseGameHandler
                     yield return null;
                 }
                 currentPath = goal.Path;
-                startNodes[i] = currentPath.GoalNode;
+                startNodes[i] = currentPath.GoalNode.Copy();
                 
                 if (currentPath.Edges == null)
                 {

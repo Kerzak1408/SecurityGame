@@ -16,6 +16,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Entities.Characters.Goals
 {
+
     public class NavigationGoal : BaseGoal
     {
         private BaseAction currentAction;
@@ -50,12 +51,12 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 startNode.GoalNode = goalNode;
             }
             Character.Log("Planning started.");
-            //Thread planningThread = new Thread(() =>
-            //{
+            Thread planningThread = new Thread(() =>
+            {
                 PlanPath(startNode, goalNode, currentMap);
-            TaskManager.Instance.RunOnMainThread(Initialize);
-            //});
-            //planningThread.Start();
+                TaskManager.Instance.RunOnMainThread(Initialize);
+            });
+            planningThread.Start();
 
         }
 
@@ -117,9 +118,9 @@ namespace Assets.Scripts.Entities.Characters.Goals
                     computeCost: GetCostFunction(false)
                 );
             }
-            
-            UnityEngine.Debug.Log("Path visibility = " + Path.VisibleTime() + " max visibility = " + (leastSeenPath.VisibleTime() + MaxVisibility * (shortestPath.VisibleTime() - leastSeenPath.VisibleTime())) + 
-                " path length = " + Path.Cost);
+
+            //UnityEngine.Debug.Log("Path visibility = " + Path.VisibleTime() + " max visibility = " + (leastSeenPath.VisibleTime() + MaxVisibility * (shortestPath.VisibleTime() - leastSeenPath.VisibleTime())) + 
+            //" path length = " + Path.Cost);
             stopwatch.Stop();
             Character.Log("A* time = " + stopwatch.ElapsedMilliseconds / 1000f + " seconds.");
         }
@@ -185,6 +186,12 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 }
             }
             currentAction.Update();
+        }
+
+        public void Reset()
+        {
+            IsInitialized = false;
+            Path = null;
         }
     }
 }
