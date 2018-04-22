@@ -36,7 +36,7 @@ namespace Assets.Scripts.Entities
             ray = new Ray();
             ray.origin = Camera.transform.position;
 
-            relatedObject = GameObject.Find(Data.relatedName);
+            relatedObject = GameObject.Find(Data.RelatedName);
             if (relatedObject != null)
             {
                 alarm = relatedObject.GetComponent<PIRAlarm>();

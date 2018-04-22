@@ -2,41 +2,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TaskManager : MonoBehaviour
+namespace Assets.Scripts.Threading
 {
-    private static readonly Queue<Action> taskQueue = new Queue<Action>();
-
-    public static TaskManager Instance { get; private set; }
-
-    public void RunOnMainThread(Action action)
+    /// <summary>
+    /// Singleton for running action on the main threads. Unity stuff can be called only from main thread.
+    /// </summary>
+    public class TaskManager : MonoBehaviour
     {
-        lock (taskQueue)
-        {
-            taskQueue.Enqueue(action);
-        }
-    }
+        private static readonly Queue<Action> taskQueue = new Queue<Action>();
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
-    }
+        public static TaskManager Instance { get; private set; }
 
-    private void Update()
-    {
-        lock (taskQueue)
+        public void RunOnMainThread(Action action)
         {
-            while (taskQueue.Count > 0)
+            lock (taskQueue)
             {
-                taskQueue.Dequeue().Invoke();
+                taskQueue.Enqueue(action);
+            }
+        }
+
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private void Update()
+        {
+            lock (taskQueue)
+            {
+                while (taskQueue.Count > 0)
+                {
+                    taskQueue.Dequeue().Invoke();
+                }
             }
         }
     }
-
 }

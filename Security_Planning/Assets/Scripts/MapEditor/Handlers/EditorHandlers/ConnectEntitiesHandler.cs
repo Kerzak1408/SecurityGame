@@ -48,7 +48,7 @@ namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
                     hit.transform.gameObject.HasScriptOfType(selectedTransmitter.GetReceiverType()));
                 if (!receiverHit.Equals(default(RaycastHit)))
                 {
-                    selectedTransmitter.Data.relatedName = receiverHit.transform.name;
+                    selectedTransmitter.Data.RelatedName = receiverHit.transform.name;
                     currentMap.ActivateAllEntities();
                     selectedTransmitter = null;
                     GridManager.FlagCurrentButton();

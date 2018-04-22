@@ -1,19 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class InputRestrictions : MonoBehaviour
+namespace Assets.Scripts.UI
 {
-	void Start ()
+    public class InputRestrictions : MonoBehaviour
     {
-        GetComponent<InputField>().onValidateInput += NumberValidation;
-	}
-
-    public char NumberValidation(string text, int charIndex, char addedChar) 
-    {
-        if (addedChar >= '0' && addedChar <= '9')
+        void Start ()
         {
-            return addedChar;
+            GetComponent<InputField>().onValidateInput += NumberValidation;
         }
-        return '\0';
+
+        public char NumberValidation(string text, int charIndex, char addedChar) 
+        {
+            if (addedChar >= '0' && addedChar <= '9')
+            {
+                return addedChar;
+            }
+            return '\0';
+        }
     }
 }

@@ -13,14 +13,12 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>2017.4.1f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -338,7 +336,6 @@
     <Compile Include="Assets\Scripts\Items\CardItem.cs" />
     <Compile Include="Assets\Scripts\Items\KeyItem.cs" />
     <Compile Include="Assets\Scripts\Items\WireCutterItem.cs" />
-    <Compile Include="Assets\Scripts\Main.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Game.cs" />
     <Compile Include="Assets\Scripts\MapEditor\GridBase.cs" />
     <Compile Include="Assets\Scripts\MapEditor\GridManager.cs" />
@@ -1578,6 +1575,8 @@
     <None Include="Assets\Logs\Log_2018-4-22_10-44-58.txt" />
     <None Include="Assets\Logs\Log_2018-4-22_11-01-39.txt" />
     <None Include="Assets\Logs\Log_2018-4-22_11-03-51.txt" />
+    <None Include="Assets\Logs\Log_2018-4-22_11-58-34.txt" />
+    <None Include="Assets\Logs\Log_2018-4-22_11-58-47.txt" />
     <None Include="Assets\Logs\Log_2018-4-22_12-33-07.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-15-37.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-16-19.txt" />

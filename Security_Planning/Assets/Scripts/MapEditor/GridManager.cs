@@ -17,7 +17,7 @@ using Assets.Scripts.MapEditor.Handlers.GameModes;
 using Assets.Scripts.Model;
 using Assets.Scripts.Reflection;
 using Assets.Scripts.Serialization;
-using CustomSerialization;
+using Assets.Scripts.UI;
 using SFB;
 using UnityEngine;
 using UnityEngine.EventSystems;

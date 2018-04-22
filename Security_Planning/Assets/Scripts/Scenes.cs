@@ -2,85 +2,91 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Scenes : MonoBehaviour
+namespace Assets.Scripts
 {
-    public const string MAP_EDITOR = "MapEditor";
-    public const string MAIN_MENU = "MainMenu";
-    public const string MAIN_SCENE = "MainScene";
-    public const string MAP_CHOICE_SCREEN = "MapChoiceScreen";
-
-    public const string ACTIONS_TO_DRAW = "actionsToDraw";
-    public const string GAME_HANDLER = "gameHandler";
-    public const string MAP = "map";
-
-    private void Start()
+    /// <summary>
+    /// Wrapper for SceneManager to enable passing parameters betwen scenes.
+    /// </summary>
+    public class Scenes : MonoBehaviour
     {
-        Application.targetFrameRate = 120;
-    }
+        public const string MAP_EDITOR = "MapEditor";
+        public const string MAIN_MENU = "MainMenu";
+        public const string MAIN_SCENE = "MainScene";
+        public const string MAP_CHOICE_SCREEN = "MapChoiceScreen";
 
-    public static Dictionary<string, string> Parameters { get; private set; }
-    public static Dictionary<string, object> ObjectParameters { get; private set; }
+        public const string ACTIONS_TO_DRAW = "actionsToDraw";
+        public const string GAME_HANDLER = "gameHandler";
+        public const string MAP = "map";
 
-    public static void Load(string sceneName, Dictionary<string, object> objectParameters)
-    {
-        ObjectParameters = objectParameters;
-        SceneManager.LoadScene(sceneName);
-    }
+        private void Start()
+        {
+            Application.targetFrameRate = 120;
+        }
 
-    public static void Load(string sceneName, Dictionary<string, string> parameters = null)
-    {
-        Parameters = parameters;
-        SceneManager.LoadScene(sceneName);
-    }
+        public static Dictionary<string, string> Parameters { get; private set; }
+        public static Dictionary<string, object> ObjectParameters { get; private set; }
 
-    public static void Load(string sceneName, string paramKey, string paramValue)
-    {
-        Parameters = new Dictionary<string, string>();
-        Parameters.Add(paramKey, paramValue);
-        SceneManager.LoadScene(sceneName);
-    }
+        public static void Load(string sceneName, Dictionary<string, object> objectParameters)
+        {
+            ObjectParameters = objectParameters;
+            SceneManager.LoadScene(sceneName);
+        }
 
-    public static void Load(string sceneName, string paramKey, object paramValue)
-    {
-        ObjectParameters = new Dictionary<string, object>();
-        ObjectParameters.Add(paramKey, paramValue);
-        SceneManager.LoadScene(sceneName);
-    }
+        public static void Load(string sceneName, Dictionary<string, string> parameters = null)
+        {
+            Parameters = parameters;
+            SceneManager.LoadScene(sceneName);
+        }
 
-    public static string GetParam(string paramKey)
-    {
-        if (Parameters == null) return "";
-        return Parameters[paramKey];
-    }
+        public static void Load(string sceneName, string paramKey, string paramValue)
+        {
+            Parameters = new Dictionary<string, string>();
+            Parameters.Add(paramKey, paramValue);
+            SceneManager.LoadScene(sceneName);
+        }
 
-    public static object GetObjectParam(string paramKey)
-    {
-        if (ObjectParameters == null || !ObjectParameters.ContainsKey(paramKey)) return null;
-        return ObjectParameters[paramKey];
-    }
+        public static void Load(string sceneName, string paramKey, object paramValue)
+        {
+            ObjectParameters = new Dictionary<string, object>();
+            ObjectParameters.Add(paramKey, paramValue);
+            SceneManager.LoadScene(sceneName);
+        }
 
-    private Scenes()
-    {
+        public static string GetParam(string paramKey)
+        {
+            if (Parameters == null) return "";
+            return Parameters[paramKey];
+        }
+
+        public static object GetObjectParam(string paramKey)
+        {
+            if (ObjectParameters == null || !ObjectParameters.ContainsKey(paramKey)) return null;
+            return ObjectParameters[paramKey];
+        }
+
+        private Scenes()
+        {
         
-    }
+        }
 
-    public void LoadEditor()
-    {
-        Load(MAP_EDITOR);
-    }
+        public void LoadEditor()
+        {
+            Load(MAP_EDITOR);
+        }
 
-    public void LoadMainMenu()
-    {
-        Load(MAIN_MENU);
-    }
+        public void LoadMainMenu()
+        {
+            Load(MAIN_MENU);
+        }
 
-    public void LoadMapChoiceScreen()
-    {
-        Load(MAP_CHOICE_SCREEN);
-    }
+        public void LoadMapChoiceScreen()
+        {
+            Load(MAP_CHOICE_SCREEN);
+        }
 
-    public static bool IsCurrentScene(string sceneName)
-    {
-        return SceneManager.GetActiveScene().name == sceneName;
+        public static bool IsCurrentScene(string sceneName)
+        {
+            return SceneManager.GetActiveScene().name == sceneName;
+        }
     }
 }

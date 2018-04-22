@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
-using Assets.Scripts.Model;
 using UnityEngine;
 
 namespace Assets.Scripts.Serialization

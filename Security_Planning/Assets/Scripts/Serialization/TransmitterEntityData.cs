@@ -5,6 +5,12 @@ namespace Assets.Scripts.Serialization
     [Serializable]
     public class TransmitterEntityData : BaseEntityData
     {
-        public string relatedName = "None";
+        private string relatedName = "None";
+
+        public string RelatedName
+        {
+            get { return relatedName; }
+            set { relatedName = value; }
+        }
     }
 }

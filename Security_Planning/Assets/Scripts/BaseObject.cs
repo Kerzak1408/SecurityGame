@@ -13,8 +13,6 @@ namespace Assets.Scripts
             isInitialized = true;
         }
 
-        //protected virtual void Start() { }
-
         private void Update()
         {
             if (isInitialized)

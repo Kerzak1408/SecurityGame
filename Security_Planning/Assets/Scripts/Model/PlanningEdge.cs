@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Characters.Actions;
-using Assets.Scripts.Entities.Interfaces;
 using UnityEngine;
 
 namespace Assets.Scripts.Model
 {
+    /// <summary>
+    /// Edge of the planning graph. Always leads to some interactable object so that it can change the state. 
+    /// This edge is an abstraction of the navigation path leading to the interactable object.
+    /// </summary>
     public class PlanningEdge : Edge<PlanningNode, PlanningEdgeType>
     {
-        private GameObject interactObject;
-        private Path<TileNode, TileEdge> path;
-        private BaseCharacter character;
-        private float interactTime;
+        private readonly GameObject interactObject;
+        private readonly Path<TileNode, TileEdge> path;
+        private readonly BaseCharacter character;
+        private readonly float interactTime;
 
         public override float Cost
         {
@@ -64,19 +65,7 @@ namespace Assets.Scripts.Model
 
         public float VisibleTime
         {
-            get
-            {
-                return path.VisibilityTime;
-                //float visibleTime = 0;
-                //foreach (TileEdge tileEdge in path.Edges)
-                //{
-                //    float visibleFraction = tileEdge.Nodes.Count(node => node.IsDetectable(Start.DestroyedDetectors)) /
-                //                            (float)tileEdge.Nodes.Length;
-                //    visibleTime += visibleFraction * tileEdge.Cost;
-                //}
-
-                //return visibleTime;
-            }
+            get { return path.VisibilityTime; }
         }
 
         public PlanningEdge(PlanningNode start, PlanningNode neighbor, PlanningEdgeType type, BaseCharacter character,

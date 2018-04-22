@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
-using UnityEngine;
 
 namespace Assets.Scripts.Model
 {
@@ -22,8 +19,16 @@ namespace Assets.Scripts.Model
                 }
                 return node.IsDetectable(deactivatedDetectors);
             };
-        } 
+        }
 
+        /// <summary>
+        /// Filters all <paramref name="hardlyForbiddenTypes"/> and all FENCE, CARD_DOOR and KEY_DOORedges that are not in <paramref name="unlockedEdgeTypes"/>.
+        /// In addition, filters also edges that are obstructed, <paramref name="destroyedObstacles"/> determines destroyed detectors that are not considered.
+        /// </summary>
+        /// <param name="unlockedEdgeTypes"></param>
+        /// <param name="hardlyForbiddenTypes"></param>
+        /// <param name="destroyedObstacles"></param>
+        /// <returns></returns>
         public static Func<TileEdge, bool> EdgeFilter(IEnumerable<EdgeType> unlockedEdgeTypes, 
             IEnumerable<EdgeType> hardlyForbiddenTypes, IEnumerable<BaseEntity> destroyedObstacles)
         {

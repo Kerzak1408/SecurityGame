@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Assets.Scripts.Entities;
-
-namespace Assets.Scripts.Model
+﻿namespace Assets.Scripts.Model
 {
+    /// <summary>
+    /// Representation of the navigation graph.
+    /// </summary>
     public class AIModel
     {
         public TileNode[,] Tiles { get; set; }

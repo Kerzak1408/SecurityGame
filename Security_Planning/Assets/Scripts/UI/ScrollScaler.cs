@@ -1,20 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ScrollScaler : MonoBehaviour
+namespace Assets.Scripts.UI
 {
-    private static readonly float MAX_SCALE = 2;
-    private static readonly float MIN_SCALE = 0.1f;
-
-    public void ScrollScale(BaseEventData e)
+    public class ScrollScaler : MonoBehaviour
     {
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        Vector3 potentialScale = transform.localScale + Vector3.one * scroll;
-        if (potentialScale.x < MAX_SCALE && potentialScale.x > MIN_SCALE)
+        private static readonly float MAX_SCALE = 2;
+        private static readonly float MIN_SCALE = 0.1f;
+
+        public void ScrollScale(BaseEventData e)
         {
-            transform.localScale = potentialScale;
+            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            Vector3 potentialScale = transform.localScale + Vector3.one * scroll;
+            if (potentialScale.x < MAX_SCALE && potentialScale.x > MIN_SCALE)
+            {
+                transform.localScale = potentialScale;
+            }
         }
     }
 }

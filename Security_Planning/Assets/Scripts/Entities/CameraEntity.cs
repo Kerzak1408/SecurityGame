@@ -24,7 +24,7 @@ namespace Assets.Scripts.Entities
             //Debug.Log("camera related name = " + Data.relatedName);
             Vector3 position = transform.position;
             transform.position = new Vector3(position.x, position.y, -3f);
-            GameObject monitor = GameObject.Find(Data.relatedName);
+            GameObject monitor = GameObject.Find(Data.RelatedName);
             if (monitor == null)
             {   
                 Camera.enabled = false;

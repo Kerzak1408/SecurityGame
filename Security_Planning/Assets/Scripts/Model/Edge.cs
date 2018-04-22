@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Scripts.Algorithms.AStar.Interfaces;
-using Assets.Scripts.DataStructures;
+﻿using Assets.Scripts.Algorithms.AStar.Interfaces;
 
 namespace Assets.Scripts.Model
 {
@@ -30,7 +25,7 @@ namespace Assets.Scripts.Model
             get { return new[] {Start, Neighbor}; }
         }
 
-        public Edge(TNode start, TNode neighbor, TEdgeType type)
+        protected Edge(TNode start, TNode neighbor, TEdgeType type)
         {
             this.start = start;
             this.neighbor = neighbor;

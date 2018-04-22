@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
-using Assets.Scripts.Entities.Interfaces;
-using UnityEngine;
 
 namespace Assets.Scripts.Model
 {
+    /// <summary>
+    /// Navigation edge.
+    /// </summary>
     public class TileEdge : Edge<TileNode, EdgeType>
     {
-        private float cost;
+        private readonly float cost;
 
         public IObstacle Obstacle { get; private set; }
         public List<BaseEntity> ObstructingEntities { get; set; }

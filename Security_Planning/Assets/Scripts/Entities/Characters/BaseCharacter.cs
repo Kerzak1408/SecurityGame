@@ -9,6 +9,7 @@ using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Helpers;
 using Assets.Scripts.Items;
+using Assets.Scripts.Model;
 using Assets.Scripts.Serialization;
 using UnityEngine;
 using Object = UnityEngine.Object;

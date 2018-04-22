@@ -12,6 +12,7 @@ using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters.Actions;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
+using Assets.Scripts.Threading;
 using UnityEngine;
 
 namespace Assets.Scripts.Entities.Characters.Goals

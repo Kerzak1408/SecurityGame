@@ -23,7 +23,7 @@ namespace Assets.Scripts.Model
         public PlanningNode GoalNode { get; set; }
 
         public Dictionary<IPlanningEdgeCreator, List<TileNode>> CreatorsDictionary { get; set; }
-        private BaseCharacter character;
+        private readonly BaseCharacter character;
         private List<IAStarEdge<PlanningNode>> edges;
         private bool useVisibilityLimit;
         private float maxAbsoluteVisibility;
@@ -50,7 +50,9 @@ namespace Assets.Scripts.Model
             }
         }
 
-
+        /// <summary>
+        /// Edges are generated dynamically so we do not have to create fully connected graph.
+        /// </summary>
         public List<IAStarEdge<PlanningNode>> Edges
         {
             get
@@ -61,6 +63,7 @@ namespace Assets.Scripts.Model
                     character.Map.AIModel.Reset();
                     TileNode.VisibleTime = VisibleTime;
                     TileNode.TotalTime = TotalTime;
+                    // Try to find path to the goal.
                     Path<TileNode, TileEdge> pathToGoal = ComputePath(GoalNode.TileNode, maxAbsoluteVisibility);
 
                     if (pathToGoal.Cost < float.MaxValue)
@@ -69,12 +72,16 @@ namespace Assets.Scripts.Model
                         edges.Add(edge);
                     }
 
+                    // Look for all available not-yet-visited interactable items.
                     foreach (KeyValuePair<IPlanningEdgeCreator, List<TileNode>> keyValuePair in CreatorsDictionary)
                     {
                         IPlanningEdgeCreator creator = keyValuePair.Key;
                         if (creator.ShouldExplore(this))
                         {
                             IEnumerable<TileNode> tileNodes = keyValuePair.Value;
+
+                            // Each interactable item can be surrounded by many navigation nodes. We choose just the closest one 
+                            // from this set to reduce the branching of the search.
                             TileNode neighborTileNode = null;
                             float minDistanceSquared = float.MaxValue;
                             foreach (TileNode tileNode in tileNodes)
@@ -95,13 +102,13 @@ namespace Assets.Scripts.Model
                                 continue;
                             }
 
-                            int branches = character.Data.Sensitivity - 1;
-                            for (int i = 0; i <= branches; i++)
+                            int branchesMinusOne = character.Data.Sensitivity - 1;
+                            for (int i = 0; i <= branchesMinusOne; i++)
                             {
-                                float currentVisibilityLimit = branches == 0 ?
+                                float currentVisibilityLimit = branchesMinusOne == 0 ?
                                     0
                                     :
-                                    lowVisibilityLimit + (float) i / branches *
+                                    lowVisibilityLimit + (float) i / branchesMinusOne *
                                     (highVisibilityLimit - lowVisibilityLimit);
                                 character.Map.AIModel.Reset();
                                 Path<TileNode, TileEdge> path = ComputePath(neighborTileNode, currentVisibilityLimit);
@@ -158,7 +165,6 @@ namespace Assets.Scripts.Model
 
         private Path<TileNode, TileEdge> ComputePath(TileNode target, float maxVisibility)
         {
-
             Func<TileEdge, bool> basicEdgeFilter = Filters.EdgeFilter(UnlockedEdges, character.Data.ForbiddenEdgeTypes,
                         DestroyedDetectors.OfType<BaseEntity>());
 
@@ -173,21 +179,16 @@ namespace Assets.Scripts.Model
                     edgeFilter: basicEdgeFilter,
                     computeCost: CurrentPriorityCost);
             }
-            else
-            {
-
-                return AStarAlgorithm.AStar(
-                    TileNode,
-                    target,
-                    heuristics,
-                    edgeFilter: basicEdgeFilter,
-                    computeCost: CurrentPriorityCost,
-                    visibilityIndex : IsVisibilityPriority ? 0 : 1
-                );
-            }
+            // Simple A* in case there is no visibility limit.
+            return AStarAlgorithm.AStar(
+                TileNode,
+                target,
+                heuristics,
+                edgeFilter: basicEdgeFilter,
+                computeCost: CurrentPriorityCost,
+                visibilityIndex : IsVisibilityPriority ? 0 : 1
+            );
         }
-
-
 
         public float ComputeVisibleTime(TileEdge edge)
         {
@@ -247,6 +248,9 @@ namespace Assets.Scripts.Model
             return result.ToString();
         }
 
+        /// <summary>
+        /// Clears edges.
+        /// </summary>
         public void Reset()
         {
             edges = null;

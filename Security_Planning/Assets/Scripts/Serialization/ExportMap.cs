@@ -1,13 +1,13 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.IO.Compression;
 using System.Text;
-using System;
-using System.Diagnostics;
 using Assets.Scripts.Helpers;
 using Boo.Lang;
 using SFB;
 
-namespace CustomSerialization
+namespace Assets.Scripts.Serialization
 {
     public static class ExportMap
     {
@@ -137,4 +137,3 @@ namespace CustomSerialization
 
     }
 }
-

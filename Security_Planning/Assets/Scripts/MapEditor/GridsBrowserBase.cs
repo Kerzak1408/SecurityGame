@@ -5,6 +5,7 @@ using Assets.Scripts.DataHandlers;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.MapEditor.Handlers;
+using Assets.Scripts.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
