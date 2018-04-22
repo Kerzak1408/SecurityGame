@@ -8,6 +8,7 @@ namespace Entities.Characters.Behaviours
     public abstract class BaseBehaviour
     {
         protected BaseCharacter character;
+        public bool IsInitialized { get; protected set; }
 
         public BaseBehaviour(BaseCharacter character)
         {

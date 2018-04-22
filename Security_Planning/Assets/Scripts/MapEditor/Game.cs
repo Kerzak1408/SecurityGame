@@ -23,6 +23,7 @@ namespace Assets.Scripts.MapEditor
 
         public Map Map { get; private set; }
         public bool IsFinished { get; private set; }
+        public BaseGameHandler GameHandler { get; private set; }
         public Camera ObserverCamera;
 
         public Tuple<Camera, BaseCharacter>[] Cameras;
@@ -31,7 +32,7 @@ namespace Assets.Scripts.MapEditor
         private Vector3 previousMousePosition;
 
         private StreamWriter logFileWriter;
-        private BaseGameHandler gameHandler;
+        
 
         private float redrawTimer;
         
@@ -43,7 +44,7 @@ namespace Assets.Scripts.MapEditor
             var camerasList = new List<Tuple<Camera, BaseCharacter>>();
             camerasList.Add(new Tuple<Camera, BaseCharacter>(ObserverCamera, null));
             string mapName = (string) Scenes.GetObjectParam("map");
-            gameHandler = (BaseGameHandler) Scenes.GetObjectParam(Scenes.GAME_HANDLER);
+            GameHandler = (BaseGameHandler) Scenes.GetObjectParam(Scenes.GAME_HANDLER);
             Map = LoadMap(mapName, mapVisible:true);
 
             DirectoryHelper.CreateDirectoryLazy(FileHelper.JoinPath(Application.dataPath, "Logs"));
@@ -118,11 +119,28 @@ namespace Assets.Scripts.MapEditor
             Map.ExtractAIModel();
             //Map.EmptyParent.transform.eulerAngles = new Vector3(90, Map.EmptyParent.transform.eulerAngles.y, Map.EmptyParent.transform.eulerAngles.z);
 
-            gameHandler.Start(this);
+            GameHandler.Start(this);
         }
 
         private void Update ()
         {
+            if (!(GameHandler is SimulationGameHandler))
+            {
+                if (!Map.Burglar.IsPlanningStarted)
+                {
+                    Map.Burglar.StartPlanning();
+                }
+                if (!Map.Burglar.IsInitialized)
+                {
+                    PanelSimulation.SetActive(true);
+                    return;
+                }
+                else
+                {
+                    PanelSimulation.SetActive(false);
+                }
+            }
+
             if (IsFinished)
             {
                 return;
@@ -156,7 +174,7 @@ namespace Assets.Scripts.MapEditor
                 }
 
             }
-            gameHandler.Update();
+            GameHandler.Update();
         }
 
         public void SwitchCamera()
@@ -297,7 +315,7 @@ namespace Assets.Scripts.MapEditor
 
         public void GoalsCompleted(BaseCharacter baseCharacter)
         {
-            gameHandler.GoalsCompleted(baseCharacter);
+            GameHandler.GoalsCompleted(baseCharacter);
         }
 
         public void EndSimulation(List<BaseAction>[] actionsToDraw)

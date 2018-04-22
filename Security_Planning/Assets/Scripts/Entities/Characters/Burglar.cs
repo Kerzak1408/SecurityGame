@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Assets.Scripts.DataStructures;
-using Assets.Scripts.Entities;
+﻿using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Interfaces;
 using Entities.Characters.Behaviours;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Burglar : BaseCharacter
 {
@@ -19,12 +14,29 @@ public class Burglar : BaseCharacter
     private bool isPaused = true;
     public BaseBehaviour Behaviour;
 
+    public bool IsInitialized
+    {
+        get { return Behaviour.IsInitialized; }
+    }
+
+    public bool IsPlanningStarted { get; private set; }
+
     // Use this for initialization
     public override void StartGame()
     {
         base.StartGame();
         Behaviour = new CollectEverythingBehaviour(this);
+        if (CurrentGame.GameHandler is SimulationGameHandler)
+        {
+            return;
+        }
+        
+    }
+
+    public void StartPlanning()
+    {
         Behaviour.Start();
+        IsPlanningStarted = true;
     }
 
 	// Update is called once per frame
@@ -32,7 +44,7 @@ public class Burglar : BaseCharacter
     {
         base.UpdateGame();
         IsMoving = false;
-        if (isPaused || CurrentGame.IsFinished) return;
+        if (isPaused || CurrentGame.IsFinished || !Behaviour.IsInitialized) return;
         Behaviour.Update();
     }
 
