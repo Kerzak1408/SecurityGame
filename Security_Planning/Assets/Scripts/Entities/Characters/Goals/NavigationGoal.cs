@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
+using Assets.Scripts.Algorithms.AStar;
 using Assets.Scripts.Algorithms.AStar.Heuristics;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Extensions;
@@ -67,10 +68,10 @@ namespace Assets.Scripts.Entities.Characters.Goals
             stopwatch.Start();
             Character.Map.AIModel.Reset();
             startNode.IsVisibilityPriority = true;
-            Path<PlanningNode, PlanningEdge> leastSeenPath = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
+            Path<PlanningNode, PlanningEdge> leastSeenPath = AStarAlgorithm.AStar(
                 startNode,
                 goalNode,
-                new EuclideanHeuristics<PlanningNode>(currentMap.Tiles, 1),
+                new EuclideanHeuristics<PlanningNode>(1),
                 edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
                 computeCost: GetCostFunction(true));
 
@@ -82,10 +83,10 @@ namespace Assets.Scripts.Entities.Characters.Goals
 
             UnityEngine.Debug.Log(
                 "------------------------------------SHORTEST PATH--------------------------------------------------");
-            Path<PlanningNode, PlanningEdge> shortestPath = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
+            Path<PlanningNode, PlanningEdge> shortestPath = AStarAlgorithm.AStar(
                 startNode,
                 goalNode,
-                new EuclideanHeuristics<PlanningNode>(currentMap.Tiles, 0),
+                new EuclideanHeuristics<PlanningNode>(0),
                 edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
                 computeCost: GetCostFunction(false)
                 );
@@ -110,12 +111,12 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 Character.Map.AIModel.Reset();
                 startNode.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility - longestPathVisibility), longestPathVisibility, shortestPathVisibility);
                 //Path = shortestPath;
-                Path = AStarAlgorithm.AStar<PlanningNode, PlanningEdge>(
+                Path = AStarAlgorithm.AStar(
                     startNode,
                     goalNode,
-                    new EuclideanHeuristics<PlanningNode>(currentMap.Tiles, 0),
+                    new EuclideanHeuristics<PlanningNode>(0),
                     edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
-                    onBeforeAddToOpen: edge =>
+                    onBeforeChangeFValue: edge =>
                     {
                         edge.Neighbor.VisibleTime = edge.Start.VisibleTime + edge.VisibleTime;
                         edge.Neighbor.TotalTime = edge.Start.TotalTime + edge.Cost;

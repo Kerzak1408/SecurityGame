@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Algorithms.AStar.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
 

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Algorithms.AStar;
 using Assets.Scripts.Algorithms.AStar.Heuristics;
+using Assets.Scripts.Algorithms.AStar.Interfaces;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
-using Assets.Scripts.Items;
 using UnityEngine;
 
 namespace Assets.Scripts.Model
@@ -119,7 +120,7 @@ namespace Assets.Scripts.Model
                                         DestroyedObstacles.Copy(),
                                         DestroyedDetectors.Copy(),
                                         FiniteObject,
-                                        isVisibilityPriority: IsVisibilityPriority);
+                                        IsVisibilityPriority);
                                     creator.ModifyNextNode(neighbor);
                                     foreach (TileEdge pathEdge in path.Edges)
                                     {
@@ -160,9 +161,7 @@ namespace Assets.Scripts.Model
             Func<TileEdge, bool> basicEdgeFilter = Filters.EdgeFilter(UnlockedEdges, character.Data.ForbiddenEdgeTypes,
                         DestroyedDetectors.OfType<BaseEntity>());
 
-            Heuristics<TileNode> heuristics;
-
-            heuristics = new EuclideanHeuristics<TileNode>(character.Map.Tiles, IsVisibilityPriority ? 1 : 0);
+            Heuristics<TileNode> heuristics = new EuclideanHeuristics<TileNode>(IsVisibilityPriority ? 1 : 0);
             if (useVisibilityLimit)
             {
                 return AStarAlgorithm.AStarMultipleVisit(
