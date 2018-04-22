@@ -33,6 +33,7 @@ namespace Assets.Scripts.MapEditor
         public Slider SliderMaxVisibility;
         public Image HandleMaxVisibilitySlider;
         public GameObject ButtonRemoveEntity;
+        public Button ExportToPngButton;
     
         public GameObject Panel;
         public GameObject PanelStart;
@@ -51,7 +52,7 @@ namespace Assets.Scripts.MapEditor
         public GameObject PanelInfo;
         public GameObject Items;
 
-        public GameObject ButtonAddMap;
+        //public GameObject ButtonAddMap;
 
         public GameObject PanelNewMapForm;
         public GameObject Canvas;
@@ -81,7 +82,7 @@ namespace Assets.Scripts.MapEditor
         private readonly string[] affectedCanvasElements =
         {
             "Scroll View", "ButtonMenu", "ButtonSave", "ButtonDelete", "ButtonImport", "ButtonExport",
-            "ButtonExportAll", "ButtonExportPng", "PanelSimulation", "PanelInfo"
+            "ButtonExportAll", "ButtonExportPng", "PanelSimulation", "PanelInfo", "ButtonAddMap", "DropdownMode"
         };
         internal Vector3 newEntityPosition;
         private List<BaseAction>[] drawActions;
@@ -552,26 +553,26 @@ namespace Assets.Scripts.MapEditor
             ResetGraphDrawing();
         }
 
-        public void SetCanvasActive(bool active, GameObject excludeObject=null)
+        public void SetCanvasActive(bool active)
         {
             foreach (string elementName in affectedCanvasElements)
             {
-                GameObject gameObject = Canvas.transform.Find(elementName).gameObject;
-                if (gameObject != excludeObject)
-                {
-                    gameObject.SetActive(active);
-                }
+                Canvas.transform.Find(elementName).gameObject.SetActive(active);
             }
         }
 
         public void PreviewPhoto(BaseEventData e)
         {
-            SetCanvasActive(false, Canvas.transform.Find("ButtonExportPng").gameObject);
+            SetCanvasActive(false);
+            PanelInfo.SetActive(true);
+            ExportToPngButton.gameObject.SetActive(true);
+            WriteToInfoPanel("Export to PNG");
         }
 
         public void EndPreview(BaseEventData e)
         {
             SetCanvasActive(true);
+            WriteToInfoPanel("");
         }
 
         public void Export()
@@ -813,6 +814,11 @@ namespace Assets.Scripts.MapEditor
         {
             ((EditBehaviourHandler) currentEditorHandler).ChangeMaxVisibilityMeasure(value);
             FlagCurrentButton();
+        }
+
+        public void WriteToInfoPanel(string text)
+        {
+            PanelInfo.GetComponentInChildren<Text>().text = text;
         }
     }
 }

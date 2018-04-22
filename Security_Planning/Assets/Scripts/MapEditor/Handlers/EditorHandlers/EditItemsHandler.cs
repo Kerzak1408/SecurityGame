@@ -57,13 +57,14 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         {
             currentMap = gridManager.GetCurrentMap();
             currentMap.DeactivateEntitiesExceptOfType(typeof(BaseCharacter));
-            gridManager.SetCanvasActive(false);
+            
         }
 
         public override void LeftButtonUp(RaycastHit[] raycastHits)
         {
             if (selectedCharacter != null)
             {
+                gridManager.SetCanvasActive(false);
                 Func<RaycastHit, bool> addItemPredicate = hit => hit.transform.gameObject.IsChildOf(allItems);
                 Func<RaycastHit, bool> removeItemPredicate = hit => hit.transform.gameObject.IsChildOf(items);
                 if (raycastHits.Any(addItemPredicate))
