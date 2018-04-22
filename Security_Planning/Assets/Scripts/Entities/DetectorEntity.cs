@@ -74,6 +74,7 @@ namespace Assets.Scripts.Entities
         }
         public void Interact(BaseCharacter character, Action success = null)
         {
+            character.AttackForSeconds(InteractTime);
             Action wrapperSuccess = () =>
             {
                 if (success != null)

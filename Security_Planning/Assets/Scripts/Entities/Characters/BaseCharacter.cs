@@ -293,6 +293,27 @@ namespace Assets.Scripts.Entities.Characters
             //StartCoroutine(_LockMovementAndAttack(0, .6f));
         }
 
+        public void AttackForSeconds(float seconds)
+        {
+            StartCoroutine(AttackForSecondsEnumerator(seconds));
+        }
+
+        private IEnumerator AttackForSecondsEnumerator(float seconds)
+        {
+            float lastTime = seconds;
+            while (seconds > 0)
+            {
+                if ((int) lastTime != (int) seconds)
+                {
+                    Attack();
+                }
+                lastTime = seconds;
+                seconds -= Time.deltaTime;
+                yield return null;
+            }
+        }
+
+
         public IEnumerator _LockMovementAndAttack(float delayTime, float lockTime)
         {
             yield return new WaitForSeconds(delayTime);
