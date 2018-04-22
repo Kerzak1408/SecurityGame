@@ -62,6 +62,10 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 result = Regex.Replace(result, "(\\B[A-Z])", " $1");
                 gridManager.PanelInfo.GetComponentInChildren<Text>().text = result;
             }
+            else
+            {
+                gridManager.PanelInfo.GetComponentInChildren<Text>().text = "";
+            }
         }
 
         public virtual void Start() { gridManager.DropdownMode.RefreshShownValue(); }

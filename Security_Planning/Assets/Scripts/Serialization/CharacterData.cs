@@ -14,6 +14,7 @@ namespace Assets.Scripts.Serialization
         private List<DetectorType> ignoredDetectors;
 
         private float maxVisibilityMeasure;
+        private int sensitivity;
 
         public string[] ItemNames
         {
@@ -37,6 +38,12 @@ namespace Assets.Scripts.Serialization
         {
             get { return maxVisibilityMeasure; }
             set { maxVisibilityMeasure = value; }
+        }
+
+        public int Sensitivity
+        {
+            get { return sensitivity; }
+            set { sensitivity = value; }
         }
     }
 }

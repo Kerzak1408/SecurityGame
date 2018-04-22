@@ -12,7 +12,6 @@ public class Scenes : MonoBehaviour
     public const string ACTIONS_TO_DRAW = "actionsToDraw";
     public const string GAME_HANDLER = "gameHandler";
     public const string MAP = "map";
-    public const string SIMULATION_SENSITIVITY = "simulationSensitivity";
 
     private void Start()
     {

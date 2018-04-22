@@ -118,6 +118,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 float loadedSliderValue = selectedBurglar.Data.MaxVisibilityMeasure * (NavigationGoal.PATHS_COUNT - 1);
                 ChangeMaxVisibilityMeasure(loadedSliderValue, true);
                 PreviousSliderValue = loadedSliderValue;
+                gridManager.InputSensitivity.text = selectedBurglar.Data.Sensitivity.ToString();
             }
         }
 
@@ -149,6 +150,11 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             {
                 gridManager.SliderMaxVisibility.value = value;
             }
+        }
+
+        public void ChangeSensitivity(int value)
+        {
+            selectedBurglar.Data.Sensitivity = value;
         }
     }
 }

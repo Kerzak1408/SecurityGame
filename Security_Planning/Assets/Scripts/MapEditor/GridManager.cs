@@ -27,7 +27,7 @@ namespace Assets.Scripts.MapEditor
         public InputField InputWidth;
         public InputField InputHeight;
         public InputField InputName;
-        public InputField InputSimulationSensitivity;
+        public InputField InputSensitivity;
         public Text TextError;
         public Text TextMaxVisibilityMeasure;
         public Slider SliderMaxVisibility;
@@ -82,7 +82,7 @@ namespace Assets.Scripts.MapEditor
         private readonly string[] affectedCanvasElements =
         {
             "Scroll View", "ButtonMenu", "ButtonSave", "ButtonDelete", "ButtonImport", "ButtonExport",
-            "ButtonExportAll", "ButtonExportPng", "PanelSimulation", "PanelInfo", "ButtonAddMap", "DropdownMode"
+            "ButtonExportAll", "ButtonExportPng", "Button_Simulate", "PanelInfo", "ButtonAddMap", "DropdownMode"
         };
         internal Vector3 newEntityPosition;
         private List<BaseAction>[] drawActions;
@@ -674,9 +674,6 @@ namespace Assets.Scripts.MapEditor
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters[Scenes.GAME_HANDLER] = new SimulationGameHandler();
             parameters[Scenes.MAP] = GetCurrentMap().Name;
-            parameters[Scenes.SIMULATION_SENSITIVITY] = InputSimulationSensitivity.text.Length == 0
-                ? 0
-                : int.Parse(InputSimulationSensitivity.text) - 1;
             Scenes.Load(Scenes.MAIN_SCENE, parameters);
         }
 
@@ -813,6 +810,13 @@ namespace Assets.Scripts.MapEditor
         public void ChangeMaxVisibilityMeasure(float value)
         {
             ((EditBehaviourHandler) currentEditorHandler).ChangeMaxVisibilityMeasure(value);
+            FlagCurrentButton();
+        }
+
+
+        public void OnSensitivityEndEdit(string value)
+        {
+            ((EditBehaviourHandler)currentEditorHandler).ChangeSensitivity(int.Parse(value));
             FlagCurrentButton();
         }
 

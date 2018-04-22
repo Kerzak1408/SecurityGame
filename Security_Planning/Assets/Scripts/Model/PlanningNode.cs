@@ -32,7 +32,6 @@ namespace Assets.Scripts.Model
         public bool IsVisibilityPriority { get; set; }
         public float VisibleTime { get; set; }
         public float TotalTime { get; set; }
-        public int SimulationSensitivity { get; set; }
 
         private Func<TileEdge, PriorityCost> CurrentPriorityCost
         {
@@ -93,13 +92,14 @@ namespace Assets.Scripts.Model
                             {
                                 continue;
                             }
-                            
-                            for (int i = 0; i <= SimulationSensitivity; i++)
+
+                            int branches = character.Data.Sensitivity - 1;
+                            for (int i = 0; i <= branches; i++)
                             {
-                                float currentVisibilityLimit = SimulationSensitivity == 0 ?
+                                float currentVisibilityLimit = branches == 0 ?
                                     0
                                     :
-                                    lowVisibilityLimit + (float) i / SimulationSensitivity *
+                                    lowVisibilityLimit + (float) i / branches *
                                     (highVisibilityLimit - lowVisibilityLimit);
                                 character.Map.AIModel.Reset();
                                 Path<TileNode, TileEdge> path = ComputePath(neighborTileNode, currentVisibilityLimit);
@@ -120,7 +120,6 @@ namespace Assets.Scripts.Model
                                         DestroyedDetectors.Copy(),
                                         FiniteObject,
                                         isVisibilityPriority: IsVisibilityPriority);
-                                    neighbor.SimulationSensitivity = SimulationSensitivity;
                                     creator.ModifyNextNode(neighbor);
                                     foreach (TileEdge pathEdge in path.Edges)
                                     {

@@ -43,12 +43,10 @@ public class SimulationGameHandler : BaseGameHandler
         
         Queue<BaseGoal> goals = CollectEverythingBehaviour.GenerateGoals(Burglar, false);
         PlanningNode[] startNodes = new PlanningNode[actionsToDraw.Length];
-        int simulationSensitivity = (int) Scenes.GetObjectParam(Scenes.SIMULATION_SENSITIVITY);
         while (goals.Count > 0)
         {
             
             NavigationGoal goal = goals.Dequeue() as NavigationGoal;
-            goal.SimulationSensitivity = simulationSensitivity;
 
             for (int i = 0; i < startNodes.Length; i++)
             //for (int i = 0; i < 1; i++)
