@@ -307,5 +307,12 @@ namespace Assets.Scripts.MapEditor
             parameters[Scenes.ACTIONS_TO_DRAW] = actionsToDraw;
             Scenes.Load(Scenes.MAP_EDITOR, parameters);
         }
+
+        public void CancelSimulation()
+        {
+            var parameters = new Dictionary<string, object>();
+            parameters[Scenes.MAP] = Scenes.ObjectParameters[Scenes.MAP];
+            Scenes.Load(Scenes.MAP_EDITOR, parameters);
+        }
     }
 }
