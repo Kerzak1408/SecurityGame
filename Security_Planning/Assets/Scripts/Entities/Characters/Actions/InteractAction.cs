@@ -1,13 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Assets.Scripts.Entities.Characters;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Entities.Characters.Actions
+namespace Assets.Scripts.Entities.Characters.Actions
 {
     public class InteractAction : BaseAction
     {
-
         public GameObject Interacted { get; private set; }
 
         public string InteractedName { get;  set; }
@@ -19,10 +15,10 @@ namespace Entities.Characters.Actions
 
         public override void Activate()
         {
-            character.Log("Trying to interact with " + Interacted.name + ".");
-            character.InteractWith(Interacted, () =>
+            Character.Log("Trying to interact with " + Interacted.name + ".");
+            Character.InteractWith(Interacted, () =>
             {
-                character.Log("Successfully interacted with " + Interacted.name + ".");
+                Character.Log("Successfully interacted with " + Interacted.name + ".");
                 IsCompleted = true;
             });
         }

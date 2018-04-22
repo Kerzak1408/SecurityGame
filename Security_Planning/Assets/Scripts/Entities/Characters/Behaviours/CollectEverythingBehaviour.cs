@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections;
-using Assets.Scripts.DataStructures;
-using Assets.Scripts.Entities.Characters;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Entities;
+using Assets.Scripts.DataStructures;
+using Assets.Scripts.Entities.Characters.Actions;
 using Assets.Scripts.Entities.Characters.Goals;
-using Entities.Characters.Goals;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
-using Entities.Characters.Actions;
 using UnityEngine;
 
-namespace Entities.Characters.Behaviours
+namespace Assets.Scripts.Entities.Characters.Behaviours
 {
+    /// <summary>
+    /// Collects as many money as possible. The order of collection is determined by the proximity od character to the pile of money.
+    /// </summary>
     public class CollectEverythingBehaviour : BaseBehaviour
     {
         private Queue<BaseGoal> goals;
-        //private BaseGoal currentGoal;
         private BaseAction currentAction;
         private Queue<BaseAction> actionsQueue;
         
@@ -32,15 +31,21 @@ namespace Entities.Characters.Behaviours
 
         public override void Start()
         {
-            goals = GenerateGoals(character);
+            goals = GenerateGoals(Character);
             TotalMoneyGoals = goals.Count(goal => goal is MoneyGoal);
-            character.StartCoroutine(PlanGoals(result =>
+            Character.StartCoroutine(PlanGoals(result =>
             {
                 IsInitialized = true;
                 actionsQueue = result;
             }));
         }
 
+        /// <summary>
+        /// Generate all money goals. Order them by the distance to <paramref name="character"/>.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="navigateBack">Should the result contain Navigation goal to the start position?</param>
+        /// <returns></returns>
         public static Queue<BaseGoal> GenerateGoals(BaseCharacter character, bool navigateBack=true)
         {
             Map currentMap = character.Map;
@@ -61,6 +66,11 @@ namespace Entities.Characters.Behaviours
             return result;
         }
 
+        /// <summary>
+        /// Plan the action needed to complete all the goals.
+        /// </summary>
+        /// <param name="resultAction">What to do with the planned actions.</param>
+        /// <returns></returns>
         private IEnumerator PlanGoals(Action<Queue<BaseAction>> resultAction)
         {
             var allActions = new Queue<BaseAction>();
@@ -74,7 +84,7 @@ namespace Entities.Characters.Behaviours
                     startNode.Reset();
                 }
 
-                goal.MaxVisibility = character.Data.MaxVisibilityMeasure;
+                goal.MaxVisibility = Character.Data.MaxVisibilityMeasure;
                 goal.Activate(startNode);
 
                 while (!goal.IsInitialized)
@@ -111,68 +121,6 @@ namespace Entities.Characters.Behaviours
             resultAction(allActions);
         }
 
-        private IEnumerator WaitForGoalPlanning(Action<List<BaseAction>[]> resultAction)
-        {
-            var actionsToDraw = new List<BaseAction>[NavigationGoal.PATHS_COUNT];
-            for (int i = 0; i < actionsToDraw.Length; i++)
-            {
-                actionsToDraw[i] = new List<BaseAction>();
-            }
-
-            Queue<BaseGoal> goals = CollectEverythingBehaviour.GenerateGoals(character, false);
-            PlanningNode[] startNodes = new PlanningNode[actionsToDraw.Length];
-            while (goals.Count > 0)
-            {
-
-                NavigationGoal goal = goals.Dequeue() as NavigationGoal;
-
-                for (int i = 0; i < startNodes.Length; i++)
-                //for (int i = 0; i < 1; i++)
-                {
-                    goal.Reset();
-                    PlanningNode startNode = startNodes[i];
-                    if (startNode != null)
-                    {
-                        startNode.Reset();
-                    }
-                    Path<PlanningNode, PlanningEdge> currentPath;
-
-                    goal.MaxVisibility = (float)i / (startNodes.Length - 1);
-                    //goal.MaxVisibility = 1.0f;
-                    goal.Activate(startNode);
-
-                    while (!goal.IsInitialized)
-                    {
-                        yield return null;
-                    }
-                    currentPath = goal.Path;
-                    if (currentPath.GoalNode != null)
-                    {
-                        startNodes[i] = currentPath.GoalNode.Copy();
-                    }
-
-                    if (currentPath.Edges == null)
-                    {
-                        continue;
-                    }
-
-                    foreach (PlanningEdge planningEdge in currentPath.Edges)
-                    {
-                        foreach (BaseAction action in planningEdge.ActionsToComplete)
-                        {
-                            if (action.GetType() == typeof(InteractAction))
-                            {
-                                var interactAction = (InteractAction)action;
-                                interactAction.InteractedName = interactAction.Interacted.name;
-                            }
-                            actionsToDraw[i].Add(action);
-                        }
-                    }
-                }
-            }
-            resultAction(actionsToDraw);
-        }
-
         public override void Update()
         {
             if (currentAction == null || currentAction.IsCompleted)
@@ -184,26 +132,6 @@ namespace Entities.Characters.Behaviours
                 }
             }
             currentAction.Update();
-
-            //if (currentGoal == null || currentGoal.IsFinished)
-            //{
-            //    if (currentGoal is MoneyGoal && currentGoal.IsSuccessFul)
-            //    {
-            //        SuccessfulMoneyGoals++;
-            //    }
-            //    if (goals.Count > 0)
-            //    {
-            //        currentGoal = goals.Dequeue();
-            //        currentGoal.Activate();
-            //    }
-            //    else
-            //    {
-            //        character.GoalsCompleted();
-            //        currentGoal = null;
-            //        return;
-            //    }
-            //}
-            //currentGoal.Update();
         }
     }
 }

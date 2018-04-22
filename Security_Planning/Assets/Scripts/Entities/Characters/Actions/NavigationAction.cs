@@ -1,21 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.DataStructures;
-using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Model;
-using UnityEngine;
 
-namespace Entities.Characters.Actions
+namespace Assets.Scripts.Entities.Characters.Actions
 {
     public class NavigationAction : BaseAction
     {
-        private IntegerTuple goalCoords;
+        private readonly IntegerTuple goalCoords;
         private TileEdge currentEdge;
 
         public Queue<TileEdge> PathQueue { get; private set; }
 
-        public NavigationAction(BaseCharacter character, List<TileEdge> navigationEdges) : base(character)
+        public NavigationAction(BaseCharacter character, ICollection<TileEdge> navigationEdges) : base(character)
         {
             if (navigationEdges == null || navigationEdges.Count == 0)
             {
@@ -30,27 +27,27 @@ namespace Entities.Characters.Actions
 
         public override void Activate()
         {
-            character.Log("Navigation to " + goalCoords + " started.");
+            Character.Log("Navigation to " + goalCoords + " started.");
         }
 
         public override void Update()
         {
             if (IsCompleted) return;
-            if (currentEdge == null || (currentEdge.IsOpen && character.NavigateTo(currentEdge.Neighbor)))
+            if (currentEdge == null || (currentEdge.IsOpen && Character.NavigateTo(currentEdge.Neighbor)))
             {
                 if (PathQueue.Count > 0)
                 {
                     currentEdge = PathQueue.Dequeue();
-                    character.Log("Next target: " + currentEdge.Neighbor.Position + " of type " + currentEdge.Type + ".");
+                    Character.Log("Next target: " + currentEdge.Neighbor.Position + " of type " + currentEdge.Type + ".");
                     if (!currentEdge.IsOpen)
                     {
-                        currentEdge.Open(character);
+                        currentEdge.Open(Character);
                     }
                 }
                 else
                 {
                     IsCompleted = true;
-                    character.Log("Navigation to " + goalCoords + " completed.");
+                    Character.Log("Navigation to " + goalCoords + " completed.");
                 }
             }
         }

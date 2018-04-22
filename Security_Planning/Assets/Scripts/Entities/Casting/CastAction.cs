@@ -1,47 +1,51 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class CastAction
+namespace Assets.Scripts.Entities.Casting
 {
-    private Action interruptAction;
-    private Action successAction;
+    /// <summary>
+    /// Wrapper for any action that should be executed after the given time. Supports interrupt action as well.
+    /// </summary>
+    public class CastAction
+    {
+        private readonly Action interruptAction;
+        private readonly Action successAction;
     
-    private bool started;
+        private bool started;
 
-    public float TimeLeft { get; private set; }
-    public float CastTime { get; private set; }
+        public float TimeLeft { get; private set; }
+        public float CastTime { get; private set; }
 
-    public CastAction(float castTime, Action interruptAction, Action successAction)
-    {
-        CastTime = castTime;
-        TimeLeft = castTime;
-        this.interruptAction = interruptAction;
-        this.successAction = successAction;
-    }
-
-    public void StartCast()
-    {
-        started = true;
-    }
-
-    public void Update()
-    {
-        if (started)
+        public CastAction(float castTime, Action interruptAction, Action successAction)
         {
-            TimeLeft -= Time.deltaTime;
-            if (TimeLeft <= 0)
+            CastTime = castTime;
+            TimeLeft = castTime;
+            this.interruptAction = interruptAction;
+            this.successAction = successAction;
+        }
+
+        public void StartCast()
+        {
+            started = true;
+        }
+
+        public void Update()
+        {
+            if (started)
             {
-                successAction();
-                CastManager.Instance.CastingFinished(this);
+                TimeLeft -= Time.deltaTime;
+                if (TimeLeft <= 0)
+                {
+                    successAction();
+                    CastManager.Instance.CastingFinished(this);
+                }
             }
         }
-    }
 
-    public void Interrupt()
-    {
-        interruptAction();
-        CastManager.Instance.CastingFinished(this);
+        public void Interrupt()
+        {
+            interruptAction();
+            CastManager.Instance.CastingFinished(this);
+        }
     }
 }

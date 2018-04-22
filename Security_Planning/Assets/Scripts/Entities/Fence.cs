@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
+using Assets.Scripts.Entities.Casting;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;

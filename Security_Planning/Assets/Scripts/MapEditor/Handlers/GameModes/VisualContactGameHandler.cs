@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Entities.Characters.Behaviours;
 using Assets.Scripts.MapEditor;
-using Entities.Characters.Behaviours;
 using UnityEngine;
 
 public class VisualContactGameHandler : BaseGameUserHandler

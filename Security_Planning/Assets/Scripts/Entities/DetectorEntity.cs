@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
+using Assets.Scripts.Entities.Casting;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Gates;
 using Assets.Scripts.Entities.Interfaces;

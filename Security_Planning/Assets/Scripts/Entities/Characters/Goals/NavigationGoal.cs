@@ -9,15 +9,16 @@ using System.Threading;
 using Assets.Scripts.Algorithms.AStar;
 using Assets.Scripts.Algorithms.AStar.Heuristics;
 using Assets.Scripts.DataStructures;
+using Assets.Scripts.Entities.Characters.Actions;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
-using Entities.Characters.Actions;
-using Entities.Characters.Goals;
 using UnityEngine;
 
 namespace Assets.Scripts.Entities.Characters.Goals
 {
-
+    /// <summary>
+    /// Navigate to the specified location.
+    /// </summary>
     public class NavigationGoal : BaseGoal
     {
         private BaseAction currentAction;
@@ -26,7 +27,9 @@ namespace Assets.Scripts.Entities.Characters.Goals
         public PlanningNode GoalNode { get; private set; }
         public Path<PlanningNode, PlanningEdge> Path { get; private set; }
         public float MaxVisibility { get; set; }
-
+        /// <summary>
+        /// Number of paths that will be drawn in editor after simulation.
+        /// </summary>
         public static readonly int PATHS_COUNT = 6;
 
         public NavigationGoal(BaseCharacter character, IntegerTuple goalCoordinates) : base(character, goalCoordinates)
@@ -53,6 +56,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 startNode.GoalNode = goalNode;
             }
             Character.Log("Planning started.");
+            // Start planning in a new thread so it would not cause application to stuck. 
             Thread planningThread = new Thread(() =>
             {
                 PlanPath(startNode, goalNode, currentMap);
@@ -80,9 +84,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
             startNode.Reset();
             Character.Map.AIModel.Reset();
             startNode.IsVisibilityPriority = false;
-
-            UnityEngine.Debug.Log(
-                "------------------------------------SHORTEST PATH--------------------------------------------------");
+            
             Path<PlanningNode, PlanningEdge> shortestPath = AStarAlgorithm.AStar(
                 startNode,
                 goalNode,
@@ -110,7 +112,6 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 startNode.Reset();
                 Character.Map.AIModel.Reset();
                 startNode.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility - longestPathVisibility), longestPathVisibility, shortestPathVisibility);
-                //Path = shortestPath;
                 Path = AStarAlgorithm.AStar(
                     startNode,
                     goalNode,
@@ -118,6 +119,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
                     edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
                     onBeforeChangeFValue: edge =>
                     {
+                        // Pass the values to the neighbor.
                         edge.Neighbor.VisibleTime = edge.Start.VisibleTime + edge.VisibleTime;
                         edge.Neighbor.TotalTime = edge.Start.TotalTime + edge.Cost;
                         edge.Neighbor.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility- longestPathVisibility), longestPathLength, shortestPathVisibility);
@@ -130,8 +132,6 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 }
             }
 
-            //UnityEngine.Debug.Log("Path visibility = " + Path.VisibleTime() + " max visibility = " + (leastSeenPath.VisibleTime() + MaxVisibility * (shortestPath.VisibleTime() - leastSeenPath.VisibleTime())) + 
-            //" path length = " + Path.Cost);
             stopwatch.Stop();
             Character.Log("A* time = " + stopwatch.ElapsedMilliseconds / 1000f + " seconds.");
         }

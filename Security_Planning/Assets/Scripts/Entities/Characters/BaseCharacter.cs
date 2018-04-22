@@ -2,16 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Constants;
 using Assets.Scripts.DataHandlers;
 using Assets.Scripts.DataStructures;
+using Assets.Scripts.Entities.Casting;
 using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Items;
-using Assets.Scripts.Model;
 using Assets.Scripts.Serialization;
 using UnityEngine;
-using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 namespace Assets.Scripts.Entities.Characters
@@ -29,8 +27,8 @@ namespace Assets.Scripts.Entities.Characters
         protected bool IsMoving;
 
         private AudioSource footstepAudio;
-        protected float speed = 1f;
-        protected CharacterController controller;
+        protected float Speed = 1f;
+        protected CharacterController Controller;
 
         public bool IsActive { get; set; }
 
@@ -59,6 +57,9 @@ namespace Assets.Scripts.Entities.Characters
             }
         }
 
+        /// <summary>
+        /// AI Model position. (This is NOT world position.)
+        /// </summary>
         public IntegerTuple Position
         {
             get { return Map.GetClosestTile(transform.position).Position; }
@@ -68,7 +69,7 @@ namespace Assets.Scripts.Entities.Characters
         {
             base.StartGame();
             footstepAudio = gameObject.AttachAudioSource("Footstep");
-            controller = GetComponent<CharacterController>();
+            Controller = GetComponent<CharacterController>();
             animator = GetComponentInChildren<Animator>();
             animator.speed = 2;
 
@@ -135,9 +136,7 @@ namespace Assets.Scripts.Entities.Characters
                 float yRotation = potentialRotationY > 75 && potentialRotationY < 360 - 75
                     ? localEulerAngles.y
                     : potentialRotationY;
-
-                //var delta = new Vector3(xRotation, yRotation, 0);
-                //Camera.transform.Rotate(delta);
+                
                 Camera.transform.localEulerAngles = new Vector3(xRotation, yRotation, 0);
 
             }
@@ -161,8 +160,8 @@ namespace Assets.Scripts.Entities.Characters
         protected void MoveForward()
         {
             IsMoving = true;
-            var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.forward);
-            controller.Move(transformedDir);
+            var transformedDir = transform.TransformDirection(Speed * Time.deltaTime * Vector3.forward);
+            Controller.Move(transformedDir);
         }
 
         private void InitializeItem(GameObject item)
@@ -176,7 +175,14 @@ namespace Assets.Scripts.Entities.Characters
             item.SetActive(false);
         }
 
+        /// <summary>
+        /// Not used right now, but ready for password objects.
+        /// </summary>
+        /// <param name="passwordOpenableObject"></param>
         public abstract void RequestPassword(IPasswordOpenable passwordOpenableObject);
+        /// <summary>
+        /// Not used right now, but ready for password objects.
+        /// </summary>
         public abstract void InterruptRequestPassword();
         public abstract void RequestCard(CardReaderEntity cardReader);
 
@@ -196,7 +202,6 @@ namespace Assets.Scripts.Entities.Characters
                 
                 return Items[activeItemIndex];
             }
-                
         }
 
         public void Interact(RaycastHit[] raycastHits)
@@ -277,10 +282,10 @@ namespace Assets.Scripts.Entities.Characters
             GetActiveItem().SetActive(true);
         }
 
-        public void AllowUnlocking(Action UnlockOnce)
+        public void AllowUnlocking(Action unlockOnce)
         {
             // Animation of unlocking.
-            UnlockOnce();
+            unlockOnce();
         }
 
         public virtual void ObtainMoney()
@@ -314,30 +319,14 @@ namespace Assets.Scripts.Entities.Characters
             }
         }
 
-
-        public IEnumerator _LockMovementAndAttack(float delayTime, float lockTime)
-        {
-            yield return new WaitForSeconds(delayTime);
-            animator.SetBool("Moving", false);
-            //rb.velocity = Vector3.zero;
-            //rb.angularVelocity = Vector3.zero;
-            //inputVec = new Vector3(0, 0, 0);
-            animator.applyRootMotion = true;
-            yield return new WaitForSeconds(lockTime);
-            //canAction = true;
-            //canMove = true;
-            animator.applyRootMotion = false;
-        }
-
         public bool NavigateTo(TileNode tileNode)
         {
             Vector3 target = Map.Tiles.Get(tileNode.Position).transform.position;
             bool isCloseEnough = Vector3.Distance(transform.position, target) < 0.05f;
-            //if (!isCloseEnough)
-            {
-                transform.LookAt(target);
-                MoveForward();
-            }
+
+            transform.LookAt(target);
+            MoveForward();
+            
             return isCloseEnough;
         }
 

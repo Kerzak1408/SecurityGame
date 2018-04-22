@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Entities.Characters.Actions;
 using Assets.Scripts.Entities.Interfaces;
-using Entities.Characters.Actions;
 using UnityEngine;
 
 namespace Assets.Scripts.Model

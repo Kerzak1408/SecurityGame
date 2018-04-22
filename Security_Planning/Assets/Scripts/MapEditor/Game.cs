@@ -5,9 +5,9 @@ using System.Linq;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Entities.Characters.Actions;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
-using Entities.Characters.Actions;
 using UnityEngine;
 using UnityEngine.UI;
 

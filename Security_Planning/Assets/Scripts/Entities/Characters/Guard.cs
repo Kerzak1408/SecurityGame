@@ -1,6 +1,5 @@
 ﻿using Assets.Scripts.DataHandlers;
 using Assets.Scripts.Entities.Interfaces;
-using Assets.Scripts.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,21 +7,14 @@ namespace Assets.Scripts.Entities.Characters
 {
     public class Guard : BaseCharacter
     {
-        GameObject Canvas;
-        GameObject inputPassword;
-
-        IPasswordOpenable passwordOpenableObject;
-
-        
+        private GameObject inputPassword;
+        public IPasswordOpenable passwordOpenableObject;
         private ResourcesHolder resourcesHolder;
-        private Rigidbody rigidBody;
         
         public override void StartGame()
         {
             base.StartGame();
-            rigidBody = GetComponent<Rigidbody>();
             resourcesHolder = ResourcesHolder.Instance;
-            Canvas = GameObject.Find("Canvas");
             inputPassword = GameObject.Find("InputField_Password");
             inputPassword.SetActive(false);
             
@@ -42,8 +34,7 @@ namespace Assets.Scripts.Entities.Characters
             IsActive = true;
 
         }
-
-        // Update is called once per frame
+        
         protected override void UpdateGame()
         {
             if (CurrentGame.IsFinished)
@@ -79,14 +70,14 @@ namespace Assets.Scripts.Entities.Characters
             {
                 IsMoving = true;
 
-                var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.left);
-                controller.Move(transformedDir);
+                var transformedDir = transform.TransformDirection(Speed * Time.deltaTime * Vector3.left);
+                Controller.Move(transformedDir);
             }
             if (Input.GetKey(KeyCode.E))
             {
                 IsMoving = true;
-                var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.right);
-                controller.Move(transformedDir);
+                var transformedDir = transform.TransformDirection(Speed * Time.deltaTime * Vector3.right);
+                Controller.Move(transformedDir);
             }
         
             if (Input.GetKey(KeyCode.W))
@@ -95,17 +86,17 @@ namespace Assets.Scripts.Entities.Characters
             }
             if (Input.GetKey(KeyCode.D))
             {
-                controller.transform.Rotate(Time.deltaTime * new Vector3(0, RotationSpeed, 0));
+                Controller.transform.Rotate(Time.deltaTime * new Vector3(0, RotationSpeed, 0));
             }
             if (Input.GetKey(KeyCode.A))
             {
-                controller.transform.Rotate(Time.deltaTime * new Vector3(0, -RotationSpeed, 0));
+                Controller.transform.Rotate(Time.deltaTime * new Vector3(0, -RotationSpeed, 0));
             } 
             if (Input.GetKey(KeyCode.S))
             {
                 IsMoving = true;
-                var transformedDir = transform.TransformDirection(speed * Time.deltaTime * Vector3.back);
-                controller.Move(transformedDir);
+                var transformedDir = transform.TransformDirection(Speed * Time.deltaTime * Vector3.back);
+                Controller.Move(transformedDir);
             }
 
             if (IsMoving && !Input.GetMouseButton(0))

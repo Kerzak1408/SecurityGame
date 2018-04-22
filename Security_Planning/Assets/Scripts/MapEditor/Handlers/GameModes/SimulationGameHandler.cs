@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.DataStructures;
+using Assets.Scripts.Entities.Characters.Actions;
+using Assets.Scripts.Entities.Characters.Behaviours;
 using Assets.Scripts.Entities.Characters.Goals;
 using Assets.Scripts.MapEditor;
 using Assets.Scripts.Model;
-using Entities.Characters.Actions;
-using Entities.Characters.Behaviours;
-using Entities.Characters.Goals;
 
 public class SimulationGameHandler : BaseGameHandler
 {

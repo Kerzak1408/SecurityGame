@@ -1,8 +1,7 @@
 ﻿using Assets.Scripts.DataStructures;
-using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Model;
 
-namespace Entities.Characters.Goals
+namespace Assets.Scripts.Entities.Characters.Goals
 {
     public abstract class BaseGoal
     {

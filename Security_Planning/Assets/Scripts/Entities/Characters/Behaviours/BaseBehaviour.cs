@@ -1,18 +1,13 @@
-﻿using Assets.Scripts.Entities.Characters;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Entities.Characters.Behaviours
+﻿namespace Assets.Scripts.Entities.Characters.Behaviours
 {
     public abstract class BaseBehaviour
     {
-        protected BaseCharacter character;
+        protected BaseCharacter Character;
         public bool IsInitialized { get; protected set; }
 
-        public BaseBehaviour(BaseCharacter character)
+        protected BaseBehaviour(BaseCharacter character)
         {
-            this.character = character;
+            Character = character;
         }
 
         public abstract void Start();

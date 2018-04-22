@@ -1,14 +1,12 @@
-﻿using Assets.Scripts.Entities.Characters;
-
-namespace Entities.Characters.Actions
+﻿namespace Assets.Scripts.Entities.Characters.Actions
 {
     public abstract class BaseAction
     {
-        protected BaseCharacter character;
+        protected BaseCharacter Character;
 
         protected BaseAction(BaseCharacter character)
         {
-            this.character = character;
+            Character = character;
         }
 
         public bool IsCompleted { get; protected set; }
