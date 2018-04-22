@@ -4,9 +4,9 @@ namespace Assets.Scripts.Animations
 {
     public class MoneyFalling : MonoBehaviour
     {
-	
-        void Update ()
+        private void Update ()
         {
+            // Rotate each money randomly and let it fall. When it is too low, return it up.
             foreach (Transform child in transform)
             {
                 float xRotation = -Random.value;

@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using UnityEngine;
 
 namespace Assets.Scripts.DataStructures
 {
+    /// <summary>
+    /// Multi-dimensional cost. Higher index == Lower priority. By comparison, first values are compared and only when they 
+    /// are equal the second ones are compared etc.
+    /// </summary>
     public class PriorityCost
     {
-        private float[] costs;
+        private readonly float[] costs;
 
         public int Length
         {
@@ -40,7 +41,13 @@ namespace Assets.Scripts.DataStructures
             costs[priorityIndex] = cost;
         }
 
-        public static PriorityCost operator +(PriorityCost first, PriorityCost second)
+        /// <summary>
+        /// Sums values of each index, respectively.
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
+        public static PriorityCost operator + (PriorityCost first, PriorityCost second)
         {
             var result = new PriorityCost(first.Length);
             for (int i = 0; i < first.Length; i++)
@@ -50,7 +57,14 @@ namespace Assets.Scripts.DataStructures
             return result;
         }
 
-        public static bool operator <(PriorityCost left, PriorityCost right)
+        /// <summary>
+        /// Compares the first components, in case of equality, second components, in case
+        /// od equality third components etc.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator < (PriorityCost left, PriorityCost right)
         {
             for (int i = 0; i < left.Length; i++)
             {
@@ -70,7 +84,14 @@ namespace Assets.Scripts.DataStructures
             return false;
         }
 
-        public static bool operator >(PriorityCost left, PriorityCost right)
+        /// <summary>
+        /// Compares the first components, in case of equality, second components, in case
+        /// od equality third components etc.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator > (PriorityCost left, PriorityCost right)
         {
             return right < left;
         }
@@ -84,13 +105,18 @@ namespace Assets.Scripts.DataStructures
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append("[");
-            for (int i = 0; i < costs.Length; i++)
+            foreach (var cost in costs)
             {
-                stringBuilder.Append(costs[i]).Append(",");
+                stringBuilder.Append(cost).Append(",");
             }
+            stringBuilder.Append("]");
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Round each component to the <paramref name="decimalPlaces"/>.
+        /// </summary>
+        /// <param name="decimalPlaces"></param>
         public void Round(int decimalPlaces)
         {
             float pow = Mathf.Pow(10, decimalPlaces);

@@ -44,7 +44,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
         {
             Map currentMap = Character.Map;
             PlanningNode startNode, goalNode;
-            currentMap.GetPlanningModel(Character, GoalCoordinates, finalObject, out startNode, out goalNode);
+            currentMap.InitializePlanningModel(Character, GoalCoordinates, finalObject, out startNode, out goalNode);
             if (startOverrideNode != null)
             {
                 startOverrideNode.CreatorsDictionary = startNode.CreatorsDictionary;

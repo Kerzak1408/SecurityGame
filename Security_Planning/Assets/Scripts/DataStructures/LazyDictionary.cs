@@ -1,27 +1,35 @@
 ﻿using System.Collections.Generic;
 
-public class LazyDictionary<TKey, TValue> : Dictionary<TKey, TValue>
+namespace Assets.Scripts.DataStructures
 {
-    private TValue defaultValue;
-
-    public LazyDictionary(TValue defaultValue)
+    /// <summary>
+    /// Dictionary that assign defaultValue to the key that is accessed but does not exist in the dictionary.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    public class LazyDictionary<TKey, TValue> : Dictionary<TKey, TValue>
     {
-        this.defaultValue = defaultValue;
-    }
+        private TValue defaultValue;
 
-    public new TValue this[TKey key]
-    {
-        get
+        public LazyDictionary(TValue defaultValue)
         {
-            if (!ContainsKey(key))
-            {
-                this[key] = defaultValue;
-            }
-            return base[key];
+            this.defaultValue = defaultValue;
         }
-        set
+
+        public new TValue this[TKey key]
         {
-            base[key] = value;
+            get
+            {
+                if (!ContainsKey(key))
+                {
+                    this[key] = defaultValue;
+                }
+                return base[key];
+            }
+            set
+            {
+                base[key] = value;
+            }
         }
     }
 }

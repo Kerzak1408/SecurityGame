@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
-using Assets.Scripts.Entities.Interfaces;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Items;
 using Assets.Scripts.Model;
-using Assets.Scripts.Reflection;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -28,13 +25,25 @@ namespace Assets.Scripts.DataStructures
         public static readonly string HEDGE = "Hedge";
         private static readonly float MIN_OBSTACLE_DISTANCE = 0.5f;
 
+        /// <summary>
+        /// Physical square tiles forming the map.
+        /// </summary>
         public GameObject[,] Tiles { get; private set; }
         public List<GameObject> Entities { get; private set; }
+        /// <summary>
+        /// Currently not used, but left here because of possible future usage of password objects.
+        /// </summary>
         public Dictionary<Tuple<int, int>, string> PasswordDictionary { get; private set; }
+        /// <summary>
+        /// GameObject that is the parent to the Tiles and Entities in the GameObject hierarchy.
+        /// </summary>
         public GameObject EmptyParent { get; private set; }
         public AIModel AIModel { get; private set; }
         public string Name { get; private set; }
 
+        /// <summary>
+        /// The world coordinates of the map center.
+        /// </summary>
         public Vector3 CenterWorld
         {
             get
@@ -45,17 +54,27 @@ namespace Assets.Scripts.DataStructures
             }
         }
 
+        /// <summary>
+        /// The count of Tiles in horizontal way. (This is NOT physical width.)
+        /// </summary>
         public int Width
         {
             get { return Tiles.GetLength(1); }
         }
 
+
+        /// <summary>
+        /// The count of Tiles in vertical way. (This is NOT physical height.)
+        /// </summary>
         public int Height
         {
             get { return Tiles.GetLength(0); }
         }
 
         private Burglar burglar;
+        /// <summary>
+        /// By design, there is only one Burglar in each map.
+        /// </summary>
         public Burglar Burglar
         {
             get
@@ -66,6 +85,9 @@ namespace Assets.Scripts.DataStructures
         }
 
         private Guard guard;
+        /// <summary>
+        /// By design, there is only one Guard in each map.
+        /// </summary>
         public Guard Guard
         {
             get
@@ -90,6 +112,10 @@ namespace Assets.Scripts.DataStructures
             EmptyParent.SetActive(active);
         }
 
+        /// <summary>
+        /// Remove the detector entity from AI Model.
+        /// </summary>
+        /// <param name="toBeRemovedEntity"></param>
         public void RemoveDetectorEntity(GameObject toBeRemovedEntity)
         {
             Entities.Remove(toBeRemovedEntity);
@@ -125,6 +151,11 @@ namespace Assets.Scripts.DataStructures
             }
         }
 
+        /// <summary>
+        /// Each entity has a unique ID in order to distinguish between them during serialization/deserialization.
+        /// Because entities can be also removed, we use the lowest available id.
+        /// </summary>
+        /// <returns>The lowes available entity ID.</returns>
         public int GetNextEntityId()
         {
             var ids = new List<int>();
@@ -144,6 +175,10 @@ namespace Assets.Scripts.DataStructures
             }
         }
 
+        /// <summary>
+        /// Extracts AI model from the physical Unity objects. Each tile corresponds to one TileNode. Every node has up to 8 directed edges
+        /// to its neighbors. 
+        /// </summary>
         public void ExtractAIModel()
         {
             int width = Tiles.GetLength(0);
@@ -235,6 +270,7 @@ namespace Assets.Scripts.DataStructures
             }
         }
 
+        // Mark edges that are obstructed by obstacles.
         private void RemoveObstacleEdges(GameObject entity)
         {
             var entityCollider = entity.GetComponent<Collider>();
@@ -267,11 +303,6 @@ namespace Assets.Scripts.DataStructures
                         {
                             reverseEdge.ObstructingEntities.Add(entity.GetComponent<BaseEntity>());
                         }
-                        else
-                        {
-                            Debug.Log("WTF");
-                        }
-                       
                     }
                 }
             }
@@ -382,6 +413,11 @@ namespace Assets.Scripts.DataStructures
             }
         }
 
+        /// <summary>
+        /// Positions of entities are continuous. Therefore, we need to be able to assign TileNode to each world location.
+        /// </summary>
+        /// <param name="position">World position.</param>
+        /// <returns></returns>
         public TileNode GetClosestTile(Vector3 position)
         {
             TileNode result = null;
@@ -400,7 +436,16 @@ namespace Assets.Scripts.DataStructures
             return result;
         }
 
-        public void GetPlanningModel(BaseCharacter character, IntegerTuple goalCoords, GameObject finalObject,
+        /// <summary>
+        /// Prepares everything needed to run planning in the action space. Especially <paramref name="startNode"/>,
+        /// <paramref name="goalNode"/> and edgeCreatorDictionary inside them.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="goalCoords"></param>
+        /// <param name="finalObject">Final money object.</param>
+        /// <param name="startNode">Determined by the state of the <paramref name="character"/></param>
+        /// <param name="goalNode"></param>
+        public void InitializePlanningModel(BaseCharacter character, IntegerTuple goalCoords, GameObject finalObject,
             out PlanningNode startNode, out PlanningNode goalNode)
         {
             IEnumerable<GameObject> edgeCreatingEntities =
@@ -444,7 +489,6 @@ namespace Assets.Scripts.DataStructures
                     }
                 }
             }
-
             return result;
         }
     }

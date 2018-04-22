@@ -271,10 +271,8 @@
     <Compile Include="Assets\Scripts\Algorithms\FloodFill\Results\IntegerTupleCluster.cs" />
     <Compile Include="Assets\Scripts\Animations\MoneyFalling.cs" />
     <Compile Include="Assets\Scripts\BaseObject.cs" />
-    <Compile Include="Assets\Scripts\Comparers\ObjectComparer.cs" />
     <Compile Include="Assets\Scripts\Constants\Constants.cs" />
     <Compile Include="Assets\Scripts\DataHandlers\ResourcesHolder.cs" />
-    <Compile Include="Assets\Scripts\DataStructures\FloodFillResult.cs" />
     <Compile Include="Assets\Scripts\DataStructures\IntegerTuple.cs" />
     <Compile Include="Assets\Scripts\DataStructures\LazyDictionary.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Map.cs" />
@@ -1572,6 +1570,7 @@
     <None Include="Assets\Logs\Log_2018-4-22_07-53-10.txt" />
     <None Include="Assets\Logs\Log_2018-4-22_09-15-20.txt" />
     <None Include="Assets\Logs\Log_2018-4-22_09-29-50.txt" />
+    <None Include="Assets\Logs\Log_2018-4-22_09-30-30.txt" />
     <None Include="Assets\Logs\Log_2018-4-22_12-33-07.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-15-37.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-16-19.txt" />

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.DataStructures
 {
@@ -17,7 +13,7 @@ namespace Assets.Scripts.DataStructures
             return new IntegerTuple(tuple1.First + tuple2.First, tuple1.Second + tuple2.Second);
         }
 
-        public static IntegerTuple operator *(IntegerTuple tuple1, int multiplier)
+        public static IntegerTuple operator * (IntegerTuple tuple1, int multiplier)
         {
             return new IntegerTuple(tuple1.First * multiplier, tuple1.Second * multiplier);
         }
