@@ -59,6 +59,7 @@ namespace Assets.Scripts.MapEditor
         public Dropdown DropdownMode;
 
         public GameObject PanelEditBehaviour;
+        public GameObject PanelLegend;
         
         public GameObject ClickedTile;
 
@@ -147,6 +148,7 @@ namespace Assets.Scripts.MapEditor
             {
                 return;
             }
+            PanelLegend.SetActive(true);
 
             string mapName = (string)Scenes.GetObjectParam(Scenes.MAP);
             SelectMap(MapsDictionary.First(kvPair => kvPair.Value.Name == mapName).Key);
@@ -426,6 +428,7 @@ namespace Assets.Scripts.MapEditor
 
         public void AddMap()
         {
+            ResetGraphDrawing();
             ChangeEditorHandler<NewMapHandler>();
             Grids.SetActive(false);
             HideCurrentMap();
@@ -549,12 +552,26 @@ namespace Assets.Scripts.MapEditor
             ResetGraphDrawing();
         }
 
-        public void SetCanvasActive(bool active)
+        public void SetCanvasActive(bool active, GameObject excludeObject=null)
         {
             foreach (string elementName in affectedCanvasElements)
             {
-                Canvas.transform.Find(elementName).gameObject.SetActive(active);
+                GameObject gameObject = Canvas.transform.Find(elementName).gameObject;
+                if (gameObject != excludeObject)
+                {
+                    gameObject.SetActive(active);
+                }
             }
+        }
+
+        public void PreviewPhoto(BaseEventData e)
+        {
+            SetCanvasActive(false, Canvas.transform.Find("ButtonExportPng").gameObject);
+        }
+
+        public void EndPreview(BaseEventData e)
+        {
+            SetCanvasActive(true);
         }
 
         public void Export()
@@ -662,7 +679,7 @@ namespace Assets.Scripts.MapEditor
             Scenes.Load(Scenes.MAIN_SCENE, parameters);
         }
 
-        private void ResetGraphDrawing()
+        public void ResetGraphDrawing()
         {
             foreach (LineRenderer lineRenderer in lineRenderers)
             {
@@ -673,6 +690,7 @@ namespace Assets.Scripts.MapEditor
             {
                 Destroy(gameObject);
             }
+            PanelLegend.SetActive(false);
         }
 
         private void DrawAction(InteractAction action, Vector3 offset, Color color)
@@ -775,9 +793,7 @@ namespace Assets.Scripts.MapEditor
             Vector3 upRightCorner = upRightTile.transform.position + new Vector3(0.5f, 0.5f);
             Vector3 screenDownLeft = Camera.main.WorldToScreenPoint(downLeftCorner);
             Vector3 screenUpRight = Camera.main.WorldToScreenPoint(upRightCorner);
-            int width = Screen.width;
-            int height = Screen.height;
-            Texture2D tex = new Texture2D((int) (screenUpRight.x - screenDownLeft.x) , (int) (screenUpRight.y - screenDownLeft.y) , TextureFormat.RGB24, false);
+            Texture2D tex = new Texture2D((int)(screenUpRight.x - screenDownLeft.x), (int)(screenUpRight.y - screenDownLeft.y), TextureFormat.RGB24, false);
 
             // Read screen contents into the texture
             tex.ReadPixels(new Rect(screenDownLeft, screenUpRight - screenDownLeft), 0, 0);
@@ -798,6 +814,5 @@ namespace Assets.Scripts.MapEditor
             ((EditBehaviourHandler) currentEditorHandler).ChangeMaxVisibilityMeasure(value);
             FlagCurrentButton();
         }
-
     }
 }

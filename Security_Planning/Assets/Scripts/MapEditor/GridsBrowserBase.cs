@@ -113,18 +113,18 @@ namespace Assets.Scripts.MapEditor
 
         public void DefaultScrollLogic(float scroll, RaycastHit[] raycastHits)
         {
-            if (raycastHits.Length != 0)
-            {
-                GameObject hitObject = raycastHits[0].transform.gameObject;
-                if (!hitObject.IsEqualToDescendantOf(ScrollView))
+            //if (raycastHits.Length != 0)
+            //{
+            //    GameObject hitObject = raycastHits[0].transform.gameObject;
+            //    if (!hitObject.IsEqualToDescendantOf(ScrollView))
                 {
-                    float potentiallyNewSize = Camera.main.orthographicSize - scroll;
+                    float potentiallyNewSize = Camera.main.orthographicSize - scroll * 5;
                     if (potentiallyNewSize > 1 && potentiallyNewSize < 20)
                     {
                         Camera.main.orthographicSize = potentiallyNewSize;
                     }
                 }
-            }
+            //}
         }
 
         protected virtual Button AddMapButton(string name, Color color)

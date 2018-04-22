@@ -1,7 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters.Goals;
 using Assets.Scripts.MapEditor;
@@ -9,8 +7,6 @@ using Assets.Scripts.Model;
 using Entities.Characters.Actions;
 using Entities.Characters.Behaviours;
 using Entities.Characters.Goals;
-using UnityEditor.SceneManagement;
-using UnityEngine;
 
 public class SimulationGameHandler : BaseGameHandler
 {
