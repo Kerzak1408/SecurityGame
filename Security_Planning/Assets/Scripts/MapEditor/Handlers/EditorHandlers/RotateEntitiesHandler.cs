@@ -3,13 +3,12 @@ using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using UnityEngine;
 
-namespace Assets.Scripts.MapEditor.EditorHandlers
+namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 {
     public class RotateEntitiesHandler : BaseUserSelectableHandler
     {
         private GameObject rotationArrow;
         private GameObject rotatedEntity;
-        private float rotateBack;
 
         public RotateEntitiesHandler(GridManager gridManager) : base(gridManager)
         {
@@ -20,7 +19,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             if (rotationArrow == null)
             {
                 rotationArrow =
-                    gridManager.InstantiateGameObject(Resources.Load<GameObject>("Prefabs/UI/RotationArrow"));
+                    GridManager.InstantiateGameObject(Resources.Load<GameObject>("Prefabs/UI/RotationArrow"));
                 rotationArrow.SetActive(false);
             }
             
@@ -34,7 +33,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
 
         public override void LeftButtonUp(RaycastHit[] raycastHits)
         {
-            Map currentMap = gridManager.GetCurrentMap();
+            Map currentMap = GridManager.GetCurrentMap();
             RaycastHit entityHit =
                 raycastHits.FirstOrDefault(hit => currentMap.Entities.Contains(hit.transform.gameObject));
             if (!entityHit.Equals(default(RaycastHit)))
@@ -74,7 +73,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         {
             rotatedEntity.transform.Rotate(0, 0, rotationSpeed, Space.World);
             rotationArrow.transform.Rotate(0, 0, rotationSpeed, Space.World);
-            gridManager.FlagCurrentButton();
+            GridManager.FlagCurrentButton();
             AdjustArrowRotation();
         }
 

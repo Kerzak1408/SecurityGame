@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.MapEditor.EditorHandlers
+namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 {
     public class AddEntityHandler : BaseUserSelectableHandler
     {
@@ -16,11 +16,10 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 return;
             }
             RaycastHit firstHit = raycastHits[0];
-            gridManager.newEntityPosition = firstHit.point;
-            gridManager.PanelEntities.SetActive(true);
-            gridManager.AdjustPanelToCamera(gridManager.PanelEntities);
-            gridManager.ChangeEditorHandler<ChooseEntityHandler>();
-
+            GridManager.NewEntityPosition = firstHit.point;
+            GridManager.PanelEntities.SetActive(true);
+            GridManager.AdjustPanelToCamera(GridManager.PanelEntities);
+            GridManager.ChangeEditorHandler<ChooseEntityHandler>();
         }
     }
 }

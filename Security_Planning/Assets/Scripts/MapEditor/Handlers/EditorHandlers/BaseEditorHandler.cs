@@ -4,12 +4,11 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.MapEditor.EditorHandlers
+namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 {
     public abstract class BaseEditorHandler : BaseHandler
     {
-        protected GridManager gridManager;
-        private string name;
+        protected GridManager GridManager;
 
         public override string Name
         {
@@ -24,7 +23,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
 
         protected BaseEditorHandler(GridManager gridManager)
         {
-            this.gridManager = gridManager;
+            this.GridManager = gridManager;
         }
 
         public virtual void LeftButtonDown(RaycastHit[] raycastHits) { }
@@ -35,9 +34,9 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
 
         public virtual void HoverLogic(RaycastHit[] raycastHits)
         {
-            IEnumerable<RaycastHit> validObjects = raycastHits.Where(hit => !hit.transform.gameObject.Equals(gridManager.Panel) &&
-                                                                           !hit.transform.gameObject.Equals(gridManager.PanelEntities) &&
-                                                                           !hit.transform.gameObject.Equals(gridManager.PanelInfo));
+            IEnumerable<RaycastHit> validObjects = raycastHits.Where(hit => !hit.transform.gameObject.Equals(GridManager.Panel) &&
+                                                                           !hit.transform.gameObject.Equals(GridManager.PanelEntities) &&
+                                                                           !hit.transform.gameObject.Equals(GridManager.PanelInfo));
             RaycastHit objectToChoose = default(RaycastHit);
             foreach (RaycastHit validObject in validObjects)
             {
@@ -49,6 +48,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             }
             if (!objectToChoose.Equals(default(RaycastHit)))
             {
+                // Split camel case.
                 string[] splitName = objectToChoose.transform.name.Split('_');
                 string result = "";
                 Regex regexDigitsOnly = new Regex(@"^\d+$");
@@ -60,15 +60,15 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                     }
                 }
                 result = Regex.Replace(result, "(\\B[A-Z])", " $1");
-                gridManager.PanelInfo.GetComponentInChildren<Text>().text = result;
+                GridManager.PanelInfo.GetComponentInChildren<Text>().text = result;
             }
             else
             {
-                gridManager.PanelInfo.GetComponentInChildren<Text>().text = "";
+                GridManager.PanelInfo.GetComponentInChildren<Text>().text = "";
             }
         }
 
-        public virtual void Start() { gridManager.DropdownMode.RefreshShownValue(); }
+        public virtual void Start() { GridManager.DropdownMode.RefreshShownValue(); }
         public virtual void End() { }
     }
 }

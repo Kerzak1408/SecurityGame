@@ -2,27 +2,27 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.MapEditor.EditorHandlers
+namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 {
     public class NewMapHandler : BaseEditorHandler
     {
-        private Selectable SelectedInputField;
+        private Selectable selectedInputField;
 
         public NewMapHandler(GridManager gridManager) : base(gridManager)
         {
-            SelectedInputField = gridManager.InputName;
+            selectedInputField = gridManager.InputName;
         }
 
         public override void PressedKeys(KeyCode[] keyCodesUp, KeyCode[] keyCodesDown, KeyCode[] keyCodesPressed)
         {
             if (keyCodesDown.Contains(KeyCode.Tab))
             {
-                SelectedInputField = SelectedInputField.FindSelectableOnDown();
-                if (SelectedInputField == null)
+                selectedInputField = selectedInputField.FindSelectableOnDown();
+                if (selectedInputField == null)
                 {
-                    SelectedInputField = gridManager.InputName;
+                    selectedInputField = GridManager.InputName;
                 }
-                SelectedInputField.Select();
+                selectedInputField.Select();
             }
         }
     }

@@ -6,9 +6,7 @@ namespace Assets.Scripts.Items
     public abstract class BaseItem : BaseObject, IPlanningEdgeCreator
     {
         public Vector3 DefaultLocalPosition { get; set; }
-
         public abstract EdgeType CorrespondingEdgeType { get; }
-
         public abstract PlanningEdgeType PlanningEdgeType { get; }
         public GameObject Interactable { get; set; }
         public float InteractTime

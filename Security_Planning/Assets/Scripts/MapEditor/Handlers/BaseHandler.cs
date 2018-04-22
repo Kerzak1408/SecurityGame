@@ -1,8 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public abstract class BaseHandler
+﻿namespace Assets.Scripts.MapEditor.Handlers
 {
-    public abstract string Name { get; }
+    /// <summary>
+    /// Join base for editor and game handlers.
+    /// </summary>
+    public abstract class BaseHandler
+    {
+        public abstract string Name { get; }
+    }
 }

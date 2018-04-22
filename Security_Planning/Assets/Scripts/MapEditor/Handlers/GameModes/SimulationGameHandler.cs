@@ -4,93 +4,92 @@ using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters.Actions;
 using Assets.Scripts.Entities.Characters.Behaviours;
 using Assets.Scripts.Entities.Characters.Goals;
-using Assets.Scripts.MapEditor;
 using Assets.Scripts.Model;
 
-public class SimulationGameHandler : BaseGameHandler
+namespace Assets.Scripts.MapEditor.Handlers.GameModes
 {
-    private bool isStarted;
-
-    public override string Name
+    public class SimulationGameHandler : BaseGameHandler
     {
-        get { return "Simulation"; }
-    }
+        private bool isStarted;
 
-    public override void Start(Game game)
-    {
-        base.Start(game);
-        Game.PanelSimulation.SetActive(true);
-    }
-
-    public override void Update()
-    {
-        if (isStarted)
+        public override string Name
         {
-            return;
+            get { return "Simulation"; }
         }
-        Game.StartCoroutine(WaitForGoalPlanning());
-        isStarted = true;
-    }
 
-    private IEnumerator WaitForGoalPlanning()
-    {
-        var actionsToDraw = new List<BaseAction>[NavigationGoal.PATHS_COUNT];
-        for (int i = 0; i < actionsToDraw.Length; i++)
+        public override void Start(Game game)
         {
-            actionsToDraw[i] = new List<BaseAction>();
+            base.Start(game);
+            Game.PanelSimulation.SetActive(true);
         }
-        
-        Queue<BaseGoal> goals = CollectEverythingBehaviour.GenerateGoals(Burglar, false);
-        PlanningNode[] startNodes = new PlanningNode[actionsToDraw.Length];
-        while (goals.Count > 0)
-        {
-            
-            NavigationGoal goal = goals.Dequeue() as NavigationGoal;
 
-            for (int i = 0; i < startNodes.Length; i++)
-            //for (int i = 0; i < 1; i++)
+        public override void Update()
+        {
+            if (isStarted)
             {
-                goal.Reset();
-                PlanningNode startNode = startNodes[i];
-                if (startNode != null)
-                {
-                    startNode.Reset();
-                }
-                Path<PlanningNode, PlanningEdge> currentPath;
+                return;
+            }
+            Game.StartCoroutine(WaitForGoalPlanning());
+            isStarted = true;
+        }
 
-                goal.MaxVisibility = (float)i / (startNodes.Length - 1);
-                //goal.MaxVisibility = 1.0f;
-                goal.Activate(startNode);
+        private IEnumerator WaitForGoalPlanning()
+        {
+            var actionsToDraw = new List<BaseAction>[NavigationGoal.PATHS_COUNT];
+            for (int i = 0; i < actionsToDraw.Length; i++)
+            {
+                actionsToDraw[i] = new List<BaseAction>();
+            }
+        
+            Queue<BaseGoal> goals = CollectEverythingBehaviour.GenerateGoals(Burglar, false);
+            PlanningNode[] startNodes = new PlanningNode[actionsToDraw.Length];
+            while (goals.Count > 0)
+            {
+            
+                NavigationGoal goal = goals.Dequeue() as NavigationGoal;
 
-                while (!goal.IsInitialized)
+                for (int i = 0; i < startNodes.Length; i++)
                 {
-                    yield return null;
-                }
-                currentPath = goal.Path;
-                if (currentPath.GoalNode != null)
-                {
-                    startNodes[i] = currentPath.GoalNode.Copy();
-                }
-                
-                if (currentPath.Edges == null)
-                {
-                    continue;
-                }
-
-                foreach (PlanningEdge planningEdge in currentPath.Edges)
-                {
-                    foreach (BaseAction action in planningEdge.ActionsToComplete)
+                    goal.Reset();
+                    PlanningNode startNode = startNodes[i];
+                    if (startNode != null)
                     {
-                        if (action.GetType() == typeof(InteractAction))
+                        startNode.Reset();
+                    }
+
+                    goal.MaxVisibility = (float)i / (startNodes.Length - 1);
+                    goal.Activate(startNode);
+
+                    while (!goal.IsInitialized)
+                    {
+                        yield return null;
+                    }
+                    var currentPath = goal.Path;
+                    if (currentPath.GoalNode != null)
+                    {
+                        startNodes[i] = currentPath.GoalNode.Copy();
+                    }
+                
+                    if (currentPath.Edges == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (PlanningEdge planningEdge in currentPath.Edges)
+                    {
+                        foreach (BaseAction action in planningEdge.ActionsToComplete)
                         {
-                            var interactAction = (InteractAction)action;
-                            interactAction.InteractedName = interactAction.Interacted.name;
+                            if (action.GetType() == typeof(InteractAction))
+                            {
+                                var interactAction = (InteractAction)action;
+                                interactAction.InteractedName = interactAction.Interacted.name;
+                            }
+                            actionsToDraw[i].Add(action);
                         }
-                        actionsToDraw[i].Add(action);
                     }
                 }
             }
+            Game.EndSimulation(actionsToDraw);
         }
-        Game.EndSimulation(actionsToDraw);
     }
 }

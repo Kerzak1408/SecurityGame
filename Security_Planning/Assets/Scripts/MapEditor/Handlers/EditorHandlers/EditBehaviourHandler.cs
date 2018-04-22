@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Assets.Scripts.DataHandlers;
 using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Characters.Goals;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.MapEditor.EditorHandlers
+namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 {
     public class EditBehaviourHandler : BaseUserSelectableHandler
     {
-        private GameObject panelEditBehaviour;
-        private Transform togglesParent;
-        private Dictionary<EdgeType, Toggle> tileEdgeToggles;
-        private Dictionary<PlanningEdgeType, Toggle> planningEdgeToggles;
+        private readonly GameObject panelEditBehaviour;
+        private readonly Transform togglesParent;
+        private readonly Dictionary<EdgeType, Toggle> tileEdgeToggles;
+        private readonly Dictionary<PlanningEdgeType, Toggle> planningEdgeToggles;
         private Burglar selectedBurglar;
-        private bool toggleChangedFromCode;
 
         public Dictionary<Toggle, bool> PreviousValues { get; private set; }
         public float PreviousSliderValue { get; private set; }
@@ -49,7 +46,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         {
             foreach (T edgeType in bannableEdgeTypes)
             {
-                GameObject toggleObject = gridManager.InstantiateGameObject(ResourcesHolder.Instance.BehaviourToggle);
+                GameObject toggleObject = GridManager.InstantiateGameObject(ResourcesHolder.Instance.BehaviourToggle);
                 toggleObject.transform.parent = togglesParent;
                 var toggle = toggleObject.GetComponent<Toggle>();
                 toggle.GetComponentInChildren<Text>().text = toString(edgeType);
@@ -119,7 +116,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 float loadedSliderValue = selectedBurglar.Data.MaxVisibilityMeasure * (NavigationGoal.PATHS_COUNT - 1);
                 ChangeMaxVisibilityMeasure(loadedSliderValue, true);
                 PreviousSliderValue = loadedSliderValue;
-                gridManager.InputSensitivity.text = selectedBurglar.Data.Sensitivity.ToString();
+                GridManager.InputSensitivity.text = selectedBurglar.Data.Sensitivity.ToString();
             }
         }
 
@@ -140,16 +137,15 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             }
         }
 
-
         public void ChangeMaxVisibilityMeasure(float value, bool calledFromCode=false)
         {
             float newMeasure = value / (NavigationGoal.PATHS_COUNT - 1);
-            gridManager.TextMaxVisibilityMeasure.text = newMeasure.ToString();
-            gridManager.HandleMaxVisibilitySlider.color = GridManager.Colors[(int)value];
+            GridManager.TextMaxVisibilityMeasure.text = newMeasure.ToString();
+            GridManager.HandleMaxVisibilitySlider.color = GridManager.Colors[(int)value];
             selectedBurglar.Data.MaxVisibilityMeasure = newMeasure;
             if (calledFromCode)
             {
-                gridManager.SliderMaxVisibility.value = value;
+                GridManager.SliderMaxVisibility.value = value;
             }
         }
 

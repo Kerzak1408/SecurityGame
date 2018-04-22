@@ -1,28 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Assets.Scripts.Extensions;
-using Assets.Scripts.MapEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ObserverGameHandler : BaseGameUserHandler
+namespace Assets.Scripts.MapEditor.Handlers.GameModes
 {
-    private string name;
-
-    public override string Name
+    public class ObserverGameHandler : BaseGameUserHandler
     {
-        get { return "Observer"; }
-    }
-
-    public override void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        public override string Name
         {
-            Game.SwitchCamera();
+            get { return "Observer"; }
         }
-        if (Input.GetKeyDown(KeyCode.P))
+
+        public override void Update()
         {
-            Burglar.ChangePausedState();
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                Game.SwitchCamera();
+            }
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                Burglar.ChangePausedState();
+            }
         }
     }
 }

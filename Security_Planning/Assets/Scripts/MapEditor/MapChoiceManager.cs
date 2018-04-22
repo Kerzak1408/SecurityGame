@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.MapEditor.Handlers.GameModes;
 using Assets.Scripts.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,7 @@ namespace Assets.Scripts.MapEditor
             if (SelectedMapButton != null)
             {
                 Dictionary<string, object> parameters = new Dictionary<string, object>();
-                parameters["gameHandler"] = selectableHandlers[DropdownGameMode.value];
+                parameters["gameHandler"] = SelectableHandlers[DropdownGameMode.value];
                 parameters["map"] = MapsDictionary[SelectedMapButton].Name;
                 Scenes.Load(Scenes.MAIN_SCENE, parameters);
             }
@@ -30,7 +31,7 @@ namespace Assets.Scripts.MapEditor
             var options = new List<Dropdown.OptionData>();
             foreach (BaseGameHandler handler in gameHandlers)
             {
-                selectableHandlers[options.Count] = handler;
+                SelectableHandlers[options.Count] = handler;
                 options.Add(new Dropdown.OptionData(handler.Name));
             }
 

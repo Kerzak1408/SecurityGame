@@ -4,7 +4,7 @@ using Assets.Scripts.Entities;
 using Assets.Scripts.Extensions;
 using UnityEngine;
 
-namespace Assets.Scripts.MapEditor.EditorHandlers
+namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 {
     /// <summary>
     /// Handles connecting transmitters <see cref="TransmitterEntity"/> with the receivers <see cref="ReceiverEntity"/>
@@ -20,7 +20,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
 
         public override void Start()
         {
-            currentMap = gridManager.GetCurrentMap();
+            currentMap = GridManager.GetCurrentMap();
             currentMap.DeactivateEntitiesExceptOfType(typeof(TransmitterEntity));
         }
 
@@ -51,7 +51,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                     selectedTransmitter.Data.relatedName = receiverHit.transform.name;
                     currentMap.ActivateAllEntities();
                     selectedTransmitter = null;
-                    gridManager.FlagCurrentButton();
+                    GridManager.FlagCurrentButton();
                 }
             }
         }

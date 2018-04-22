@@ -8,6 +8,7 @@ using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Entities.Characters.Actions;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Helpers;
+using Assets.Scripts.MapEditor.Handlers.GameModes;
 using Assets.Scripts.Model;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,16 +30,11 @@ namespace Assets.Scripts.MapEditor
 
         public Tuple<Camera, BaseCharacter>[] Cameras;
         private int activeCameraIndex;
-        private Vector3? startPointRight;
         private Vector3 previousMousePosition;
 
         private StreamWriter logFileWriter;
         
-
-        private float redrawTimer;
-        
-
-        // Use this for initialization
+    
         protected override void Start ()
         {
             base.Start();
@@ -118,8 +114,6 @@ namespace Assets.Scripts.MapEditor
 
             Map.EmptyParent.transform.Rotate(90, 0, 0);
             Map.ExtractAIModel();
-            //Map.EmptyParent.transform.eulerAngles = new Vector3(90, Map.EmptyParent.transform.eulerAngles.y, Map.EmptyParent.transform.eulerAngles.z);
-
             GameHandler.Start(this);
         }
 
@@ -232,13 +226,6 @@ namespace Assets.Scripts.MapEditor
                 }
             }
             if (Map == null) return;
-
-            redrawTimer += Time.deltaTime;
-            if (redrawTimer > 1)
-            {
-                //Map.ExtractAIModel();
-                redrawTimer = 0;
-            }
 
 
             foreach (TileNode tileModel in Map.AIModel.Tiles)

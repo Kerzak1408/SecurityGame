@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Algorithms.FloodFill;
 using Assets.Scripts.Algorithms.FloodFill.Results;
@@ -15,6 +14,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.MapEditor
 {
+    /// <summary>
+    /// The very base ancestor of all classes that can load maps.
+    /// </summary>
     public class GridBase : MonoBehaviour
     {
         private static readonly string UP = "Up";
@@ -29,16 +31,14 @@ namespace Assets.Scripts.MapEditor
         protected const string ENTITIES = "Entities";
         protected const string PASSWORDS = "Passwords";
 
-        protected AIModel model;
-
-        // Use this for initialization
+        protected AIModel Model;
+        
         protected virtual void Start ()
         {
             MAPS_PATH = FileHelper.JoinPath(Application.persistentDataPath, "Maps");
             Physics.gravity = Vector3.forward;
         }
-
-        // Update is called once per frame
+        
         void Update ()
         {
 		
@@ -53,11 +53,6 @@ namespace Assets.Scripts.MapEditor
             var passwordDictionary = serializer.Deserialize<Dictionary<Tuple<int, int>, string>>(FileHelper.JoinPath(MAPS_PATH, mapName, PASSWORDS));
             var allTiles = ResourcesHolder.Instance.AllTiles;
 
-            //foreach (KeyValuePair<Tuple<int, int>, string> kvPair in passwordDictionary)
-            //{
-            //    Debug.Log("KEY=" + kvPair.Key + " VALUE=" + kvPair.Value);
-            //}
-
             int width = namesMatrix.GetLength(1);
             int height = namesMatrix.GetLength(0);
             var loadedGrid = new GameObject[height, width];
@@ -67,7 +62,6 @@ namespace Assets.Scripts.MapEditor
             for (int j = 0; j < width; j++)
             {
                 string currentName = namesMatrix[i, j].Trim();
-                //Debug.Log("Loading tile = +" + currentName + "+");
                 var newTile = allTiles.FindByName(currentName);
                 GameObject newObject = Instantiate(newTile, transform) as GameObject;
                 loadedGrid[i, j] = newObject;

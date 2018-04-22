@@ -1,25 +1,27 @@
-﻿using System.Linq;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
-namespace Assets.Scripts.MapEditor.EditorHandlers
+namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 {
+    /// <summary>
+    /// Base class for choosing from the panels.
+    /// </summary>
     public abstract class BaseChooseHandler : BaseEditorHandler
     {
-        private GameObject scrolledObject;
-        public float cameraOriginalSize;
+        private readonly GameObject scrolledObject;
+        private readonly float cameraOriginalSize;
+
         protected BaseChooseHandler(GridManager gridManager, GameObject scrolledObject) : base(gridManager)
         {
             this.scrolledObject = scrolledObject;
-            this.cameraOriginalSize = gridManager.cameraOriginalSize;
+            cameraOriginalSize = gridManager.CameraOriginalSize;
         }
 
         public override void Start()
         {
             base.Start();
-            gridManager.SetCanvasActive(false);
-            gridManager.Grids.SetActive(false);
-            gridManager.PanelInfo.SetActive(true);
+            GridManager.SetCanvasActive(false);
+            GridManager.Grids.SetActive(false);
+            GridManager.PanelInfo.SetActive(true);
         }
 
         public override void Scroll(float scroll, RaycastHit[] raycastHits)
@@ -32,15 +34,15 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
 
         protected void ExitHandler()
         {
-            gridManager.Panel.SetActive(false);
-            gridManager.PanelEntities.SetActive(false);
-            gridManager.ActivatePreviousHandler();
+            GridManager.Panel.SetActive(false);
+            GridManager.PanelEntities.SetActive(false);
+            GridManager.ActivatePreviousHandler();
         }
 
         public override void End()
         {
-            gridManager.SetCanvasActive(true);
-            gridManager.Grids.SetActive(true);
+            GridManager.SetCanvasActive(true);
+            GridManager.Grids.SetActive(true);
         }
     }
 }

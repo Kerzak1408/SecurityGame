@@ -4,8 +4,7 @@ using System.Linq;
 using Assets.Scripts.DataHandlers;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Extensions;
-using Assets.Scripts.MapEditor.EditorHandlers;
-using Assets.Scripts.Reflection;
+using Assets.Scripts.MapEditor.Handlers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -20,10 +19,10 @@ namespace Assets.Scripts.MapEditor
         public GameObject ScrollView;
 
         protected Dictionary<Button, Map> MapsDictionary;
-        protected Dictionary<int, TSelectableHandler> selectableHandlers;
+        protected Dictionary<int, TSelectableHandler> SelectableHandlers;
         protected Button SelectedMapButton;
 
-        public float cameraOriginalSize;
+        public float CameraOriginalSize;
 
         private Vector3 previousMousePosition;
 
@@ -36,13 +35,12 @@ namespace Assets.Scripts.MapEditor
         {
             return button.GetComponentInChildren<Text>().text.Replace(' ', '_');
         }
-
-        // Use this for initialization
+        
         protected override void Start ()
         {
             base.Start();
             MapsDictionary = new Dictionary<Button, Map>();
-            selectableHandlers = new Dictionary<int, TSelectableHandler>();
+            SelectableHandlers = new Dictionary<int, TSelectableHandler>();
 
             if (!Directory.Exists(MAPS_PATH))
             {
@@ -55,7 +53,7 @@ namespace Assets.Scripts.MapEditor
                 Button addedButton = AddMapButton(directory.Name.Replace('_', ' '), Color.white);
                 LoadMap(directory.Name, addedButton);
             }
-            cameraOriginalSize = Camera.main.orthographicSize;
+            CameraOriginalSize = Camera.main.orthographicSize;
             if (MapsDictionary.Count > 0)
             {
                 string lastMapName = PlayerPrefs.GetString(Constants.Constants.PLAYER_PREFS_LAST_MAP, "");
@@ -74,7 +72,6 @@ namespace Assets.Scripts.MapEditor
             
         }
 	
-        // Update is called once per frame
         protected virtual void Update ()
         {
             if (Input.GetMouseButtonDown(1))
@@ -101,7 +98,7 @@ namespace Assets.Scripts.MapEditor
             PlayerPrefs.SetString(Constants.Constants.PLAYER_PREFS_LAST_MAP, map.Name);
             map.SetActive(true);
             SelectedMapButton.GetComponent<Image>().color = MyColors.LIGHT_SKY_BLUE;
-            Camera.main.orthographicSize = cameraOriginalSize * Mathf.Max(map.Width, map.Height) / 10f;
+            Camera.main.orthographicSize = CameraOriginalSize * Mathf.Max(map.Width, map.Height) / 10f;
             Vector3 center = map.CenterWorld;
             Camera.main.transform.position = new Vector3(center.x, center.y, Camera.main.transform.position.z);
         }
@@ -114,18 +111,11 @@ namespace Assets.Scripts.MapEditor
 
         public void DefaultScrollLogic(float scroll, RaycastHit[] raycastHits)
         {
-            //if (raycastHits.Length != 0)
-            //{
-            //    GameObject hitObject = raycastHits[0].transform.gameObject;
-            //    if (!hitObject.IsEqualToDescendantOf(ScrollView))
-                {
-                    float potentiallyNewSize = Camera.main.orthographicSize - scroll * 5;
-                    if (potentiallyNewSize > 1 && potentiallyNewSize < 20)
-                    {
-                        Camera.main.orthographicSize = potentiallyNewSize;
-                    }
-                }
-            //}
+            float potentiallyNewSize = Camera.main.orthographicSize - scroll * 5;
+            if (potentiallyNewSize > 1 && potentiallyNewSize < 20)
+            {
+                Camera.main.orthographicSize = potentiallyNewSize;
+            } 
         }
 
         protected virtual Button AddMapButton(string name, Color color)

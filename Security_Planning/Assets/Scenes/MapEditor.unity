@@ -11472,7 +11472,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1929198242}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: 20}
   m_LocalScale: {x: 26.4, y: 5, z: 1}
   m_Children:
   - {fileID: 1678323077}
@@ -12199,8 +12199,6 @@ MonoBehaviour:
   PanelEditBehaviour: {fileID: 668822336}
   PanelLegend: {fileID: 557435545}
   ClickedTile: {fileID: 0}
-  currentPasswordGate: {fileID: 0}
-  toBeRemovedEntity: {fileID: 0}
 --- !u!114 &2042591919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12296,7 +12294,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2046003553}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: 20}
   m_LocalScale: {x: 26.4, y: 5, z: 1}
   m_Children:
   - {fileID: 183119320}

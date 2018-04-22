@@ -1,12 +1,12 @@
-﻿    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-    using Assets.Scripts.DataHandlers;
-    using Assets.Scripts.DataStructures;
+using Assets.Scripts.DataHandlers;
+using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Extensions;
 using UnityEngine;
 
-namespace Assets.Scripts.MapEditor.EditorHandlers
+namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 {
     public class ChooseEntityHandler : BaseChooseHandler
     {
@@ -17,21 +17,21 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         public override void LeftButtonUp(RaycastHit[] raycastHits)
         {
             RaycastHit entityHit =
-                raycastHits.FirstOrDefault(hit => hit.transform.gameObject.IsEqualToChildOf(gridManager.Entities));
+                raycastHits.FirstOrDefault(hit => hit.transform.gameObject.IsEqualToChildOf(GridManager.Entities));
             if (!entityHit.Equals(default(RaycastHit)))
             {
                 GameObject hitObject = entityHit.transform.gameObject;
-                if (hitObject.IsEqualToChildOf(gridManager.Entities))
+                if (hitObject.IsEqualToChildOf(GridManager.Entities))
                 {
-                    gridManager.FlagCurrentButton();
+                    GridManager.FlagCurrentButton();
                     Object item = ResourcesHolder.Instance.AllEntities.FindByName(hitObject.name);
-                    GameObject newObject = gridManager.InstantiateGameObject(item);
+                    GameObject newObject = GridManager.InstantiateGameObject(item);
                     newObject.DeactivateAllScripts();
                     newObject.DeactivateAllCamerasAndAudioListeners();
                     newObject.name = item.name;
-                    Map currentMap = gridManager.GetCurrentMap();
+                    Map currentMap = GridManager.GetCurrentMap();
                     List<GameObject> entities = currentMap.Entities;
-                    newObject.transform.position = gridManager.newEntityPosition;
+                    newObject.transform.position = GridManager.NewEntityPosition;
                     newObject.transform.parent = currentMap.EmptyParent.transform;
                     newObject.transform.name += ("_" + currentMap.GetNextEntityId());
                     entities.Add(newObject);

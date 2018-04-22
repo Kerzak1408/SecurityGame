@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using System.Linq;
+﻿using System.Linq;
 using Assets.Scripts.DataStructures;
+using UnityEngine;
 
-namespace Assets.Scripts.MapEditor.EditorHandlers
+namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 {
     public class DragHandler : BaseUserSelectableHandler
     {
@@ -16,7 +16,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         {
             if (raycastHits.Length != 0)
             {
-                Map map = gridManager.GetCurrentMap();
+                Map map = GridManager.GetCurrentMap();
                 // Get Entity collider.
                 RaycastHit entityHit = raycastHits.FirstOrDefault(x => map.Entities.Contains(x.transform.gameObject));
                 if (!entityHit.Equals(default(RaycastHit)))
@@ -31,7 +31,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         {
             if (draggedObject != null)
             {
-                gridManager.FlagCurrentButton();
+                GridManager.FlagCurrentButton();
                 Vector3 previousPosition = draggedObject.transform.position;
                 var v3 = Input.mousePosition;
                 v3 = Camera.main.ScreenToWorldPoint(v3);

@@ -8,7 +8,7 @@ using Assets.Scripts.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Assets.Scripts.MapEditor.EditorHandlers
+namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 {
     public class EditItemsHandler : BaseUserSelectableHandler
     {
@@ -16,13 +16,12 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         private BaseCharacter selectedCharacter;
         private List<Object> currentItemObjects;
 
-        private GameObject panelAllItems;
-        private GameObject panelAllItemsStart;
-        private GameObject allItems;
+        private readonly GameObject panelAllItems;
+        private readonly GameObject allItems;
 
-        private GameObject panelItems;
-        private GameObject panelItemsStart;
-        private GameObject items;
+        private readonly GameObject panelItems;
+        private readonly GameObject panelItemsStart;
+        private readonly GameObject items;
 
         private void RefreshItems(RaycastHit[] raycastHits, System.Func<RaycastHit, bool> predicate, Action<List<Object>, Object> action)
         {
@@ -33,14 +32,14 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             Vector3 startPosition = items.transform.childCount == 0
                 ? panelItemsStart.transform.position
                 : items.transform.GetChild(0).transform.position;
-            gridManager.InitializePanelGroup(currentItemObjects.ToArray(), startPosition, items);
-            gridManager.FlagCurrentButton();
+            GridManager.InitializePanelGroup(currentItemObjects.ToArray(), startPosition, items);
+            GridManager.FlagCurrentButton();
         }
 
         public EditItemsHandler(GridManager gridManager) : base(gridManager)
         {
             panelAllItems = gridManager.PanelAllItems;
-            panelAllItemsStart = gridManager.PanelAllItemsStart;
+            var panelAllItemsStart = gridManager.PanelAllItemsStart;
             allItems = gridManager.AllItems;
 
             panelItems = gridManager.PanelItems;
@@ -52,10 +51,10 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
 
         public override void Start()
         {
-            currentMap = gridManager.GetCurrentMap();
+            currentMap = GridManager.GetCurrentMap();
             currentMap.DeactivateEntitiesExceptOfType(typeof(BaseCharacter));
-            gridManager.SetCanvasActive(false);
-            gridManager.DropdownMode.gameObject.SetActive(true);
+            GridManager.SetCanvasActive(false);
+            GridManager.DropdownMode.gameObject.SetActive(true);
         }
 
         public override void LeftButtonUp(RaycastHit[] raycastHits)
@@ -78,7 +77,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                     selectedCharacter = null;
                     panelItems.SetActive(false);
                     panelAllItems.SetActive(false);
-                    gridManager.SetCanvasActive(true);
+                    GridManager.SetCanvasActive(true);
                 }
 
             }
@@ -97,9 +96,9 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                     Debug.Log("itemName: " + itemName);
                 }
                 currentItemObjects = itemNames.Select(itemName => allItemsIcons.First(icon => icon.name == itemName)).ToList();
-                gridManager.InitializePanelGroup(currentItemObjects.ToArray(), panelItemsStart.transform.position, items);
-                gridManager.AdjustPanelToCamera(panelAllItems, 3);
-                gridManager.AdjustPanelToCamera(panelItems, -3);
+                GridManager.InitializePanelGroup(currentItemObjects.ToArray(), panelItemsStart.transform.position, items);
+                GridManager.AdjustPanelToCamera(panelAllItems, 3);
+                GridManager.AdjustPanelToCamera(panelItems, -3);
                 panelItems.SetActive(true);
                 panelAllItems.SetActive(true);
             }
@@ -108,7 +107,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         public override void End()
         {
             currentMap.ActivateAllEntities();
-            gridManager.SetCanvasActive(true);
+            GridManager.SetCanvasActive(true);
         }
 
         public override void Scroll(float scroll, RaycastHit[] raycastHits)
@@ -121,11 +120,11 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             {
                 if (raycastHits.Any(hit => hit.transform.gameObject.Equals(panelAllItems)))
                 {
-                    allItems.transform.position += new Vector3(Camera.main.orthographicSize / gridManager.cameraOriginalSize * 25 * scroll, 0, 0);
+                    allItems.transform.position += new Vector3(Camera.main.orthographicSize / GridManager.CameraOriginalSize * 25 * scroll, 0, 0);
                 }
                 else if (raycastHits.Any(hit => hit.transform.gameObject.Equals(panelItems)))
                 {
-                    items.transform.position += new Vector3(Camera.main.orthographicSize / gridManager.cameraOriginalSize * 25 * scroll, 0, 0);
+                    items.transform.position += new Vector3(Camera.main.orthographicSize / GridManager.CameraOriginalSize * 25 * scroll, 0, 0);
                 }
             }
         }

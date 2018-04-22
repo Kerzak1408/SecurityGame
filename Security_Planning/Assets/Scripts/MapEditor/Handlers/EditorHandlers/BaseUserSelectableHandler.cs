@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Linq;
-using Assets.Scripts.Entities.Characters;
 using Assets.Scripts.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.MapEditor.EditorHandlers
+namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 {
+    /// <summary>
+    /// Base class for all the handlers that can be entered directly by user (from dropdown).
+    /// </summary>
     public abstract class BaseUserSelectableHandler : BaseEditorHandler
     {
-        private Dropdown dropdownMode;
+        private readonly Dropdown dropdownMode;
 
         protected BaseUserSelectableHandler(GridManager gridManager) : base(gridManager)
         {
@@ -27,7 +29,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
 
         public override void Scroll(float scroll, RaycastHit[] raycastHits)
         {
-            gridManager.DefaultScrollLogic(scroll, raycastHits);
+            GridManager.DefaultScrollLogic(scroll, raycastHits);
         }
 
 

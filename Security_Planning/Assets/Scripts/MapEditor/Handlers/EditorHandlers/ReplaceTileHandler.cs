@@ -7,7 +7,7 @@ using Assets.Scripts.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.MapEditor.EditorHandlers
+namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 {
     public class ReplaceTileHandler : BaseUserSelectableHandler
     {
@@ -21,7 +21,7 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
 
         public override void LeftButtonUp(RaycastHit[] raycastHits)
         {
-            Map map = gridManager.GetCurrentMap();
+            Map map = GridManager.GetCurrentMap();
             RaycastHit tileHit = raycastHits.FirstOrDefault(x => map.Tiles.Contains(x.transform.gameObject));
             if (!tileHit.Equals(default(RaycastHit)))
             {
@@ -30,13 +30,13 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 
                 if (hitObject.transform.parent.gameObject.HasScriptOfType<PasswordGate>())
                 {
-                    gridManager.currentPasswordGate = hitObject.GetComponentInParent<PasswordGate>();
-                    gridManager.PanelPassword.GetComponentInChildren<InputField>().text = gridManager.currentPasswordGate.Password;
-                    var currentMap = gridManager.GetCurrentMap();
+                    GridManager.CurrentPasswordGate = hitObject.GetComponentInParent<PasswordGate>();
+                    GridManager.PanelPassword.GetComponentInChildren<InputField>().text = GridManager.CurrentPasswordGate.Password;
+                    var currentMap = GridManager.GetCurrentMap();
                     Tuple<int, int> passwordIndices = currentMap.Tiles.GetIndices(hitObject.transform.parent.gameObject);
-                    map.PasswordDictionary[passwordIndices] = gridManager.currentPasswordGate.Password;
-                    gridManager.Grids.SetActive(true);
-                    gridManager.PanelPassword.SetActive(true);
+                    map.PasswordDictionary[passwordIndices] = GridManager.CurrentPasswordGate.Password;
+                    GridManager.Grids.SetActive(true);
+                    GridManager.PanelPassword.SetActive(true);
                 }
                 else if (hitObject.HasScriptOfType<TransmitterEntity>())
                 {
@@ -50,10 +50,10 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                 else
                 {
                     hitObject.ChangeColor(Color.red);
-                    gridManager.ClickedTile = hitObject;
-                    gridManager.AdjustPanelToCamera(gridManager.Panel);
-                    gridManager.Panel.SetActive(true);
-                    gridManager.ChangeEditorHandler<ChooseTileHandler>();
+                    GridManager.ClickedTile = hitObject;
+                    GridManager.AdjustPanelToCamera(GridManager.Panel);
+                    GridManager.Panel.SetActive(true);
+                    GridManager.ChangeEditorHandler<ChooseTileHandler>();
                 }
 
             }
@@ -61,8 +61,8 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
 
         public override void HoverLogic(RaycastHit[] raycastHits)
         {
-            Map currentMap = gridManager.GetCurrentMap();
-            if (!gridManager.Panel.activeInHierarchy)
+            Map currentMap = GridManager.GetCurrentMap();
+            if (!GridManager.Panel.activeInHierarchy)
             {
                 RaycastHit tileHit = raycastHits.FirstOrDefault(x => currentMap.Tiles.Contains(x.transform.gameObject));
                 if (!tileHit.Equals(default(RaycastHit)))
@@ -73,7 +73,6 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
                         HoverEnded();
                         var currentParent = currentMap.EmptyParent;
                         if (HitObject.IsEqualToChildOf(currentParent) ||
-                            /*HitObject.transform.parent.gameObject.HasScriptOfType<PasswordGate>()*/
                             currentMap.Entities.Contains(HitObject)
                         )
                         {

@@ -12,7 +12,8 @@ using Assets.Scripts.Entities.Characters.Goals;
 using Assets.Scripts.Entities.Gates;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Helpers;
-using Assets.Scripts.MapEditor.EditorHandlers;
+using Assets.Scripts.MapEditor.Handlers.EditorHandlers;
+using Assets.Scripts.MapEditor.Handlers.GameModes;
 using Assets.Scripts.Model;
 using Assets.Scripts.Reflection;
 using Assets.Scripts.Serialization;
@@ -54,45 +55,35 @@ namespace Assets.Scripts.MapEditor
         public GameObject PanelInfo;
         public GameObject Items;
 
-        //public GameObject ButtonAddMap;
-
         public GameObject PanelNewMapForm;
         public GameObject Canvas;
         public GameObject PanelPassword;
         public Dropdown DropdownMode;
-
         public GameObject PanelEditBehaviour;
         public GameObject PanelLegend;
-        
         public GameObject ClickedTile;
 
         private Vector3 originalPanelScale;
-        
-        public PasswordGate currentPasswordGate;
-
-        public const string EMPTY_SQUARE = "000_Empty";
-        public Tuple<int, int> passwordIndices;
-
-        private GameObject draggedObject;
-        public GameObject toBeRemovedEntity;
         private List<GameObject> graphDrawingItems;
-
         private BaseEditorHandler currentEditorHandler;
         private IEnumerable<BaseEditorHandler> editorHandlers;
         private BaseEditorHandler previousHandler;
+        private List<BaseAction>[] drawActions;
+        private bool isInitialized;
+        private LineRenderer[] lineRenderers;
 
         private readonly string[] affectedCanvasElements =
         {
             "Scroll View", "ButtonMenu", "ButtonSave", "ButtonDelete", "ButtonImport", "ButtonExport",
             "ButtonExportAll", "ButtonExportPng", "Button_Simulate", "PanelInfo", "ButtonAddMap", "DropdownMode"
         };
-        internal Vector3 newEntityPosition;
-        private List<BaseAction>[] drawActions;
-        private bool isInitialized;
-        private LineRenderer[] lineRenderers;
-
         public static readonly Color[] Colors = { Color.green, Color.blue, Color.magenta, Color.yellow, Color.red, Color.black };
-        
+        public static readonly string EMPTY_SQUARE = "000_Empty";
+
+        public Vector3 NewEntityPosition { get; set; }
+        public GameObject ToBeRemovedEntity { get; set; }
+        public Tuple<int, int> PasswordIndices { get; set; }
+        public PasswordGate CurrentPasswordGate { get; set; }
 
         // Use this for initialization
         protected override void Start ()
@@ -124,7 +115,7 @@ namespace Assets.Scripts.MapEditor
             foreach (BaseUserSelectableHandler baseUserSelectableHandler in baseUserSelectableHandlers)
             {
 
-                selectableHandlers[options.Count] = baseUserSelectableHandler;
+                SelectableHandlers[options.Count] = baseUserSelectableHandler;
                 if (baseUserSelectableHandler is DragHandler)
                 {
                     indexOfDrag = options.Count;
@@ -176,7 +167,6 @@ namespace Assets.Scripts.MapEditor
 
         }
 
-        // Update is called once per frame
         protected override void Update()
         {
             base.Update();
@@ -285,7 +275,7 @@ namespace Assets.Scripts.MapEditor
 
         public void OnDropdownValueChange()
         {
-            BaseUserSelectableHandler handler = selectableHandlers[DropdownMode.value];
+            BaseUserSelectableHandler handler = SelectableHandlers[DropdownMode.value];
             ChangeEditorHandler(handler.GetType());
             DropdownMode.RefreshShownValue();
         }
@@ -340,7 +330,7 @@ namespace Assets.Scripts.MapEditor
         /// <param name="yTranslation"> The y translation of the panel in the default position. </param>
         public void AdjustPanelToCamera(GameObject panel, float yTranslation = 0)
         {
-            float cameraRatio = Camera.main.orthographicSize / cameraOriginalSize;
+            float cameraRatio = Camera.main.orthographicSize / CameraOriginalSize;
             panel.transform.localScale =  cameraRatio * originalPanelScale;
             yTranslation *= cameraRatio;
             var cameraPosition = Camera.main.transform.position;
@@ -519,12 +509,12 @@ namespace Assets.Scripts.MapEditor
         {
             var dict = MapsDictionary[SelectedMapButton].PasswordDictionary;
             var newPassword = PanelPassword.GetComponentInChildren<InputField>().text;
-            var oldPassword = dict[passwordIndices];
+            var oldPassword = dict[PasswordIndices];
             if (newPassword != oldPassword)
             {
                 FlagCurrentButton();
-                currentPasswordGate.Password = newPassword;
-                dict[passwordIndices] = newPassword;
+                CurrentPasswordGate.Password = newPassword;
+                dict[PasswordIndices] = newPassword;
             }
             PanelPassword.SetActive(false);
             Grids.SetActive(true);
@@ -534,8 +524,8 @@ namespace Assets.Scripts.MapEditor
         {
             FlagCurrentButton();
             ButtonRemoveEntity.SetActive(false);
-            MapsDictionary[SelectedMapButton].Entities.Remove(toBeRemovedEntity);
-            Destroy(toBeRemovedEntity);
+            MapsDictionary[SelectedMapButton].Entities.Remove(ToBeRemovedEntity);
+            Destroy(ToBeRemovedEntity);
         }
 
         public void DestroyGameObject(GameObject gameObject)
@@ -779,7 +769,7 @@ namespace Assets.Scripts.MapEditor
             }
         }
 
-        IEnumerator ExportPngCoroutine(string path)
+        private IEnumerator ExportPngCoroutine(string path)
         {
             SetCanvasActive(false);
             // We should only read the screen buffer after rendering is complete

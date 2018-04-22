@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public abstract class BaseGameUserHandler : BaseGameHandler
+﻿namespace Assets.Scripts.MapEditor.Handlers.GameModes
 {
+    public abstract class BaseGameUserHandler : BaseGameHandler
+    {
+    }
 }
