@@ -1,29 +1,33 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Enums;
+using UnityEngine;
 
-public static class VectorExtensions
+namespace Assets.Scripts.Extensions
 {
-    /// <summary>
-    /// Gets the vector compoarison coordinate. Thew comparison coordinate is determined by the direction of the translation of the gate.
-    /// For vertical gates return y coord, for horizontal gates x one.
-    /// </summary>
-    /// <param name="vector">The vector.</param>
-    public static double GetVectorCoord(this Vector3 vector, Axis axis)
+    public static class VectorExtensions
     {
-        switch (axis)
+        /// <summary>
+        /// Gets the vector compoarison coordinate. Thew comparison coordinate is determined by the direction of the translation of the gate.
+        /// For vertical gates return y coord, for horizontal gates x one.
+        /// </summary>
+        /// <param name="vector">The vector.</param>
+        public static double GetVectorCoord(this Vector3 vector, Axis axis)
         {
-            case Axis.X:
+            switch (axis)
+            {
+                case Axis.X:
                 {
                     return vector.x;
                 }
-            case Axis.Y:
+                case Axis.Y:
                 {
                     return vector.y;
                 }
-            case Axis.Z:
+                case Axis.Z:
                 {
                     return vector.z;
                 }
+            }
+            return 0;
         }
-        return 0;
     }
 }

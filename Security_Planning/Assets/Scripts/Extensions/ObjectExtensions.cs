@@ -1,16 +1,25 @@
 ﻿using UnityEngine;
 
-public static class ObjectExtensions {
-
-    public static Object FindByName(this Object[] array, string name)
+namespace Assets.Scripts.Extensions
+{
+    public static class ObjectExtensions
     {
-        foreach (Object item in array)
+        /// <summary>
+        /// Finds the first item in <paramref name="array"/> with the name equal to <paramref name="name"/>.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static Object FindByName(this Object[] array, string name)
         {
-            if (item.name == name)
+            foreach (Object item in array)
             {
-                return item;
+                if (item.name == name)
+                {
+                    return item;
+                }
             }
+            return null;
         }
-        return null;
     }
 }

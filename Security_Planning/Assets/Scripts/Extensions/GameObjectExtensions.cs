@@ -105,6 +105,7 @@ namespace Assets.Scripts.Extensions
             return false;
         }
 
+        
         /// <param name="clipName"> The clip is supposed to be located in Assets/Resources/Sounds </param>
         public static AudioSource AttachAudioSource(this GameObject gameObject, string clipName, float pitch = 1)
         {
@@ -121,6 +122,13 @@ namespace Assets.Scripts.Extensions
             return result;
         }
 
+        /// <summary>
+        /// Returns the component of type <paramref name="T"/> of the <paramref name="gameObject"/> if there is such component,
+        /// otherwise return this kind of component from the children of <paramref name="gameObject"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="gameObject"></param>
+        /// <returns></returns>
         public static T GetComponentInGameObjectOrChildren<T>(this GameObject gameObject)
         {
             var result = gameObject.GetComponent<T>();
@@ -132,6 +140,11 @@ namespace Assets.Scripts.Extensions
             return result;
         }
 
+        /// <summary>
+        /// Change dropdown value cyclically up or down according to <paramref name="down"/> value.
+        /// </summary>
+        /// <param name="dropdown"></param>
+        /// <param name="down"></param>
         public static void ChangeDropdownValue(this Dropdown dropdown, bool down=true)
         {
             int optionsCount = dropdown.options.Count;

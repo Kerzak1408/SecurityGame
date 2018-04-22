@@ -3,6 +3,7 @@ using System.IO.Compression;
 using System.Text;
 using System;
 using System.Diagnostics;
+using Assets.Scripts.Helpers;
 using Boo.Lang;
 using SFB;
 

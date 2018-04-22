@@ -8,6 +8,7 @@ using Assets.Scripts.Algorithms.AStar.Interfaces;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Characters;
+using Assets.Scripts.Extensions;
 using UnityEngine;
 
 namespace Assets.Scripts.Model

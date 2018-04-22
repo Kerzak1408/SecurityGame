@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public static class UIExtensions {
-
-    public static void ChangeColor(this Button button, Color color)
+namespace Assets.Scripts.Extensions
+{
+    public static class UIExtensions
     {
-        button.GetComponent<Image>().color = color;
+        public static void ChangeColor(this Button button, Color color)
+        {
+            button.GetComponent<Image>().color = color;
+        }
     }
 }

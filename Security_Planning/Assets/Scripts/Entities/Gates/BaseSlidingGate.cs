@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Extensions;
+﻿using Assets.Scripts.Enums;
+using Assets.Scripts.Extensions;
 using UnityEngine;
 
 namespace Assets.Scripts.Entities.Gates

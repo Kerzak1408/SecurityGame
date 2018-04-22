@@ -322,7 +322,6 @@
     <Compile Include="Assets\Scripts\Entities\TransmitterEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\Window.cs" />
     <Compile Include="Assets\Scripts\Enums\Axis.cs" />
-    <Compile Include="Assets\Scripts\Enums\EditorMode.cs" />
     <Compile Include="Assets\Scripts\Extensions\CollectionsExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\GameObjectExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\MyClassesExtensions.cs" />
@@ -1576,6 +1575,8 @@
     <None Include="Assets\Logs\Log_2018-4-22_10-22-10.txt" />
     <None Include="Assets\Logs\Log_2018-4-22_10-22-17.txt" />
     <None Include="Assets\Logs\Log_2018-4-22_10-24-53.txt" />
+    <None Include="Assets\Logs\Log_2018-4-22_10-44-44.txt" />
+    <None Include="Assets\Logs\Log_2018-4-22_10-44-58.txt" />
     <None Include="Assets\Logs\Log_2018-4-22_12-33-07.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-15-37.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-16-19.txt" />

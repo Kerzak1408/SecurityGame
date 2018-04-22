@@ -8,6 +8,7 @@ using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities;
 using Assets.Scripts.Entities.Gates;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Helpers;
 using Assets.Scripts.Model;
 using Assets.Scripts.Serialization;
 using UnityEngine;

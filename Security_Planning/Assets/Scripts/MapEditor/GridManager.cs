@@ -11,6 +11,7 @@ using Assets.Scripts.Entities.Characters.Actions;
 using Assets.Scripts.Entities.Characters.Goals;
 using Assets.Scripts.Entities.Gates;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Helpers;
 using Assets.Scripts.MapEditor.EditorHandlers;
 using Assets.Scripts.Model;
 using Assets.Scripts.Reflection;

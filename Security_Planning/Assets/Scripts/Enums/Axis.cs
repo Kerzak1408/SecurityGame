@@ -1,20 +1,23 @@
 ﻿using System;
 using UnityEngine;
 
-public enum Axis {
-    X, Y, Z
-}
-
-public static class AxisUtils
+namespace Assets.Scripts.Enums
 {
-    public static Vector3 GetDirectionVector(this Axis axis)
+    public enum Axis {
+        X, Y, Z
+    }
+
+    public static class AxisUtils
     {
-        switch (axis)
+        public static Vector3 GetDirectionVector(this Axis axis)
         {
-            case Axis.X: return Vector3.right;
-            case Axis.Y: return Vector3.up;
-            case Axis.Z:return Vector3.forward;
+            switch (axis)
+            {
+                case Axis.X: return Vector3.right;
+                case Axis.Y: return Vector3.up;
+                case Axis.Z:return Vector3.forward;
+            }
+            throw new Exception("Unexpected axis type. ");
         }
-        throw new Exception("Unexpected axis type. ");
     }
 }

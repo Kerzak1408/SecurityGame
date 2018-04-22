@@ -1,15 +1,18 @@
 ﻿using System.IO;
 
-public static class DirectoryHelper
+namespace Assets.Scripts.Helpers
 {
-    /// <summary>
-    /// Creates the directory if it does not already exist.
-    /// </summary>
-    public static void CreateDirectoryLazy(string path)
+    public static class DirectoryHelper
     {
-        if (!Directory.Exists(path))
+        /// <summary>
+        /// Creates the directory if it does not already exist.
+        /// </summary>
+        public static void CreateDirectoryLazy(string path)
         {
-            Directory.CreateDirectory(path);
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
         }
     }
 }

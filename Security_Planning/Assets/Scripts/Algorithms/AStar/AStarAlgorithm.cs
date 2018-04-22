@@ -4,6 +4,7 @@ using System.Linq;
 using Assets.Scripts.Algorithms.AStar.Heuristics;
 using Assets.Scripts.Algorithms.AStar.Interfaces;
 using Assets.Scripts.DataStructures;
+using Assets.Scripts.Extensions;
 
 namespace Assets.Scripts.Algorithms.AStar
 {

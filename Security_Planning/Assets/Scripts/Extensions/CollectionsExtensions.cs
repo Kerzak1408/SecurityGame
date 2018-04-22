@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using Assets.Scripts.DataStructures;
-using Assets.Scripts.Model;
-using UnityEngine;
 
-public static class CollectionsExtensions
+namespace Assets.Scripts.Extensions
 {
-    public static Tuple<int, int> GetIndices<T>(this T[,] array, T item)
+    public static class CollectionsExtensions
     {
-        for (int i = 0; i < array.GetLength(0); i++)
+        /// <summary>
+        /// Return the position of the <paramref name="item"/> in the <paramref name="array"/> or null
+        /// if <paramref name="item"/> is not in <paramref name="array"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static Tuple<int, int> GetIndices<T>(this T[,] array, T item)
+        {
+            for (int i = 0; i < array.GetLength(0); i++)
             for (int j = 0; j < array.GetLength(1); j++)
             {
                 if (array[i,j].Equals(item))
@@ -18,118 +24,114 @@ public static class CollectionsExtensions
                     return Tuple.New(i, j);
                 }
             }
-        return null;
-    }
-
-    public static string ToStringExtended<T>(this T[] array)
-    {
-        if (array.Length == 0)
-        {
-            return "[]";
+            return null;
         }
-        var result = "[";
-        for (int i = 0; i < array.Length - 1; i++)
-        {
-            var current = array[i];
-            result += current.ToString() + ", ";
-        }
-        result += array[array.Length - 1] +  "]";
-        return result;
-    }
 
-    public static bool Contains<T>(this T[,] array, T seekedItem)
-    {
-        foreach (T item in array)
+        /// <summary>
+        /// It is not able to override array ToString() so this one is implemented for debugging.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static string ToStringExtended<T>(this T[] array)
         {
-            if (item.Equals(seekedItem))
+            if (array.Length == 0)
             {
-                return true;
+                return "[]";
             }
-        }
-        return false;
-    }
-
-    public static T Get<T>(this T[,] array, Tuple<int, int> indices)
-    {
-        return array[indices.First, indices.Second];
-    }
-
-    public static Tuple<int, int> MultiplyBy(this Tuple<int, int> tuple, int n)
-    {
-        return Tuple.New(tuple.First * n, tuple.Second * n);
-    }
-
-    public static List<T> Copy<T>(this List<T> original)
-    {
-        var copy = new List<T>();
-        foreach (T item in original)
-        {
-            copy.Add(item);
-        }
-        return copy;
-    }
-
-    public static Dictionary<TKey, TValue> Copy<TKey, TValue>(this Dictionary<TKey, TValue> original)
-    {
-        var result = new Dictionary<TKey, TValue>();
-        foreach (KeyValuePair<TKey, TValue> keyValuePair in original)
-        {
-            result[keyValuePair.Key] = keyValuePair.Value;
-        }
-        return result;
-    }
-
-    /// <summary>
-    /// Add to the dictionary where values is a collection. In case there is no such key yet,
-    /// instantiate the collection first.
-    /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TCollection"></typeparam>
-    /// <typeparam name="TValue"></typeparam>
-    /// <param name="dictionary"></param>
-    /// <param name="key"></param>
-    /// <param name="value"></param>
-    public static void LazyAdd<TKey, TCollection, TValue>(this Dictionary<TKey, TCollection> dictionary, 
-        TKey key, TValue value)
-        where TCollection : ICollection<TValue>, new()
-    {
-        if (!dictionary.ContainsKey(key))
-        {
-            dictionary[key] = new TCollection();
-        }
-        dictionary[key].Add(value);
-    }
-
-    public static T ArgMin<T>(this IEnumerable<T> enumerable, Func<T, float> value)
-    {
-        T result = default(T);
-        float min = float.MaxValue;
-        foreach (T item in enumerable)
-        {
-            float current = value(item);
-            if (current < min)
+            var result = "[";
+            for (int i = 0; i < array.Length - 1; i++)
             {
-                min = current;
-                result = item;
-            } 
+                var current = array[i];
+                result += current + ", ";
+            }
+            result += array[array.Length - 1] +  "]";
+            return result;
         }
-        return result;
-    }
 
-    public static IEnumerable<T> ToEnumerable<T>(this Array target)
-    {
-        foreach (var item in target)
-            yield return (T)item;
-    }
+        /// <summary>
+        /// Checks if <paramref name="array"/> contains <paramref name="seekedItem"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="seekedItem"></param>
+        /// <returns></returns>
+        public static bool Contains<T>(this T[,] array, T seekedItem)
+        {
+            foreach (T item in array)
+            {
+                if (item.Equals(seekedItem))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-    public static T RandomElement<T>(this IEnumerable<T> enumerable)
-    {
-        return enumerable.RandomElementUsing<T>(new System.Random());
-    }
+        /// <summary>
+        /// Returns the <paramref name="T"/> item at the indices array[indices.First, indices.Second].
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public static T Get<T>(this T[,] array, Tuple<int, int> indices)
+        {
+            return array[indices.First, indices.Second];
+        }
 
-    public static T RandomElementUsing<T>(this IEnumerable<T> enumerable, System.Random rand)
-    {
-        int index = rand.Next(0, enumerable.Count());
-        return enumerable.ElementAt(index);
+        /// <summary>
+        /// Shallow copy of the list. Creates a new instance of list but copies only references of the items.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="original"></param>
+        /// <returns></returns>
+        public static List<T> Copy<T>(this List<T> original)
+        {
+            var copy = new List<T>();
+            foreach (T item in original)
+            {
+                copy.Add(item);
+            }
+            return copy;
+        }
+
+        /// <summary>
+        /// Shallow copy of the dictionary. Creates a new instance of dictionary but copies only references of the items.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="original"></param>
+        /// <returns></returns>
+        public static Dictionary<TKey, TValue> Copy<TKey, TValue>(this Dictionary<TKey, TValue> original)
+        {
+            var result = new Dictionary<TKey, TValue>();
+            foreach (KeyValuePair<TKey, TValue> keyValuePair in original)
+            {
+                result[keyValuePair.Key] = keyValuePair.Value;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Add to the dictionary where values is a collection. In case there is no such key yet,
+        /// instantiate the collection first.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="dictionary"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public static void LazyAdd<TKey, TCollection, TValue>(this Dictionary<TKey, TCollection> dictionary, 
+            TKey key, TValue value)
+            where TCollection : ICollection<TValue>, new()
+        {
+            if (!dictionary.ContainsKey(key))
+            {
+                dictionary[key] = new TCollection();
+            }
+            dictionary[key].Add(value);
+        }
     }
 }
