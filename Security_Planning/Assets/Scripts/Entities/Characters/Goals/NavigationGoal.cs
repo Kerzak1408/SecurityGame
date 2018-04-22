@@ -31,6 +31,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
 
         public NavigationGoal(BaseCharacter character, IntegerTuple goalCoordinates) : base(character, goalCoordinates)
         {
+            MaxVisibility = character.Data.MaxVisibilityMeasure;
         }
 
         public override void Activate(PlanningNode startNode=null)
