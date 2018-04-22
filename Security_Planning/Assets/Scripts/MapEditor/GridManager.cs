@@ -342,7 +342,7 @@ namespace Assets.Scripts.MapEditor
             panel.transform.localScale =  cameraRatio * originalPanelScale;
             yTranslation *= cameraRatio;
             var cameraPosition = Camera.main.transform.position;
-            panel.transform.position = new Vector3(cameraPosition.x, cameraPosition.y + yTranslation, 0);
+            panel.transform.position = new Vector3(cameraPosition.x, cameraPosition.y + yTranslation, panel.transform.position.z);
         }
 
         private char NumberValidationFunction(string text, int charIndex, char addedChar)

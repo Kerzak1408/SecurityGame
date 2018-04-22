@@ -23,8 +23,6 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
         private GameObject panelItemsStart;
         private GameObject items;
 
-        private GameObject canvas;
-
         private void RefreshItems(RaycastHit[] raycastHits, System.Func<RaycastHit, bool> predicate, Action<List<Object>, Object> action)
         {
             RaycastHit hitItem = raycastHits.First(predicate);
@@ -49,22 +47,20 @@ namespace Assets.Scripts.MapEditor.EditorHandlers
             items = gridManager.Items;
 
             gridManager.InitializePanelGroup(ResourcesHolder.Instance.AllItemsIcons, panelAllItemsStart.transform.position, allItems);
-
-            canvas = gridManager.Canvas;
         }
 
         public override void Start()
         {
             currentMap = gridManager.GetCurrentMap();
             currentMap.DeactivateEntitiesExceptOfType(typeof(BaseCharacter));
-            
+            gridManager.SetCanvasActive(false);
+            gridManager.DropdownMode.gameObject.SetActive(true);
         }
 
         public override void LeftButtonUp(RaycastHit[] raycastHits)
         {
             if (selectedCharacter != null)
             {
-                gridManager.SetCanvasActive(false);
                 Func<RaycastHit, bool> addItemPredicate = hit => hit.transform.gameObject.IsChildOf(allItems);
                 Func<RaycastHit, bool> removeItemPredicate = hit => hit.transform.gameObject.IsChildOf(items);
                 if (raycastHits.Any(addItemPredicate))
