@@ -65,7 +65,7 @@ namespace Assets.Scripts.Entities
                         RaycastHit[] raycastHits = Physics.RaycastAll(ray);
                         // Change to distance from the closest point of collider
                         float distance = Vector3.Distance(collider.ClosestPointOnBounds(cameraPosition), cameraPosition);
-                        if (!raycastHits.Any(hit => hit.distance < distance && !hit.transform.gameObject.HasScriptOfType<BaseObject>() &&
+                        if (!raycastHits.Any(hit => hit.distance < distance && !hit.transform.gameObject.HasScriptOfType<BaseEntity>() &&
                                                     !hit.transform.gameObject.HasScriptOfType<BaseGate>()))
                         {
                             aiModel.Tiles[i, j].AddDetector(this);
