@@ -161,6 +161,24 @@ namespace Assets.Scripts.MapEditor
             int i = indices.First;
             int j = indices.Second;
             string tileName = grid[i, j].name;
+            if (tileName.Contains(FENCE))
+            {
+                return true;
+            }
+
+            int iLowered = i - 1;
+            int iIncreased = i + 1;
+            int jLowered = j - 1;
+            int jIncreased = j + 1;
+
+            // Any fence, even defined from the other side means we are outside.
+            if (iLowered > 0 && grid[iLowered, j].name.Contains(UP) && grid[iLowered, j].name.Contains(FENCE) ||
+                iIncreased < grid.GetLength(0) && grid[iIncreased, j].name.Contains(DOWN) && grid[iIncreased, j].name.Contains(FENCE) ||
+                jLowered > 0 && grid[i, jLowered].name.Contains(RIGHT) && grid[i, jLowered].name.Contains(FENCE) ||
+                jIncreased < grid.GetLength(1) && grid[i, jIncreased].name.Contains(LEFT) && grid[i, jIncreased].name.Contains(FENCE))
+            {
+                return true;
+            }
             if (i == 0)
             {
                 // On the bottom
