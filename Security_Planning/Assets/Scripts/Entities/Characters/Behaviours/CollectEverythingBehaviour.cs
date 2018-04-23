@@ -103,6 +103,11 @@ namespace Assets.Scripts.Entities.Characters.Behaviours
                     continue;
                 }
 
+                if (goal is MoneyGoal)
+                {
+                    SuccessfulMoneyGoals++;
+                }
+
                 foreach (PlanningEdge planningEdge in currentPath.Edges)
                 {
                     foreach (BaseAction action in planningEdge.ActionsToComplete)
@@ -129,6 +134,10 @@ namespace Assets.Scripts.Entities.Characters.Behaviours
                 {
                     currentAction = actionsQueue.Dequeue();
                     currentAction.Activate();
+                }
+                else
+                {
+                    Character.GoalsCompleted();
                 }
             }
             currentAction.Update();

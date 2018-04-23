@@ -68,7 +68,7 @@ namespace Assets.Scripts.MapEditor.Handlers.GameModes
                 switch (successfulMoneyGoals)
                 {
                     case 0:
-                        resultText = "Burglar did not find any path in the with visibility at most " +
+                        resultText = "Burglar did not find any path with the visibility at most " +
                                      burglar.Data.MaxVisibilityMeasure + ".";
                         break;
                     case 1:
