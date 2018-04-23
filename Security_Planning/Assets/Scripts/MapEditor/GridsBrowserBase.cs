@@ -99,7 +99,10 @@ namespace Assets.Scripts.MapEditor
             PlayerPrefs.SetString(Constants.Constants.PLAYER_PREFS_LAST_MAP, map.Name);
             map.SetActive(true);
             SelectedMapButton.GetComponent<Image>().color = MyColors.LIGHT_SKY_BLUE;
-            Camera.main.orthographicSize = CameraOriginalSize * Mathf.Max(map.Width, map.Height) / 10f;
+            float newSize = CameraOriginalSize * Mathf.Max(map.Width, map.Height) / 10f;
+            newSize = Mathf.Max(newSize, 2);
+            newSize = Mathf.Min(newSize, 499);
+            Camera.main.orthographicSize = newSize;
             Vector3 center = map.CenterWorld;
             Camera.main.transform.position = new Vector3(center.x, center.y, Camera.main.transform.position.z);
         }
@@ -113,7 +116,7 @@ namespace Assets.Scripts.MapEditor
         public void DefaultScrollLogic(float scroll, RaycastHit[] raycastHits)
         {
             float potentiallyNewSize = Camera.main.orthographicSize - scroll * 5;
-            if (potentiallyNewSize > 1 && potentiallyNewSize < 20)
+            if (potentiallyNewSize > 1 && potentiallyNewSize < 500)
             {
                 Camera.main.orthographicSize = potentiallyNewSize;
             } 

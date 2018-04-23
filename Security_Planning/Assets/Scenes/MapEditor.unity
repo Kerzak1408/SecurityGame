@@ -3097,7 +3097,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000021368913, y: 0.000019599871}
+  m_AnchoredPosition: {x: -0.000021368913, y: 0.00000081568515}
   m_SizeDelta: {x: 0, y: 30}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &472537017
@@ -3585,8 +3585,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1646767487}
   m_HandleRect: {fileID: 1646767486}
   m_Direction: 0
-  m_Value: 0.6666667
-  m_Size: 0.99999964
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7875,7 +7875,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 228887397}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -11472,7 +11472,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1929198242}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 20}
+  m_LocalPosition: {x: 0, y: 0, z: 40}
   m_LocalScale: {x: 26.4, y: 5, z: 1}
   m_Children:
   - {fileID: 1678323077}
@@ -12168,7 +12168,7 @@ MonoBehaviour:
   Grids: {fileID: 351953644}
   ScrollViewContent: {fileID: 472537015}
   ScrollView: {fileID: 1764417646}
-  cameraOriginalSize: 0
+  CameraOriginalSize: 0
   InputWidth: {fileID: 722669469}
   InputHeight: {fileID: 1776278911}
   InputName: {fileID: 2110404573}
