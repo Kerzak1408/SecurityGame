@@ -150,7 +150,7 @@ namespace Assets.Scripts.MapEditor
                     Instantiate(ResourcesHolder.Instance.AllTiles.FindByName(GridManager.EMPTY_SQUARE)) as GameObject;
                 ceilingTile.transform.position = grid[coordinate.First, coordinate.Second].transform.position 
                     + 3 * Vector3.back;
-                ceilingTile.ChangeColor(color);
+                ceilingTile.ChangeAlbedoAndEmissionColor(color);
                 ceilingTile.transform.parent = parent;
                 ceilingTile.GetComponent<SpriteRenderer>().material.shader = Shader.Find("Standard");
             }

@@ -14,6 +14,7 @@ namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 
         private GameObject hoveredObject;
         private Color hoveredObjectOriginalColor;
+        private Color hoveredObjectOriginalEmissionColor;
 
         public ReplaceTileHandler(GridManager gridManager) : base(gridManager)
         {
@@ -49,7 +50,7 @@ namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
                 }
                 else
                 {
-                    hitObject.ChangeColor(Color.red);
+                    hitObject.ChangeAlbedoAndEmissionColor(Color.red);
                     GridManager.ClickedTile = hitObject;
                     GridManager.AdjustPanelToCamera(GridManager.Panel);
                     GridManager.Panel.SetActive(true);
@@ -67,18 +68,23 @@ namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
                 RaycastHit tileHit = raycastHits.FirstOrDefault(x => currentMap.Tiles.Contains(x.transform.gameObject));
                 if (!tileHit.Equals(default(RaycastHit)))
                 {
-                    GameObject HitObject = tileHit.transform.gameObject;
-                    if (HitObject != hoveredObject)
+                    GameObject hitObject = tileHit.transform.gameObject;
+                    if (hitObject != hoveredObject)
                     {
                         HoverEnded();
                         var currentParent = currentMap.EmptyParent;
-                        if (HitObject.IsEqualToChildOf(currentParent) ||
-                            currentMap.Entities.Contains(HitObject)
+                        if (hitObject.IsEqualToChildOf(currentParent) ||
+                            currentMap.Entities.Contains(hitObject)
                         )
                         {
-                            hoveredObject = HitObject;
-                            hoveredObjectOriginalColor = HitObject.GetComponent<Renderer>().material.color;
-                            HitObject.ChangeColor(Color.green);
+                            hoveredObject = hitObject;
+                            Material material = hitObject.GetComponent<Renderer>().material;
+                            hoveredObjectOriginalColor = material.color;
+                            if (material.HasProperty("_EmissionColor"))
+                            {
+                                hoveredObjectOriginalEmissionColor = material.GetColor("_EmissionColor");
+                            }
+                            hitObject.ChangeAlbedoAndEmissionColor(Color.green);
                         }
                     }
                 }
@@ -95,7 +101,7 @@ namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
         {
             if (hoveredObject != null)
             {
-                hoveredObject.ChangeColor(hoveredObjectOriginalColor);
+                hoveredObject.ChangeColors(hoveredObjectOriginalColor, hoveredObjectOriginalEmissionColor);
             }
         }
 

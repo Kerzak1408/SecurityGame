@@ -78,11 +78,16 @@ namespace Assets.Scripts.Extensions
             return potentialScript != null;
         }
 
-        public static void ChangeColor(this GameObject gameObject, Color color)
+        public static void ChangeAlbedoAndEmissionColor(this GameObject gameObject, Color color)
+        {
+            gameObject.ChangeColors(color, color);
+        }
+
+        public static void ChangeColors(this GameObject gameObject, Color color, Color emissionColor)
         {
             var material = gameObject.GetComponent<Renderer>().material;
             material.color = color;
-            material.SetColor("_EmissionColor", color);
+            material.SetColor("_EmissionColor", emissionColor);
         }
 
         public static void ChangeMaterialAndColor(this GameObject gameObject, Color color)

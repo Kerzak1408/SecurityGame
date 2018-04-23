@@ -29,7 +29,7 @@ namespace Assets.Scripts.Entities
                 {
                     Color materialColor = GetComponent<Renderer>().material.color;
                     Color newColor = materialColor == Color.red ? Color.yellow : Color.red;
-                    gameObject.ChangeColor(newColor);
+                    gameObject.ChangeAlbedoAndEmissionColor(newColor);
                     timeOfCurrentBlick = 0;
                 }
             }
