@@ -328,7 +328,6 @@
     <Compile Include="Assets\Scripts\Extensions\ObjectExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\UIExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\VectorExtensions.cs" />
-    <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Helpers\DirectoryHelper.cs" />
     <Compile Include="Assets\Scripts\Helpers\FileHelper.cs" />
     <Compile Include="Assets\Scripts\Helpers\InteractHelper.cs" />
