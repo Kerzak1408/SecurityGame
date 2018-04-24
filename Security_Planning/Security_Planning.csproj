@@ -1607,6 +1607,10 @@
     <None Include="Assets\Logs\Log_2018-4-24_11-28-00.txt" />
     <None Include="Assets\Logs\Log_2018-4-24_11-28-09.txt" />
     <None Include="Assets\Logs\Log_2018-4-24_11-33-01.txt" />
+    <None Include="Assets\Logs\Log_2018-4-24_11-38-54.txt" />
+    <None Include="Assets\Logs\Log_2018-4-24_11-51-50.txt" />
+    <None Include="Assets\Logs\Log_2018-4-24_11-52-01.txt" />
+    <None Include="Assets\Logs\Log_2018-4-24_11-52-20.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-15-37.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-16-19.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-18-22.txt" />
@@ -2289,7 +2293,6 @@
     <None Include="Assets\Logs\Log_2018-4-9_12-55-42.txt" />
     <None Include="Assets\Logs\Log_2018-4-9_12-55-48.txt" />
     <None Include="Assets\Logs\Log_2018-4-9_12-56-01.txt" />
-    <None Include="Assets\Resources\Maps\BuildingGrid.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
