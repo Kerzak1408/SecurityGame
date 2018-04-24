@@ -388,7 +388,6 @@
     <Compile Include="Assets\Scripts\UI\UserDialog.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\External\PaintedGround\read me.txt" />
     <None Include="Assets\External\PolygonCity\Change_Log.txt" />
     <None Include="Assets\External\RPG Character Animation Pack\Elements\ImageEffects\Shaders\BlendModesOverlay.shader" />
     <None Include="Assets\External\RPG Character Animation Pack\Elements\ImageEffects\Shaders\BlurEffectConeTaps.shader" />
@@ -1605,6 +1604,9 @@
     <None Include="Assets\Logs\Log_2018-4-23_11-32-46.txt" />
     <None Include="Assets\Logs\Log_2018-4-23_12-01-00.txt" />
     <None Include="Assets\Logs\Log_2018-4-23_12-03-25.txt" />
+    <None Include="Assets\Logs\Log_2018-4-24_11-28-00.txt" />
+    <None Include="Assets\Logs\Log_2018-4-24_11-28-09.txt" />
+    <None Include="Assets\Logs\Log_2018-4-24_11-33-01.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-15-37.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-16-19.txt" />
     <None Include="Assets\Logs\Log_2018-4-3_01-18-22.txt" />
