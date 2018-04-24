@@ -56,7 +56,7 @@ namespace Assets.Scripts.MapEditor.Handlers.GameModes
                     {
                         startNode.Reset();
                     }
-
+                    
                     goal.MaxVisibility = (float)i / (startNodes.Length - 1);
                     goal.Activate(startNode);
 

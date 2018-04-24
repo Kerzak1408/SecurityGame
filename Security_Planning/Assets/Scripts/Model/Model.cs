@@ -12,12 +12,5 @@
             Tiles = new TileNode[width, height];
         }
 
-        public void Reset()
-        {
-            foreach (TileNode tileNode in Tiles)
-            {
-                tileNode.Reset();
-            }
-        }
     }
 }

@@ -71,7 +71,6 @@ namespace Assets.Scripts.Entities.Characters.Goals
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            Character.Map.AIModel.Reset();
             startNode.IsVisibilityPriority = true;
             Path<PlanningNode, PlanningEdge> leastSeenPath = AStarAlgorithm.AStar(
                 startNode,
@@ -83,7 +82,6 @@ namespace Assets.Scripts.Entities.Characters.Goals
             float longestPathLength = leastSeenPath.Cost;
             float longestPathVisibility = leastSeenPath.VisibleTime();
             startNode.Reset();
-            Character.Map.AIModel.Reset();
             startNode.IsVisibilityPriority = false;
             
             Path<PlanningNode, PlanningEdge> shortestPath = AStarAlgorithm.AStar(
@@ -111,7 +109,6 @@ namespace Assets.Scripts.Entities.Characters.Goals
             else
             {
                 startNode.Reset();
-                Character.Map.AIModel.Reset();
                 startNode.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility - longestPathVisibility), longestPathVisibility, shortestPathVisibility);
                 Path = AStarAlgorithm.AStar(
                     startNode,

@@ -16,7 +16,6 @@ namespace Assets.Scripts.Model
         public List<TileEdge> Edges { get; private set; }
         public List<DetectorEntity> DetectedBy { get; private set; }
         public Vector3 WorldPosition { get; private set; }
-        public float VisibleTime { get; set; }
 
         List<IAStarEdge<TileNode>> IAStarNode<TileNode>.Edges
         {
@@ -83,11 +82,6 @@ namespace Assets.Scripts.Model
         public bool IsObstructed(IEnumerable<BaseEntity> destroyedObstacles)
         {
             return Edges.All(edge => edge.IsObstructed(destroyedObstacles));
-        }
-
-        public void Reset()
-        {
-            VisibleTime = 0;
         }
     }
 }

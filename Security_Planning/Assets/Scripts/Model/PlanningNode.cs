@@ -59,10 +59,8 @@ namespace Assets.Scripts.Model
                 if (edges == null)
                 {
                     edges = new List<IAStarEdge<PlanningNode>>();
-                    character.Map.AIModel.Reset();
-                    TileNode.VisibleTime = VisibleTime;
                     // Try to find path to the goal.
-                    Path<TileNode, TileEdge> pathToGoal = ComputePath(GoalNode.TileNode, maxAbsoluteVisibility);
+                    Path<TileNode, TileEdge> pathToGoal = ComputePath(GoalNode.TileNode, maxAbsoluteVisibility - VisibleTime);
 
                     if (pathToGoal.Cost < float.MaxValue)
                     {
@@ -108,7 +106,6 @@ namespace Assets.Scripts.Model
                                     :
                                     lowVisibilityLimit + (float) i / branchesMinusOne *
                                     (highVisibilityLimit - lowVisibilityLimit);
-                                character.Map.AIModel.Reset();
                                 Path<TileNode, TileEdge> path = ComputePath(neighborTileNode, currentVisibilityLimit);
                                 float potentialvisibility = VisibleTime + path.VisibilityTime;
                                 if (path.Edges != null && (!useVisibilityLimit || potentialvisibility <= maxAbsoluteVisibility))
