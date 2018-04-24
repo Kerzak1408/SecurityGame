@@ -122,7 +122,6 @@ namespace Assets.Scripts.Entities.Characters.Goals
                     {
                         // Pass the values to the neighbor.
                         edge.Neighbor.VisibleTime = edge.Start.VisibleTime + edge.VisibleTime;
-                        edge.Neighbor.TotalTime = edge.Start.TotalTime + edge.Cost;
                         edge.Neighbor.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility- longestPathVisibility), longestPathLength, shortestPathVisibility);
                     },
                     computeCost: GetCostFunction(false)

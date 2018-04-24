@@ -33,7 +33,6 @@ namespace Assets.Scripts.Model
         public GameObject FiniteObject { get; set; }
         public bool IsVisibilityPriority { get; set; }
         public float VisibleTime { get; set; }
-        public float TotalTime { get; set; }
 
         private Func<TileEdge, PriorityCost> CurrentPriorityCost
         {
@@ -62,7 +61,6 @@ namespace Assets.Scripts.Model
                     edges = new List<IAStarEdge<PlanningNode>>();
                     character.Map.AIModel.Reset();
                     TileNode.VisibleTime = VisibleTime;
-                    TileNode.TotalTime = TotalTime;
                     // Try to find path to the goal.
                     Path<TileNode, TileEdge> pathToGoal = ComputePath(GoalNode.TileNode, maxAbsoluteVisibility);
 

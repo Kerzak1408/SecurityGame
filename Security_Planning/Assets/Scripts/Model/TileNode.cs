@@ -17,7 +17,6 @@ namespace Assets.Scripts.Model
         public List<DetectorEntity> DetectedBy { get; private set; }
         public Vector3 WorldPosition { get; private set; }
         public float VisibleTime { get; set; }
-        public float TotalTime { get; set; }
 
         List<IAStarEdge<TileNode>> IAStarNode<TileNode>.Edges
         {
@@ -88,7 +87,6 @@ namespace Assets.Scripts.Model
 
         public void Reset()
         {
-            TotalTime = 0;
             VisibleTime = 0;
         }
     }

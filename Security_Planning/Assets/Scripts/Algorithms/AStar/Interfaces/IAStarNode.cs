@@ -7,6 +7,5 @@ namespace Assets.Scripts.Algorithms.AStar.Interfaces
     {
         IntegerTuple Position { get; set; }
         List<IAStarEdge<T>> Edges { get; }
-        float TotalTime { get; set; }
     }
 }

@@ -5,3 +5,4 @@ Versions/
 builds/
 .vs/
 Security_Planning/Assets/Logs.meta
+*.cd
