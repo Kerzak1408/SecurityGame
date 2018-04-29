@@ -18,7 +18,7 @@ namespace Assets.Scripts.Algorithms.FloodFill
         public static TCluster FloodFill<TCluster, TNode>(TNode startNode, Func<TNode, IEnumerable<TNode>> getNeighbors) where TCluster : ICluster<TNode>, new()
         {
             var result = new TCluster();
-            FloodFill(startNode, getNeighbors, new List<TNode>(), result);
+            FloodFill(startNode, getNeighbors, new HashSet<TNode>(), result);
             return result;
         }
 
@@ -34,7 +34,7 @@ namespace Assets.Scripts.Algorithms.FloodFill
         /// <param name="result"></param>
         /// <returns> Cluster of all the TNodes that are reachable from <paramref name="startNode"/> directly or transitively by <paramref name="getNeighbors"/></returns>
         public static TCluster FloodFill<TCluster, TNode>(TNode currentNode, Func<TNode, IEnumerable<TNode>> getNeighbors,
-            List<TNode> visited, TCluster result) 
+            HashSet<TNode> visited, TCluster result) 
             where TCluster : ICluster<TNode>, new()
         {
             visited.Add(currentNode);
@@ -61,7 +61,7 @@ namespace Assets.Scripts.Algorithms.FloodFill
             where TCluster : ICluster<TNode>, new()
         {
             var result = new List<TCluster>();
-            var alreadyClustered = new List<TNode>();
+            var alreadyClustered = new HashSet<TNode>();
             foreach (TNode node in nodes)
             {
                 if (alreadyClustered.Contains(node))

@@ -309,7 +309,8 @@ namespace Assets.Scripts.MapEditor
             var newParent = new GameObject();
             newParent.transform.parent = Grids.transform;
             var map = new Map(newGrid, new List<GameObject>(), newParent, new Dictionary<Tuple<int, int>, string>(),
-                button.GetComponentInChildren<Text>().text);
+                button.GetComponentInChildren<Text>().text.Replace(" ", "_"));
+            
             MapsDictionary.Add(button, map);
 
             for (int i = 0; i < height; i++)
@@ -465,7 +466,6 @@ namespace Assets.Scripts.MapEditor
                 SelectedMapButton.ChangeColor(Color.white);
             }
             SelectedMapButton = AddMapButton(buttonName, MyColors.LIGHT_SKY_BLUE);
-
             InitializeGrid(width, height, SelectedMapButton);
 
             // To leave AddButton at the last position.
@@ -657,8 +657,15 @@ namespace Assets.Scripts.MapEditor
 
         public void Simulate()
         {
-            UnsavedChangesDialog(StartSimulation, "simulate");
-
+            if (IsFlagged(SelectedMapButton))
+            {
+                UserDialog.Instance.ShowOk("Unsaved Changes", "Save the map to enable simulation.");
+            }
+            else
+            {
+                UnsavedChangesDialog(StartSimulation, "simulate");
+            }
+            
         }
 
         private void StartSimulation()

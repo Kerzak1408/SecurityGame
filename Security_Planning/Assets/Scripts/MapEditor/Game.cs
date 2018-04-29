@@ -48,10 +48,7 @@ namespace Assets.Scripts.MapEditor
             string logFileName = "Log_" + DateTime.Now.ToString("yyyy-M-d") + "_" + DateTime.Now.ToString("hh-mm-ss") + ".txt";
             logFileWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath, "Logs", logFileName));
             Log("Simulation of " + Map.Name + " started.");
-
-            Map.ExtractAIModel();
-
-            GenerateCeiling(Map.Tiles, Map.EmptyParent.transform);
+            
 
             foreach (Transform transform in Map.EmptyParent.transform)
             {
@@ -114,6 +111,10 @@ namespace Assets.Scripts.MapEditor
 
             Map.EmptyParent.transform.Rotate(90, 0, 0);
             Map.ExtractAIModel();
+            if (!(GameHandler is SimulationGameHandler))
+            {
+                GenerateCeiling(Map.Tiles, Map.EmptyParent.transform);
+            }
             GameHandler.Start(this);
         }
 
@@ -207,6 +208,7 @@ namespace Assets.Scripts.MapEditor
 
         private void OnDrawGizmos()
         {
+            Map.ExtractAIModel();
             var guardCamera = Cameras.First(kvPair => kvPair.Second != null && kvPair.Second is Guard).First;
             var burglarCollider = Map.Entities.First(entity => entity.HasScriptOfType<Burglar>()).GetComponent<Burglar>().GetComponent<SphereCollider>();
             var planes = GeometryUtility.CalculateFrustumPlanes(guardCamera);
