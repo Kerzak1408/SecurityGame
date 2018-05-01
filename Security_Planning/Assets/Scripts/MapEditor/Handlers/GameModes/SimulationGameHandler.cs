@@ -4,6 +4,7 @@ using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters.Actions;
 using Assets.Scripts.Entities.Characters.Behaviours;
 using Assets.Scripts.Entities.Characters.Goals;
+using Assets.Scripts.Extensions;
 using Assets.Scripts.Model;
 
 namespace Assets.Scripts.MapEditor.Handlers.GameModes
@@ -40,6 +41,8 @@ namespace Assets.Scripts.MapEditor.Handlers.GameModes
             {
                 actionsToDraw[i] = new List<BaseAction>();
             }
+            float[] costs = new float[actionsToDraw.Length];
+            float[] visibleTimes = new float[actionsToDraw.Length];
         
             Queue<BaseGoal> goals = CollectEverythingBehaviour.GenerateGoals(Burglar, false);
             PlanningNode[] startNodes = new PlanningNode[actionsToDraw.Length];
@@ -75,6 +78,8 @@ namespace Assets.Scripts.MapEditor.Handlers.GameModes
                         continue;
                     }
 
+                    costs[i] = currentPath.Cost;
+                    visibleTimes[i] = currentPath.VisibleTime();
                     foreach (PlanningEdge planningEdge in currentPath.Edges)
                     {
                         foreach (BaseAction action in planningEdge.ActionsToComplete)
@@ -89,7 +94,7 @@ namespace Assets.Scripts.MapEditor.Handlers.GameModes
                     }
                 }
             }
-            Game.EndSimulation(actionsToDraw);
+            Game.EndSimulation(actionsToDraw, costs, visibleTimes);
         }
     }
 }

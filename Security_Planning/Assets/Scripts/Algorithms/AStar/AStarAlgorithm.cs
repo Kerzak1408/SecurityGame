@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Assets.Scripts.Algorithms.AStar.Heuristics;
 using Assets.Scripts.Algorithms.AStar.Interfaces;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Helpers;
+using Assets.Scripts.Model;
+using UnityEngine;
 
 namespace Assets.Scripts.Algorithms.AStar
 {
@@ -31,6 +35,13 @@ namespace Assets.Scripts.Algorithms.AStar
             where TNode : IAStarNode<TNode>
             where TEdge : IAStarEdge<TNode>
         {
+            bool isPlanning = startNode is PlanningNode;
+
+            if (!isPlanning)
+            {
+                BenchmarkAStar.NavigationAstars++;
+            }
+
             var closedSet = new List<TNode>();
             var openSet = new List<TNode>
             {
@@ -48,6 +59,15 @@ namespace Assets.Scripts.Algorithms.AStar
 
             while (openSet.Count != 0)
             {
+                if (isPlanning)
+                {
+                    BenchmarkAStar.PlanningNodesExploited++;
+                }
+                else
+                {
+                    BenchmarkAStar.NavigationNodesExploited++;
+                }
+
                 TNode currentNode = openSet.First();
             
                 // This could be optimized using binary heap but it is not worth it for the small graphs we are using.
@@ -65,7 +85,9 @@ namespace Assets.Scripts.Algorithms.AStar
                 // Current node is now the one with the smallest F value.
                 if (currentNode.Equals(goalNode))
                 {
-                    return ReconstructPath(cameFrom, goalNode, gScores[goalNode][visibilityIndex]);
+                    var result = ReconstructPath(cameFrom, goalNode, gScores[goalNode][visibilityIndex]);
+                    result.Cost = gScores[goalNode][(visibilityIndex + 1) % 2];
+                    return result;
                 }
             
                 openSet.Remove(currentNode);
@@ -73,6 +95,15 @@ namespace Assets.Scripts.Algorithms.AStar
 
                 foreach (TEdge edge in currentNode.Edges)
                 {
+                    if (isPlanning)
+                    {
+                        BenchmarkAStar.PlanningEdgesAccesed++;
+                    }
+                    else
+                    {
+                        BenchmarkAStar.NavigationEdgesAccessed++;
+                    }
+
                     TNode neighbor = edge.Neighbor;
 
                     if (nodeFilter != null && nodeFilter(neighbor) || 
@@ -83,6 +114,7 @@ namespace Assets.Scripts.Algorithms.AStar
 
                     PriorityCost cost = computeCost == null ? edge.Cost : computeCost(edge);
                     PriorityCost potentialGScore = gScores[currentNode] + cost;
+                    //potentialGScore.Round(2);
 
                     if (closedSet.Contains(neighbor)) continue;
 
@@ -100,7 +132,9 @@ namespace Assets.Scripts.Algorithms.AStar
                         }
                         cameFrom[neighbor] = new Tuple<TNode, TEdge>(currentNode, edge); ;
                         gScores[neighbor] = potentialGScore;
-                        fScores[neighbor] = potentialGScore + heuristics.ComputeHeuristics(neighbor, goalNode, 2);
+                        var hScore = heuristics.ComputeHeuristics(neighbor, goalNode, 2);
+                        //hScore.Round(2);
+                        fScores[neighbor] = potentialGScore + hScore;
                     }
                 }
             }
@@ -127,6 +161,12 @@ namespace Assets.Scripts.Algorithms.AStar
             where TNode : IAStarNode<TNode>
             where TEdge : IAStarEdge<TNode>
         {
+            bool isPlanning = startNode is PlanningNode;
+            if (!isPlanning)
+            {
+                BenchmarkAStar.NavigationAstarsMultiple++;
+            }
+
             var closedSet = new List<Tuple<TNode, float>>();
             var openSet = new List<Tuple<TNode, float>>();
             var startTuple = new Tuple<TNode, float>(startNode, 0);
@@ -141,14 +181,23 @@ namespace Assets.Scripts.Algorithms.AStar
             var fScores = new LazyDictionary<Tuple<TNode, float>, PriorityCost>(new PriorityCost(2, float.MaxValue));
             fScores[startTuple] = heuristics.ComputeHeuristics(startNode, endNode, 2);
 
+
             while (openSet.Count != 0)
             {
+                if (isPlanning)
+                {
+                    BenchmarkAStar.PlanningNodesExploited++;
+                }
+                else
+                {
+                    BenchmarkAStar.NavigationNodesExploited++;
+                }
                 Tuple<TNode, float> currentTuple = openSet.First();
                 PriorityCost minFValue = fScores[currentTuple];
                 foreach (Tuple<TNode, float> tuple in openSet)
                 {
                     var fValue = fScores[tuple];
-                    if (fValue < minFValue)
+                    if (fValue[0] < minFValue[0])
                     {
                         currentTuple = tuple;
                         minFValue = fValue;
@@ -157,7 +206,9 @@ namespace Assets.Scripts.Algorithms.AStar
 
                 if (currentTuple.First.Equals(endNode))
                 {
-                    return ReconstructPath(cameFrom, currentTuple, currentTuple.Second);
+                    var result =  ReconstructPath(cameFrom, currentTuple, currentTuple.Second);
+                    result.Cost = gScores[currentTuple][0];
+                    return result;
                 }
             
                 openSet.Remove(currentTuple);
@@ -165,6 +216,15 @@ namespace Assets.Scripts.Algorithms.AStar
 
                 foreach (TEdge edge in currentTuple.First.Edges)
                 {
+                    if (isPlanning)
+                    {
+                        BenchmarkAStar.PlanningEdgesAccesed++;
+                    }
+                    else
+                    {
+                        BenchmarkAStar.NavigationEdgesAccessed++;
+                    }
+
                     TNode neighbor = edge.Neighbor;
 
                     if (nodeFilter != null && nodeFilter(neighbor) ||

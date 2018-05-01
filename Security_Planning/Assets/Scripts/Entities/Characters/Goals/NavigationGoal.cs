@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
@@ -11,6 +12,7 @@ using Assets.Scripts.Algorithms.AStar.Heuristics;
 using Assets.Scripts.DataStructures;
 using Assets.Scripts.Entities.Characters.Actions;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Helpers;
 using Assets.Scripts.Model;
 using Assets.Scripts.Threading;
 using UnityEngine;
@@ -40,7 +42,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
 
         public override void Activate(PlanningNode startNode=null)
         {
-            Character.Log("Goal activated: Navigate to: " + GoalCoordinates);
+            Character.Log("GOAL ACTIVATED: Navigate to: " + GoalCoordinates + " SEEN LIMIT: " + MaxVisibility);
             StartPlanning(null, startNode);
         }
 
@@ -72,18 +74,22 @@ namespace Assets.Scripts.Entities.Characters.Goals
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             startNode.IsVisibilityPriority = true;
+            StringBuilder stringBuilder = new StringBuilder();
+
+            BenchmarkAStar.Reset();
             Path<PlanningNode, PlanningEdge> leastSeenPath = AStarAlgorithm.AStar(
                 startNode,
                 goalNode,
                 new EuclideanHeuristics<PlanningNode>(1),
                 edgeFilter: edge => Character.Data.ForbiddenPlanningEdgeTypes.Contains(edge.Type),
-                computeCost: GetCostFunction(true));
+                computeCost: GetCostFunction(true),
+                visibilityIndex:0);
 
             float longestPathLength = leastSeenPath.Cost;
             float longestPathVisibility = leastSeenPath.VisibleTime();
             startNode.Reset();
             startNode.IsVisibilityPriority = false;
-            
+
             Path<PlanningNode, PlanningEdge> shortestPath = AStarAlgorithm.AStar(
                 startNode,
                 goalNode,
@@ -93,6 +99,10 @@ namespace Assets.Scripts.Entities.Characters.Goals
                 );
 
             float shortestPathVisibility = shortestPath.VisibleTime();
+
+
+            stringBuilder.Append("Seen range: ").AppendLine((shortestPathVisibility - longestPathVisibility).ToString());
+            stringBuilder.Append("Length range: ").AppendLine((longestPathLength - shortestPath.Cost).ToString());
             if (MaxVisibility == 0)
             {
                 Path = leastSeenPath;
@@ -119,19 +129,42 @@ namespace Assets.Scripts.Entities.Characters.Goals
                     {
                         // Pass the values to the neighbor.
                         edge.Neighbor.VisibleTime = edge.Start.VisibleTime + edge.VisibleTime;
-                        edge.Neighbor.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility- longestPathVisibility), longestPathLength, shortestPathVisibility);
+                        edge.Neighbor.UseVisibilityLimit(longestPathVisibility + MaxVisibility * (shortestPathVisibility - longestPathVisibility), longestPathLength, shortestPathVisibility);
                     },
                     computeCost: GetCostFunction(false)
                 );
+
                 if (Path.Edges == null)
                 {
                     Path = leastSeenPath;
                 }
             }
-
+            stringBuilder.AppendLine(BenchmarkAStar.StringResult());
             stopwatch.Stop();
-            Character.Log("A* time = " + stopwatch.ElapsedMilliseconds / 1000f + " seconds.");
-        }
+            stringBuilder.AppendLine("GOAL PLANNED, elapsed time = " + stopwatch.ElapsedMilliseconds / 1000f + " seconds.");
+
+            Character.Log(stringBuilder.ToString());
+            TaskManager.Instance.RunOnMainThread(() =>
+            {
+                StreamWriter benchmarkWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath, "benchmarks.csv"), true);
+                benchmarkWriter.WriteLine(string.Join(",", new string[] {
+                MaxVisibility.ToString(),
+                (currentMap.Height*currentMap.Width).ToString(),
+                startNode.CreatorsDictionary.Count.ToString(),
+                (shortestPathVisibility - longestPathVisibility).ToString(),
+                (longestPathLength - shortestPath.Cost).ToString(),
+                Character.Data.Sensitivity.ToString(),
+                BenchmarkAStar.NavigationAstars.ToString(),
+                BenchmarkAStar.NavigationNodesExploited.ToString(),
+                BenchmarkAStar.NavigationEdgesAccessed.ToString(),
+                BenchmarkAStar.PlanningNodesExploited.ToString(),
+                BenchmarkAStar.PlanningEdgesAccesed.ToString(),
+                (stopwatch.ElapsedMilliseconds / 1000f).ToString()
+                }));
+                benchmarkWriter.Close();
+            });
+        
+    }
 
         private Func<PlanningEdge, PriorityCost> GetCostFunction(bool isVisibilityPriority)
         {

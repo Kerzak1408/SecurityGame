@@ -34,7 +34,11 @@ namespace Assets.Scripts.Entities
         public bool IsOpen { get; private set; }
         public float DelayTime
         {
-            get { return ComputeDelayTime(0) + ComputeDelayTime(1); }
+            get
+            {
+                return 3;
+                return ComputeDelayTime(0) + ComputeDelayTime(1);
+            }
         }
 
         public float InteractTime

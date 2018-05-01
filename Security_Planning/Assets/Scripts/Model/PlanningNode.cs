@@ -194,13 +194,7 @@ namespace Assets.Scripts.Model
 
         private float ComputeEdgeCost(TileEdge edge, IEnumerable<IObstacle> destroyedObstacles)
         {
-            float result = edge.Cost;
-            IObstacle obstacle = edge.Obstacle;
-            if (obstacle != null && !destroyedObstacles.Contains(obstacle))
-            {
-                result += obstacle.DelayTime;
-            }
-            return result;
+            return edge.Cost;
         }
 
         public PlanningNode(TileNode tileNode, PlanningNode goalNode, List<EdgeType> unlockedEdges,

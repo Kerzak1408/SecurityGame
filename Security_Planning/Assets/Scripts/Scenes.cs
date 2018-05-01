@@ -17,6 +17,8 @@ namespace Assets.Scripts
         public const string ACTIONS_TO_DRAW = "actionsToDraw";
         public const string GAME_HANDLER = "gameHandler";
         public const string MAP = "map";
+        public static readonly string COSTS = "costs";
+        public static readonly string SEEN_TIMES = "seenTimes";
 
         private void Start()
         {
