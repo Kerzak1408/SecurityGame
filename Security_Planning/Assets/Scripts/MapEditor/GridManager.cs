@@ -37,7 +37,8 @@ namespace Assets.Scripts.MapEditor
         public Image HandleMaxVisibilitySlider;
         public GameObject ButtonRemoveEntity;
         public Button ExportToPngButton;
-    
+        public Text[] TextsLegendVisibilities;
+        public Text[] TextsLegendLengths;
         public GameObject Panel;
         public GameObject PanelStart;
         public GameObject Tiles;
@@ -143,11 +144,15 @@ namespace Assets.Scripts.MapEditor
                 return;
             }
             PanelLegend.SetActive(true);
+            float[] costs = (float[]) Scenes.GetObjectParam(Scenes.COSTS);
+            float[] visibleTimes = (float[]) Scenes.GetObjectParam(Scenes.SEEN_TIMES);
 
             string mapName = (string)Scenes.GetObjectParam(Scenes.MAP);
             SelectMap(MapsDictionary.First(kvPair => kvPair.Value.Name == mapName).Key);
             for (int i = 0; i < actions.Length; i++)
             {
+                TextsLegendVisibilities[i].text = String.Format("{0:0.##}", visibleTimes[i]);
+                TextsLegendLengths[i].text = String.Format("{0:0.##}", costs[i]);
                 List<BaseAction> list = actions[i];
                 float spaceSize = 0.05f;
                 float translation = i * spaceSize - spaceSize * actions.Length / 2;

@@ -19,7 +19,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
 
         public override void Activate(PlanningNode startNode=null)
         {
-            Character.Log("Goal activated: Collect money at " + GoalCoordinates);
+            Character.Log("GOAL ACTIVATED: Collect money at " + GoalCoordinates + " SEEN LIMIT: " + MaxVisibility);
             StartPlanning(moneyObject, startNode);
         }
     }

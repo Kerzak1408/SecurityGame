@@ -47,7 +47,7 @@ namespace Assets.Scripts.MapEditor
             DirectoryHelper.CreateDirectoryLazy(FileHelper.JoinPath(Application.dataPath, "Logs"));
             string logFileName = "Log_" + DateTime.Now.ToString("yyyy-M-d") + "_" + DateTime.Now.ToString("hh-mm-ss") + ".txt";
             logFileWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath, "Logs", logFileName));
-            Log("Simulation of " + Map.Name + " started.");
+            Log("Simulation of " + Map.Name + " started, branching factor " + Map.Burglar.Data.Sensitivity + ".");
             
 
             foreach (Transform transform in Map.EmptyParent.transform)
@@ -208,7 +208,7 @@ namespace Assets.Scripts.MapEditor
 
         private void OnDrawGizmos()
         {
-            Map.ExtractAIModel();
+            //Map.ExtractAIModel();
             var guardCamera = Cameras.First(kvPair => kvPair.Second != null && kvPair.Second is Guard).First;
             var burglarCollider = Map.Entities.First(entity => entity.HasScriptOfType<Burglar>()).GetComponent<Burglar>().GetComponent<SphereCollider>();
             var planes = GeometryUtility.CalculateFrustumPlanes(guardCamera);
@@ -291,11 +291,15 @@ namespace Assets.Scripts.MapEditor
             GameHandler.GoalsCompleted(baseCharacter);
         }
 
-        public void EndSimulation(List<BaseAction>[] actionsToDraw)
+        public void EndSimulation(List<BaseAction>[] actionsToDraw, float[] costs, float[] visibleTimes)
         {
+            Log("Simulation ended.");
+            logFileWriter.Close();
             var parameters = new Dictionary<string, object>();
             parameters[Scenes.MAP] = Scenes.ObjectParameters[Scenes.MAP];
             parameters[Scenes.ACTIONS_TO_DRAW] = actionsToDraw;
+            parameters[Scenes.COSTS] = costs;
+            parameters[Scenes.SEEN_TIMES] = visibleTimes;
             Scenes.Load(Scenes.MAP_EDITOR, parameters);
         }
 

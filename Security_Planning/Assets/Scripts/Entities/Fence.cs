@@ -30,7 +30,11 @@ namespace Assets.Scripts.Entities
 
         public float DelayTime
         {
-            get { return  IsOpen ? 0 : cuttingLength; }
+            get
+            {
+                return 0;
+                return IsOpen ? 0 : cuttingLength;
+            }
         }
 
         public float InteractTime
