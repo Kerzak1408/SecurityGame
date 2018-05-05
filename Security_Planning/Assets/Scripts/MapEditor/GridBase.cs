@@ -149,9 +149,10 @@ namespace Assets.Scripts.MapEditor
                 GameObject ceilingTile =
                     Instantiate(ResourcesHolder.Instance.AllTiles.FindByName(GridManager.EMPTY_SQUARE)) as GameObject;
                 ceilingTile.transform.position = grid[coordinate.First, coordinate.Second].transform.position 
-                    + 3 * Vector3.back;
-                ceilingTile.ChangeAlbedoAndEmissionColor(color);
+                    + 3 * Vector3.up;
+                ceilingTile.ChangeAlbedoAndEmissionColor(color);                
                 ceilingTile.transform.parent = parent;
+                ceilingTile.transform.localEulerAngles = new Vector3(0, 0, 0);
                 ceilingTile.GetComponent<SpriteRenderer>().material.shader = Shader.Find("Standard");
             }
         }

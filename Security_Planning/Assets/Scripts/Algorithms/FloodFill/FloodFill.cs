@@ -18,7 +18,7 @@ namespace Assets.Scripts.Algorithms.FloodFill
         public static TCluster FloodFill<TCluster, TNode>(TNode startNode, Func<TNode, IEnumerable<TNode>> getNeighbors) where TCluster : ICluster<TNode>, new()
         {
             var result = new TCluster();
-            FloodFill(startNode, getNeighbors, new HashSet<TNode>(), result);
+            FloodFill(startNode, getNeighbors, new List<TNode>(), result);
             return result;
         }
 
@@ -34,7 +34,7 @@ namespace Assets.Scripts.Algorithms.FloodFill
         /// <param name="result"></param>
         /// <returns> Cluster of all the TNodes that are reachable from <paramref name="startNode"/> directly or transitively by <paramref name="getNeighbors"/></returns>
         public static TCluster FloodFill<TCluster, TNode>(TNode currentNode, Func<TNode, IEnumerable<TNode>> getNeighbors,
-            HashSet<TNode> visited, TCluster result) 
+            List<TNode> visited, TCluster result)
             where TCluster : ICluster<TNode>, new()
         {
             visited.Add(currentNode);
@@ -57,11 +57,11 @@ namespace Assets.Scripts.Algorithms.FloodFill
         /// <param name="nodes"></param>
         /// <param name="getNeighbors"></param>
         /// <returns>The list of clusters, each node is exactly in one cluster.</returns>
-        public static List<TCluster> GenerateClusters<TCluster, TNode>(IEnumerable<TNode> nodes, Func<TNode, IEnumerable<TNode>> getNeighbors) 
+        public static List<TCluster> GenerateClusters<TCluster, TNode>(IEnumerable<TNode> nodes, Func<TNode, IEnumerable<TNode>> getNeighbors)
             where TCluster : ICluster<TNode>, new()
         {
             var result = new List<TCluster>();
-            var alreadyClustered = new HashSet<TNode>();
+            var alreadyClustered = new List<TNode>();
             foreach (TNode node in nodes)
             {
                 if (alreadyClustered.Contains(node))
