@@ -15,6 +15,8 @@ namespace Assets.Scripts.Serialization
 
         private float maxVisibilityMeasure;
         private int sensitivity;
+        // Use full Pareto-optimal front.
+        private bool isOptimalAccuracyOn;
 
         public string[] ItemNames
         {
@@ -44,6 +46,12 @@ namespace Assets.Scripts.Serialization
         {
             get { return sensitivity; }
             set { sensitivity = value; }
+        }
+
+        public bool IsOptimalAccuracyOn
+        {
+            get { return isOptimalAccuracyOn; }
+            set { isOptimalAccuracyOn = value; }
         }
     }
 }

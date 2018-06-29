@@ -21,6 +21,7 @@ namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
 
         public Dictionary<Toggle, bool> PreviousValues { get; private set; }
         public float PreviousSliderValue { get; private set; }
+        public bool PreviousMaxAccuracyValue { get; private set; }
 
         public EditBehaviourHandler(GridManager gridManager) : base(gridManager)
         {
@@ -117,6 +118,8 @@ namespace Assets.Scripts.MapEditor.Handlers.EditorHandlers
                 ChangeMaxVisibilityMeasure(loadedSliderValue, true);
                 PreviousSliderValue = loadedSliderValue;
                 GridManager.InputSensitivity.text = selectedBurglar.Data.Sensitivity.ToString();
+                PreviousMaxAccuracyValue = selectedBurglar.Data.IsOptimalAccuracyOn;
+                GridManager.ToggleOptimalAccuracy.isOn = PreviousMaxAccuracyValue;
             }
         }
 

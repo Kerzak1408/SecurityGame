@@ -39,6 +39,8 @@ namespace Assets.Scripts.MapEditor
         public Button ExportToPngButton;
         public Text[] TextsLegendVisibilities;
         public Text[] TextsLegendLengths;
+        public Toggle ToggleOptimalAccuracy;
+
         public GameObject Panel;
         public GameObject PanelStart;
         public GameObject Tiles;
@@ -622,7 +624,8 @@ namespace Assets.Scripts.MapEditor
                 }
             }
 
-            if (SliderMaxVisibility.value != handler.PreviousSliderValue)
+            if (SliderMaxVisibility.value != handler.PreviousSliderValue || 
+                ToggleOptimalAccuracy.isOn != handler.PreviousMaxAccuracyValue)
             {
                 FlagCurrentButton();
             }
@@ -814,7 +817,6 @@ namespace Assets.Scripts.MapEditor
         public void ChangeMaxVisibilityMeasure(float value)
         {
             ((EditBehaviourHandler) currentEditorHandler).ChangeMaxVisibilityMeasure(value);
-            FlagCurrentButton();
         }
 
 
@@ -827,6 +829,13 @@ namespace Assets.Scripts.MapEditor
         public void WriteToInfoPanel(string text)
         {
             PanelInfo.GetComponentInChildren<Text>().text = text;
+        }
+
+        public void OnToggleOptimalAccuracyValueChanged(bool value)
+        {
+            InputSensitivity.gameObject.SetActive(!value);
+            Map currentMap = GetCurrentMap();
+            currentMap.Burglar.Data.IsOptimalAccuracyOn = value;
         }
     }
 }

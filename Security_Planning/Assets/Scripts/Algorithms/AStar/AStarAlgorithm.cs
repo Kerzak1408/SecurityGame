@@ -151,8 +151,8 @@ namespace Assets.Scripts.Algorithms.AStar
         /// <param name="endNode"></param>
         /// <param name="heuristics">Has to be admissible.</param>
         /// <param name="maxVisibility">Visibility limit, paths that exceed this limit will NOT be considered.</param>
-        /// <param name="nodeFilter">A* will NOT exploit any node, for which this filter return TRUE. </param>
-        /// <param name="edgeFilter">A* will NOT exploit any edge, for which this filter return TRUE. </param>
+        /// <param name="nodeFilter">A* will NOT exploit any node, for which this filter returns TRUE. </param>
+        /// <param name="edgeFilter">A* will NOT exploit any edge, for which this filter returns TRUE. </param>
         /// <param name="computeCost">This function overrides edge.Cost.</param>
         /// <returns></returns>
         public static Path<TNode, TEdge> AStarMultipleVisit<TNode, TEdge>(TNode startNode, TNode endNode,
@@ -245,66 +245,8 @@ namespace Assets.Scripts.Algorithms.AStar
 
                     if (!openSet.Contains(neighborTuple))
                     {
-                        // Here comes the tricky part. We have to check not only the exploited neighbor but all the tuples in closed and open set that
-                        // represents the same node as neighbor.
-                        IEnumerable<Tuple<TNode, float>> neighborOpenSetOccurences = openSet.Where(tuple => tuple.First.Equals(neighbor)).ToList().Copy();
-                    
-                        // We want to add the exploited tuple into the open set if it is better in visibility or path length in comparison with
-                        // every other tuple in both closed and open set.
-                        bool shoudAddToOpen = true;
-                        foreach (Tuple<TNode, float> neighborOccurence in neighborOpenSetOccurences)
-                        {
-                            PriorityCost neighborGScore = gScores[neighborOccurence];
-                            float neighborLength = neighborGScore[0];
-                            float neighborVisibility = neighborGScore[1];
-                            float potentialLength = potentialGScore[0];
-                            float potentialVisibility = potentialGScore[1];
-                            float lengthDiff = potentialLength - neighborLength;
-                            float visibilityDiff = potentialVisibility - neighborVisibility;
-                            
-                            if (lengthDiff < -1e-4 || visibilityDiff < -1e-4)
-                            {
-                                if ((lengthDiff < -1e-4 && visibilityDiff < 1e-4) ||
-                                    (lengthDiff < 1e-4 && visibilityDiff < -1e-4))
-                                {
-                                    // If both parameters (visibility and path length) of the exploited occurence are better than the ones
-                                    // in the open set, remove the worse one configuration from the open set.
-                                    openSet.Remove(neighborOccurence);
-                                    fScores.Remove(neighborOccurence);
-                                    gScores.Remove(neighborOccurence);
-                                }
-                            }
-                            else
-                            {
-                                // We found an occurence of a neighbor node in the open set that has lower/equal both visibility and path length.
-                                // Therefore, it does not make sense to exploit this tuple. This is the crucial time saving check.
-                                shoudAddToOpen = false;
-                            }
-                        }
-
-                        IEnumerable<Tuple<TNode, float>> neighborClosedSetOccurences = closedSet.Where(tuple => tuple.First.Equals(neighbor)).ToList().Copy();
-                        foreach (Tuple<TNode, float> neighborOccurence in neighborClosedSetOccurences)
-                        {
-                            PriorityCost neighborGScore = gScores[neighborOccurence];
-                            float neighborLength = neighborGScore[0];
-                            float neighborVisibility = neighborGScore[1];
-                            float potentialLength = potentialGScore[0];
-                            float potentialVisibility = potentialGScore[1];
-                            float lengthDiff = potentialLength - neighborLength;
-                            float visibilityDiff = potentialVisibility - neighborVisibility;
-                            if (lengthDiff > -1e-4 && visibilityDiff > -1e-4)
-                            {
-                                // Same as in the open set. Better node configuration is already closed -> reason to exploit this one.
-                                shoudAddToOpen = false;
-                            }
-                        }
-
-                        if (shoudAddToOpen)
-                        {
-                            openSet.Add(neighborTuple);
-                        }
+                        FilterParetoDominated(closedSet, openSet, neighborTuple, gScores, fScores, potentialGScore);
                     }
-
 
                     if (openSet.Contains(neighborTuple) && potentialGScore < gScores[neighborTuple])
                     {
@@ -316,6 +258,184 @@ namespace Assets.Scripts.Algorithms.AStar
                 }
             }
             return new Path<TNode, TEdge>(null, float.MaxValue);
+        }
+
+        /// <summary>
+        /// Similar to A* but plans within the space of tuples (node, visibility_so_far).
+        /// </summary>
+        /// <typeparam name="TNode"></typeparam>
+        /// <typeparam name="TEdge"></typeparam>
+        /// <param name="startNode"></param>
+        /// <param name="endNode"></param>
+        /// <param name="heuristics">Has to be admissible.</param>
+        /// <param name="nodeFilter">A* will NOT exploit any node, for which this filter returns TRUE. </param>
+        /// <param name="edgeFilter">A* will NOT exploit any edge, for which this filter returns TRUE. </param>
+        /// <param name="computeCost">This function overrides edge.Cost.</param>
+        /// <returns></returns>
+        public static IEnumerable<Path<TNode, TEdge>> AStarFullParetoFront<TNode, TEdge>(TNode startNode, TNode endNode,
+            Heuristics<TNode> heuristics, Func<TNode, bool> nodeFilter = null,
+            Func<TEdge, bool> edgeFilter = null, Func<TEdge, PriorityCost> computeCost = null)
+            where TNode : IAStarNode<TNode>
+            where TEdge : IAStarEdge<TNode>
+        {
+            bool isPlanning = startNode is PlanningNode;
+            if (!isPlanning)
+            {
+                BenchmarkAStar.NavigationAstarsMultiple++;
+            }
+
+            var closedSet = new List<Tuple<TNode, float>>();
+            var openSet = new List<Tuple<TNode, float>>();
+            var startTuple = new Tuple<TNode, float>(startNode, 0);
+            openSet.Add(startTuple);
+
+            // Backpointers. Key - where I came, Value-First - from where I came, Value-Second - which edge I used.
+            var cameFrom = new Dictionary<Tuple<TNode, float>, Tuple<Tuple<TNode, float>, TEdge>>();
+
+            var gScores = new LazyDictionary<Tuple<TNode, float>, PriorityCost>(new PriorityCost(2, float.MaxValue));
+            gScores[startTuple] = new PriorityCost(2, 0);
+
+            var fScores = new LazyDictionary<Tuple<TNode, float>, PriorityCost>(new PriorityCost(2, float.MaxValue));
+            fScores[startTuple] = heuristics.ComputeHeuristics(startNode, endNode, 2);
+
+
+            while (openSet.Count != 0)
+            {
+                if (isPlanning)
+                {
+                    BenchmarkAStar.PlanningNodesExploited++;
+                }
+                else
+                {
+                    BenchmarkAStar.NavigationNodesExploited++;
+                }
+                Tuple<TNode, float> currentTuple = openSet.First();
+                PriorityCost minFValue = fScores[currentTuple];
+                foreach (Tuple<TNode, float> tuple in openSet)
+                {
+                    var fValue = fScores[tuple];
+                    if (fValue[0] < minFValue[0])
+                    {
+                        currentTuple = tuple;
+                        minFValue = fValue;
+                    }
+                }
+
+                if (currentTuple.First.Equals(endNode))
+                {
+                    var result = ReconstructPath(cameFrom, currentTuple, currentTuple.Second);
+                    result.Cost = gScores[currentTuple][0];
+                    yield return result;
+                }
+
+                openSet.Remove(currentTuple);
+                closedSet.Add(currentTuple);
+
+                foreach (TEdge edge in currentTuple.First.Edges)
+                {
+                    if (isPlanning)
+                    {
+                        BenchmarkAStar.PlanningEdgesAccesed++;
+                    }
+                    else
+                    {
+                        BenchmarkAStar.NavigationEdgesAccessed++;
+                    }
+
+                    TNode neighbor = edge.Neighbor;
+
+                    if (nodeFilter != null && nodeFilter(neighbor) ||
+                        edgeFilter != null && edgeFilter(edge))
+                    {
+                        continue;
+                    }
+
+                    PriorityCost cost = computeCost == null ? edge.Cost : computeCost(edge);
+                    PriorityCost potentialGScore = gScores[currentTuple] + cost;
+
+                    var neighborTuple = new Tuple<TNode, float>(neighbor, potentialGScore[1]);
+
+                    if (closedSet.Contains(neighborTuple)) continue;
+
+                    if (!openSet.Contains(neighborTuple))
+                    {
+                        FilterParetoDominated(closedSet, openSet, neighborTuple, gScores, fScores, potentialGScore);
+                    }
+
+                    if (openSet.Contains(neighborTuple) && potentialGScore < gScores[neighborTuple])
+                    {
+                        cameFrom[neighborTuple] = new Tuple<Tuple<TNode, float>, TEdge>(currentTuple, edge);
+                        gScores[neighborTuple] = potentialGScore;
+                        PriorityCost fScore = potentialGScore + heuristics.ComputeHeuristics(neighbor, endNode, 2);
+                        fScores[neighborTuple] = fScore;
+                    }
+                }
+            }
+        }
+
+        private static void FilterParetoDominated<TNode>(List<Tuple<TNode, float>> closedSet, List<Tuple<TNode, float>> openSet, Tuple<TNode, float> neighborTuple,
+            LazyDictionary<Tuple<TNode, float>, PriorityCost> gScores, LazyDictionary<Tuple<TNode, float>, PriorityCost> fScores, PriorityCost potentialGScore) 
+            where TNode : IAStarNode<TNode>
+        {
+            TNode neighbor = neighborTuple.First;
+            // Here comes the tricky part. We have to check not only the exploited neighbor but all the tuples in closed and open set that
+            // represents the same node as neighbor.
+            IEnumerable<Tuple<TNode, float>> neighborOpenSetOccurences = openSet.Where(tuple => tuple.First.Equals(neighbor)).ToList().Copy();
+
+            // We want to add the exploited tuple into the open set if it is better in visibility or path length in comparison with
+            // every other tuple in both closed and open set, i.e., it is not dominated.
+            bool shoudAddToOpen = true;
+            foreach (Tuple<TNode, float> neighborOccurence in neighborOpenSetOccurences)
+            {
+                PriorityCost neighborGScore = gScores[neighborOccurence];
+                float neighborLength = neighborGScore[0];
+                float neighborVisibility = neighborGScore[1];
+                float potentialLength = potentialGScore[0];
+                float potentialVisibility = potentialGScore[1];
+                float lengthDiff = potentialLength - neighborLength;
+                float visibilityDiff = potentialVisibility - neighborVisibility;
+
+                if (lengthDiff < -1e-4 || visibilityDiff < -1e-4)
+                {
+                    if ((lengthDiff < -1e-4 && visibilityDiff < 1e-4) ||
+                        (lengthDiff < 1e-4 && visibilityDiff < -1e-4))
+                    {
+                        // If both parameters (visibility and path length) of the exploited occurence are better than the ones
+                        // in the open set, remove the worse one configuration from the open set.
+                        openSet.Remove(neighborOccurence);
+                        fScores.Remove(neighborOccurence);
+                        gScores.Remove(neighborOccurence);
+                    }
+                }
+                else
+                {
+                    // We found an occurence of a neighbor node in the open set that has lower/equal both visibility and path length.
+                    // Therefore, it does not make sense to exploit this tuple. This is the crucial time saving check.
+                    shoudAddToOpen = false;
+                }
+            }
+
+            IEnumerable<Tuple<TNode, float>> neighborClosedSetOccurences = closedSet.Where(tuple => tuple.First.Equals(neighbor)).ToList().Copy();
+            foreach (Tuple<TNode, float> neighborOccurence in neighborClosedSetOccurences)
+            {
+                PriorityCost neighborGScore = gScores[neighborOccurence];
+                float neighborLength = neighborGScore[0];
+                float neighborVisibility = neighborGScore[1];
+                float potentialLength = potentialGScore[0];
+                float potentialVisibility = potentialGScore[1];
+                float lengthDiff = potentialLength - neighborLength;
+                float visibilityDiff = potentialVisibility - neighborVisibility;
+                if (lengthDiff > -1e-4 && visibilityDiff > -1e-4)
+                {
+                    // Same as in the open set. Better node configuration is already closed -> reason to not exploit this one.
+                    shoudAddToOpen = false;
+                }
+            }
+
+            if (shoudAddToOpen)
+            {
+                openSet.Add(neighborTuple);
+            }
         }
 
         // Reconstruct path using dictionary of backpointers.

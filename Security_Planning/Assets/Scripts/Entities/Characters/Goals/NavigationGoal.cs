@@ -148,6 +148,7 @@ namespace Assets.Scripts.Entities.Characters.Goals
             {
                 StreamWriter benchmarkWriter = new StreamWriter(FileHelper.JoinPath(Application.dataPath, "benchmarks.csv"), true);
                 benchmarkWriter.WriteLine(string.Join(",", new string[] {
+                currentMap.Name,
                 MaxVisibility.ToString(),
                 (currentMap.Height*currentMap.Width).ToString(),
                 startNode.CreatorsDictionary.Count.ToString(),
